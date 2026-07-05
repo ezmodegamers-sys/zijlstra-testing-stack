@@ -10,4 +10,12 @@ Each post is a standalone HTML file in `/blog/`. No build step. Five steps, ~5 m
 
 Then commit and push — Cloudflare Pages deploys it in under a minute.
 
-Voice notes: direct, technically precise, no hedging. Short declarative openers. Bold the one sentence per section the reader must keep. Every claim about statistics should be checkable — same standard as the "// the math" sections in the tools.
+Voice notes: direct, technically precise, no hedging. Short declarative openers. Bold the one sentence per section the reader must keep. Every claim about statistics should be checkable, the same standard as the "// the math" sections in the tools.
+
+Anti-AI-tells checklist (run every draft through this before publishing):
+- No em dashes or en dashes in prose. Use a period, comma, colon, or parentheses instead. (Title-tag separators like "Post Title — Zijlstra Testing Stack" are the site's naming convention and stay.)
+- No rule-of-three rhythm ("X, Y, and Z" as a rhetorical flourish). Lists are fine only when they enumerate real things.
+- No negative parallelisms ("It isn't X; it's Y", "not just X but Y").
+- No "-ing" trailers that fake depth ("...highlighting the importance of...").
+- No inflated significance ("pivotal", "testament", "landscape", "underscores").
+- Vary sentence length. One short punchy sentence is emphasis; three in a row is theatre.
