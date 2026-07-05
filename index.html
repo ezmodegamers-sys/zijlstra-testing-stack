@@ -154,6 +154,40 @@
   .tool-arrow{font-size:16px;color:var(--tx3);transition:color .15s,transform .15s}
   .tool-card:hover .tool-arrow{color:var(--ac);transform:translateX(4px)}
 
+  /* ── FROM THE BLOG ── */
+  .from-blog{max-width:1100px;margin:0 auto;padding:0 40px 100px}
+  .blog-feature{display:grid;grid-template-columns:.9fr 1.1fr;background:var(--bg2);border:1px solid var(--bdr);
+    text-decoration:none;color:inherit;overflow:hidden;
+    transition:border-color .18s ease,transform .18s ease,box-shadow .18s ease}
+  .blog-feature:hover{border-color:var(--ac);transform:translateY(-3px);box-shadow:0 12px 28px -16px rgba(0,0,0,.75)}
+  .bf-img{background:linear-gradient(135deg,#12161d,#0d1117);border-right:1px solid var(--bdr);
+    padding:18px;display:flex;align-items:center;justify-content:center}
+  .bf-img img{width:100%;height:auto;display:block}
+  .bf-body{padding:28px 32px;display:flex;flex-direction:column;justify-content:center}
+  .bf-meta{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1.5px;
+    text-transform:uppercase;color:var(--tx3);margin-bottom:12px}
+  .bf-meta .cat{color:var(--o)}
+  .bf-title{font-size:21px;font-weight:800;line-height:1.25;letter-spacing:-.4px;margin-bottom:12px}
+  .blog-feature:hover .bf-title{color:var(--ac)}
+  .bf-excerpt{font-size:13px;color:var(--tx2);line-height:1.7;margin-bottom:16px}
+  .bf-more{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--ac)}
+  .bf-all{margin-top:14px;text-align:right}
+  .bf-all a{font-family:var(--mono);font-size:11px;color:var(--tx3);text-decoration:none}
+  .bf-all a:hover{color:var(--ac)}
+  @media(max-width:800px){
+    .blog-feature{grid-template-columns:1fr}
+    .bf-img{border-right:none;border-bottom:1px solid var(--bdr)}
+    .from-blog{padding:0 24px 60px}
+  }
+
+  /* hero blog pill */
+  .hero-note{display:inline-flex;gap:9px;align-items:center;font-family:var(--mono);font-size:11px;
+    color:var(--tx2);border:1px solid var(--bdr);padding:8px 16px;margin-bottom:40px;
+    text-decoration:none;transition:border-color .15s,color .15s}
+  .hero-note:hover{border-color:var(--ac);color:var(--tx)}
+  .hero-note .tag{color:var(--g);font-weight:700}
+  .nav-link-blog{color:var(--ac);font-weight:700}
+
   /* ── MANIFESTO ── */
   .manifesto{
     max-width:700px;margin:0 auto;padding:0 40px 100px;
@@ -189,7 +223,7 @@
 <nav class="nav">
   <div class="nav-brand">// <span>zijlstra</span> testing stack</div>
   <div class="nav-right">
-    <a class="nav-link" href="/blog/">blog</a>
+    <a class="nav-link nav-link-blog" href="/blog/">blog</a>
     <div class="nav-tag"><span class="status-dot"></span>v1.0 · ecommerce experimentation</div>
   </div>
 </nav>
@@ -206,6 +240,7 @@
     These tools protect the internal validity of your experiments, so that when you call something
     a win, <strong>you can defend it in any room.</strong>
   </p>
+  <a class="hero-note" href="/blog/how-much-traffic-do-you-need-to-ab-test"><span class="tag">NEW</span> on the blog: How much traffic do you need to A/B test? →</a>
   <div class="hero-badges">
     <div class="badge live">● Live</div>
     <div class="badge">Two-proportion z-test</div>
@@ -464,6 +499,22 @@
     </a>
 
   </div>
+</section>
+
+<section class="from-blog">
+  <div class="section-label">// from the blog · new guide most weeks</div>
+  <a class="blog-feature" href="/blog/how-much-traffic-do-you-need-to-ab-test">
+    <div class="bf-img">
+      <img src="/blog/weeks-to-winner.png" width="1200" height="630" alt="Chart of how many weeks an A/B test takes to reach significance at 10,000 visitors a month" loading="lazy">
+    </div>
+    <div class="bf-body">
+      <div class="bf-meta">Jul 5, 2026 · <span class="cat">sample size</span> · 7 min read</div>
+      <div class="bf-title">How much traffic do you need to A/B test an online store?</div>
+      <div class="bf-excerpt">At 10,000 visitors a month, detecting a 10% lift takes 56 weeks. The arithmetic to run before any test, why Bayesian doesn't rescue it, and what actually works at small-store traffic.</div>
+      <span class="bf-more">Read the guide →</span>
+    </div>
+  </a>
+  <div class="bf-all"><a href="/blog/">View all posts →</a></div>
 </section>
 
 <section class="manifesto">

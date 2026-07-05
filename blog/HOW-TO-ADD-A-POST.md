@@ -11,6 +11,7 @@ Each post is a standalone HTML file in `/blog/`. No build step. Five steps, ~5 m
    - `<h2>` sections with the `<span class="num">01</span>` numbering, links to the tools where relevant, one `.callout` for a key insight, the `.a-cta` block, and the `.author` bio block at the very end.
    Read time = words ÷ 220, rounded. Count with: `grep -o '<article.*</article>' post.html | sed 's/<[^>]*>//g' | wc -w`.
 4. **Feature it on the index** (`blog/index.html`): move the current `.feature` post down into the `.posts` list as a `.post-card`, then make your new post the `.feature` (update image, meta, title, excerpt, href). If there's no relevant image yet, reuse `og-image.png`. Also add the new post to the `blogPost` array in the index's Blog JSON-LD.
+   Then update the two homepage spots on `/index.html`: the `.hero-note` pill (new post title + href) and the `.blog-feature` card in the `from-blog` section (image, meta, title, excerpt, href).
 5. **Register it**: add a `<url>` entry to `/sitemap.xml` and an `<item>` to `/blog/feed.xml` (copy an existing one). Update the `<lastBuildDate>` in the feed.
 
 Then commit and push — Cloudflare Pages deploys it in under a minute.
