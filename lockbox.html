@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lockbox — A/B Testing Governance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0D1117; --bg2: #161B22; --bg3: #21262D;
+  --bdr: #30363D; --bdr2: #444C56;
+  --tx: #E6EDF3; --tx2: #A0AAB6; --tx3: #7D8590;
+  --ac: #4F8EF7; --ac-dim: #1A2D5A; --ac-bright: #79B8FF;
+  --g: #3FB950; --g-dim: #0D2D1A;
+  --r: #F85149; --r-dim: #3D0F0E;
+  --y: #E3B341; --y-dim: #2D2108;
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Inter', sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:var(--sans);font-size:14px;line-height:1.5;min-height:100vh}
+
+/* HEADER */
+.hdr{background:var(--bg2);border-bottom:1px solid var(--bdr);padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.hdr-brand{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-weight:700;font-size:15px;letter-spacing:-0.5px}
+.hdr-brand .dim{color:var(--tx3);font-weight:400;font-size:11px;margin-left:4px}
+
+/* PAGES */
+.page{display:none}.page.active{display:block}
+
+/* HOME */
+.home-hero{text-align:center;padding:64px 24px 32px;max-width:560px;margin:0 auto}
+.home-hero h1{font-family:var(--mono);font-size:40px;font-weight:700;letter-spacing:-2px;margin-bottom:10px}
+.home-hero h1 .hi{color:var(--ac)}
+.home-hero p{color:var(--tx2);font-size:15px;line-height:1.7;margin-bottom:28px}
+.home-body{max-width:660px;margin:0 auto;padding:0 24px 80px}
+.list-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.list-hdr h2{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--tx3);font-weight:700}
+.exp-card{background:var(--bg2);border:1px solid var(--bdr);border-left:3px solid var(--ac);padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:border-color .15s}
+.exp-card:hover{border-color:var(--bdr2)}
+.exp-card .cn{font-weight:600;font-size:14px}
+.exp-card .cm{font-size:11px;color:var(--tx3);margin-top:3px;font-family:var(--mono)}
+.empty-state{text-align:center;padding:40px;color:var(--tx3);font-size:13px;border:1px dashed var(--bdr)}
+
+/* EXP PAGE */
+.exp-wrap{max-width:1320px;margin:0 auto;padding:24px}
+.back-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.two-col{display:grid;grid-template-columns:1fr 310px;gap:18px;align-items:start}
+
+/* PANELS */
+.panel{background:var(--bg2);border:1px solid var(--bdr);margin-bottom:18px}
+.ph-hdr{padding:13px 18px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between}
+.ph-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--tx2)}
+.ph-body{padding:18px}
+.sec-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--ac);margin-bottom:13px;padding-bottom:7px;border-bottom:1px solid var(--bdr)}
+
+/* FORM */
+.fg{margin-bottom:13px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px}
+label{display:block;font-size:11px;font-weight:600;color:var(--tx2);margin-bottom:5px}
+label .req{color:var(--r);margin-left:2px}
+label .hint{color:var(--tx3);font-weight:400}
+input[type=text],input[type=number],input[type=date],select,textarea{width:100%;background:var(--bg);border:1px solid var(--bdr);color:var(--tx);padding:7px 11px;font-family:var(--sans);font-size:13px;outline:none;transition:border-color .15s;appearance:none;border-radius:0}
+input[type=number]{font-family:var(--mono)}
+input:focus,select:focus,textarea:focus{border-color:var(--ac)}
+textarea{resize:vertical;min-height:66px}
+select{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236E7681'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:30px}
+.iu{position:relative}
+.iu input{padding-right:34px}
+.unit{position:absolute;right:11px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--tx3);font-family:var(--mono);pointer-events:none}
+.range-row{display:flex;align-items:center;gap:12px}
+.range-row input[type=range]{flex:1;accent-color:var(--ac)}
+.range-val{font-family:var(--mono);font-size:13px;color:var(--ac-bright);white-space:nowrap;min-width:76px}
+
+/* BUTTONS */
+.btn{padding:7px 14px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;border:1px solid transparent;transition:all .15s;border-radius:0}
+.btn-p{background:var(--ac);color:#fff;border-color:var(--ac)}
+.btn-p:hover{background:#6BA3FF}
+.btn-s{background:transparent;color:var(--tx2);border-color:var(--bdr)}
+.btn-s:hover{border-color:var(--bdr2);color:var(--tx)}
+.btn-d{background:transparent;color:var(--r);border-color:var(--r)}
+.btn-d:hover{background:var(--r-dim)}
+.btn-sm{padding:4px 10px;font-size:12px}
+
+/* CALC */
+.calc-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.calc-box{background:var(--bg);border:1px solid var(--bdr);padding:12px 14px}
+.calc-box .lbl{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--tx3);margin-bottom:4px}
+.calc-box .val{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--ac-bright)}
+.calc-box .sub{font-size:10px;color:var(--tx3);margin-top:2px;font-family:var(--mono)}
+
+/* CHECKLIST */
+.chk-item{display:flex;gap:11px;padding:11px 13px;background:var(--bg);border:1px solid var(--bdr);margin-bottom:7px}
+.chk-item input[type=checkbox]{width:15px;height:15px;flex-shrink:0;margin-top:3px;accent-color:var(--ac);cursor:pointer}
+.ci-label{font-size:13px;font-weight:600;margin-bottom:3px}
+.ci-desc{font-size:11px;color:var(--tx3);margin-bottom:6px}
+
+/* TAGS */
+.tag{display:inline-flex;align-items:center;gap:5px;background:var(--ac-dim);color:var(--ac-bright);border:1px solid var(--ac);padding:2px 9px;font-size:12px;font-family:var(--mono);margin:2px}
+.tag .x{cursor:pointer;opacity:.6;font-size:14px;line-height:1}
+.tag .x:hover{opacity:1}
+.add-row{display:flex;gap:8px;margin-top:8px}
+.add-row input{flex:1}
+
+/* ALERTS */
+.alert{padding:9px 13px;border-left:3px solid;font-size:12px;margin-bottom:10px;display:flex;gap:9px;align-items:flex-start;line-height:1.5}
+.alert .ai{flex-shrink:0;line-height:1.6}
+.alert.warn{background:var(--y-dim);border-color:var(--y);color:var(--y)}
+.alert.err{background:var(--r-dim);border-color:var(--r);color:var(--r)}
+.alert.info{background:var(--ac-dim);border-color:var(--ac);color:var(--ac-bright)}
+
+/* STATS */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--bdr);border:1px solid var(--bdr);margin-top:14px}
+.stat-cell{background:var(--bg);padding:13px 15px}
+.stat-cell .sl{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--tx3);margin-bottom:5px}
+.stat-cell .sv{font-family:var(--mono);font-size:20px;font-weight:700}
+.stat-cell .sc{font-family:var(--mono);font-size:10px;color:var(--tx3);margin-top:3px}
+.verdict{text-align:center;padding:22px;border:2px solid;margin-top:18px}
+.verdict.ship{border-color:var(--g);background:var(--g-dim)}
+.verdict.nope{border-color:var(--r);background:var(--r-dim)}
+.verdict.meh{border-color:var(--y);background:var(--y-dim)}
+.vi{font-size:30px;display:block;margin-bottom:6px}
+.vl{font-family:var(--mono);font-size:17px;font-weight:700;text-transform:uppercase;letter-spacing:2px}
+.vs{font-size:12px;margin-top:5px;opacity:.85}
+
+/* SIDEBAR */
+.sidebar{background:var(--bg2);border:1px solid var(--bdr);position:sticky;top:64px}
+.risk-bar-wrap{height:5px;background:var(--bg);border:1px solid var(--bdr);margin:8px 0 4px;overflow:hidden}
+.risk-fill{height:100%;transition:width .5s}
+.risk-fill.low{background:var(--g)}.risk-fill.med{background:var(--y)}.risk-fill.hi{background:var(--r)}
+.risk-row{display:flex;justify-content:space-between;font-size:10px;font-family:var(--mono)}
+.ic-row{display:flex;align-items:center;gap:9px;padding:7px 0;border-bottom:1px solid var(--bdr);font-size:12px}
+.ic-row:last-child{border-bottom:none}
+.ic-dot{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;font-weight:700}
+.ic-dot.pass{background:var(--g-dim);color:var(--g)}.ic-dot.fail{background:var(--r-dim);color:var(--r)}
+.ic-dot.warn{background:var(--y-dim);color:var(--y)}.ic-dot.na{background:var(--bg3);color:var(--tx3)}
+
+hr.div{border:none;border-top:1px solid var(--bdr);margin:14px 0}
+.hidden{display:none!important}
+
+/* ── THE MATH ── */
+details.math{background:var(--bg2);border:1px solid var(--bdr);margin:18px 0}
+details.math summary{cursor:pointer;padding:14px 18px;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ac);list-style:none;user-select:none}
+details.math summary::-webkit-details-marker{display:none}
+details.math summary::before{content:'▸ '}
+details.math[open] summary::before{content:'▾ '}
+details.math summary:hover{color:var(--tx)}
+.math-body{padding:0 22px 20px;font-size:12.5px;color:var(--tx2);line-height:1.8;max-width:820px}
+.math-body h4{font-size:12px;color:var(--tx);margin:18px 0 6px;font-family:var(--mono);letter-spacing:.3px}
+.math-body h4:first-child{margin-top:4px}
+.math-body p{margin-bottom:8px}
+.math-body code{font-family:var(--mono);font-size:11px;background:var(--bg);border:1px solid var(--bdr);padding:1px 5px;color:var(--ac)}
+.math-body .formula{font-family:var(--mono);font-size:11.5px;background:var(--bg);border:1px solid var(--bdr);padding:10px 14px;margin:8px 0;color:var(--tx);overflow-x:auto;line-height:1.8}
+
+@media(max-width:900px){.two-col{grid-template-columns:1fr}.row2,.row3,.calc-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <a href="index.html" style="font-family:var(--mono);font-size:11px;color:var(--tx3);text-decoration:none;padding:4px 10px;border:1px solid var(--bdr);margin-right:12px" onmouseover="this.style.color='var(--tx)';this.style.borderColor='var(--tx3)'" onmouseout="this.style.color='var(--tx3)';this.style.borderColor='var(--bdr)'">← Home</a>
+  <div class="hdr-brand">🧪 LOCKBOX <span class="dim">// A/B Testing Governance</span></div>
+  <div style="margin-left:auto;font-size:11px;color:var(--tx3)">02 — Experiment Governance</div>
+</header>
+
+<!-- HOME -->
+<div id="pgHome" class="page active">
+  <div class="home-hero">
+    <h1>LOCK<span class="hi">BOX</span></h1>
+    <p>Scientific discipline for A/B testing. Design your experiment upfront, enter results when ready, and get a rigorous verdict with every guardrail built in.</p>
+    <button class="btn btn-p" style="padding:11px 28px;font-size:14px" onclick="showNew()">+ New Experiment</button>
+  </div>
+
+  <!-- WHY THE LOCKBOX EXISTS -->
+  <div style="max-width:720px;margin:0 auto 40px;padding:0 24px">
+    <div style="background:var(--bg2);border:1px solid var(--bdr);padding:24px 28px">
+      <div style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ac);margin-bottom:14px">// why lock anything in a box?</div>
+      <p style="font-size:13px;color:var(--tx2);line-height:1.8;margin-bottom:14px">
+        The first rule of research is that <strong style="color:var(--tx)">the questions must be fixed before the answers arrive</strong>.
+        If you choose your success metric, your sample size, and your stopping point after seeing the data, <strong style="color:var(--tx)">you can make
+        almost any test look like a winner</strong>. Check enough metrics and one will be significant by luck. Peek at results daily and stop
+        on a good day. Slice by segment until something shines. None of that is fraud in the moment. <strong style="color:var(--tx)">It just quietly guarantees
+        that what you ship is noise.</strong>
+      </p>
+      <p style="font-size:13px;color:var(--tx2);line-height:1.8;margin-bottom:14px">
+        Science had this exact disease and found the cure: <strong style="color:var(--tx)">pre-registration</strong>. Since 2005,
+        medical journals refuse to publish clinical trials that didn't register their hypothesis and primary outcome before
+        collecting data. The effect was brutal. In one famous analysis of large heart-disease trials, <strong style="color:var(--tx)">57% reported positive
+        results before registration became mandatory. After it, 8%.</strong> The drugs didn't get worse. The researchers just lost
+        the ability to move the goalposts.
+      </p>
+      <p style="font-size:13px;color:var(--tx2);line-height:1.8;margin-bottom:18px">
+        The Lockbox does for your A/B tests what trial registration did for medicine. You write down the hypothesis, the primary
+        metric, the sample size, and the end date <em>before</em> the test runs. When the results come in, the tool checks you
+        against your own commitments: did you run the full duration, did you keep the metric, are you powered enough to
+        believe the answer. <strong style="color:var(--tx)">A win that survives the Lockbox is a win you can defend in any room.</strong>
+      </p>
+      <div style="border-left:3px solid var(--ac);padding:10px 16px;background:var(--bg);margin-bottom:10px">
+        <p style="font-size:13px;color:var(--tx);line-height:1.7;font-style:italic">"The first principle is that you must not fool yourself, and you are the easiest person to fool."</p>
+        <p style="font-family:var(--mono);font-size:10px;color:var(--tx3);margin-top:6px">RICHARD FEYNMAN — physicist, Nobel laureate</p>
+      </div>
+      <div style="border-left:3px solid var(--ac);padding:10px 16px;background:var(--bg)">
+        <p style="font-size:13px;color:var(--tx);line-height:1.7;font-style:italic">"To consult the statistician after an experiment is finished is often merely to ask him to conduct a post mortem examination. He can perhaps say what the experiment died of."</p>
+        <p style="font-family:var(--mono);font-size:10px;color:var(--tx3);margin-top:6px">RONALD FISHER — founder of modern experimental design</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="home-body">
+    <div class="list-hdr">
+      <h2>Experiments</h2>
+      <span id="expCount" style="font-family:var(--mono);font-size:11px;color:var(--tx3)"></span>
+    </div>
+    <div id="expList"></div>
+  </div>
+</div>
+
+<!-- EXPERIMENT PAGE -->
+<div id="pgExp" class="page">
+  <div class="exp-wrap">
+    <div class="back-row">
+      <button class="btn btn-s btn-sm" onclick="goHome()">← Back</button>
+      <div id="expActions"></div>
+    </div>
+    <div class="two-col">
+      <div id="expMain"></div>
+      <div id="expSidebar"></div>
+    </div>
+  </div>
+</div>
+
+<!-- THE MATH -->
+<div style="max-width:960px;margin:0 auto;padding:0 24px 40px">
+  <details class="math">
+    <summary>// the math — every calculation this tool runs, in full</summary>
+    <div class="math-body">
+      <h4>Required sample size — two-proportion normal approximation</h4>
+      <p>Given baseline rate p₁, target rate p₂ = p₁ + MDE (converted to absolute percentage points), significance α and power 1−β:</p>
+      <div class="formula">n per variant = ( z₁₋α/₂ · √(2·p̄(1−p̄)) + z₁₋β · √(p₁(1−p₁) + p₂(1−p₂)) )² / (p₂ − p₁)²</div>
+      <p>z values come from the inverse normal CDF (Beasley-Springer-Moro / Abramowitz &amp; Stegun approximation). Power is the probability of detecting the effect if it truly exists; α is the probability of a false alarm if it doesn't. If you enter MDE as a relative lift, it's converted first: <code>absolute pp = baseline × relative% / 100</code>.</p>
+
+      <h4>Duration estimate</h4>
+      <p>The smaller arm is the bottleneck, so with weekly traffic W and split share s of the smaller arm:</p>
+      <div class="formula">weeks = n / (W × s)&nbsp;&nbsp;·&nbsp;&nbsp;e.g. 50/50 split → s = 0.5</div>
+      <p>The "you can detect ≥X% in k weeks" table inverts the sample size formula by binary search: it finds the smallest MDE whose required n fits in the users you'd collect in k weeks.</p>
+
+      <h4>Results — two-proportion z-test</h4>
+      <p>With control (n₁, x₁) and variant (n₂, x₂), using the pooled rate p̂ = (x₁+x₂)/(n₁+n₂):</p>
+      <div class="formula">z = (p₂ − p₁) / √( p̂(1−p̂)(1/n₁ + 1/n₂) )&nbsp;&nbsp;·&nbsp;&nbsp;p-value = 2·(1 − Φ(|z|))</div>
+      <p>The 95% confidence interval on the difference uses the unpooled standard error: <code>diff ± 1.96·√(p₁(1−p₁)/n₁ + p₂(1−p₂)/n₂)</code>. The test is two-sided: it doesn't assume in advance which way the effect goes.</p>
+
+      <h4>Why peeking invalidates α</h4>
+      <p>α = 0.05 means: if there is no real effect, a <em>single</em> look at the final data has a 5% chance of a false positive. Each additional look is another draw. Checking daily over a multi-week test pushes the real false positive rate toward 20–30% while your dashboard still says "95% confidence". That's why the tool flags any result entered before the pre-committed end date — the stated α no longer describes the actual risk taken.</p>
+
+      <h4>Why underpowered wins are inflated</h4>
+      <p>If power is low, the noise is large relative to the true effect. The only samples that cross the significance threshold are the ones where noise pushed the measurement up. So conditional on winning, the estimate is biased upward — the winner's curse. This tool flags underpowered results; <a href="reality-check.html" style="color:var(--ac)">Reality Check</a> quantifies the correction.</p>
+    </div>
+  </details>
+</div>
+
+<script>
+// ── STATE ──────────────────────────────
+let exps = JSON.parse(localStorage.getItem('lb2_exps') || '[]');
+let cur = null;
+
+function save() { localStorage.setItem('lb2_exps', JSON.stringify(exps)); }
+
+function newExp() {
+  return {
+    id: Date.now().toString(), created: new Date().toISOString(),
+    name:'', hypothesis:'', primaryMetric:'Conversion Rate', customMetric:'',
+    baselineRate:'', guardrails:[''], mde:'', mdeType:'rel', weeklyTraffic:'', power:80, alpha:0.05,
+    startDate:'', endDate:'', traffic:50, segments:[], confounds:{},
+    externalValidity:{},
+    results:{ cn:'', cx:'', vn:'', vx:'', enteredAt:'' }
+  };
+}
+
+const METRICS = ['Conversion Rate','Revenue Per User','Retention D7','Retention D30',
+  'Session Length','Click-Through Rate','Bounce Rate','Average Order Value',
+  'Activation Rate','Feature Adoption Rate','Custom...'];
+
+const CONFOUNDS = [
+  {id:'seasonal', label:'Seasonal / calendar event', desc:'Holiday, sale, or major calendar event during the test window?'},
+  {id:'concurrent', label:'Concurrent experiment', desc:'Another experiment running on overlapping users?'},
+  {id:'product_change', label:'Recent product change', desc:'Major feature shipped recently that could interact with this test?'},
+  {id:'traffic_spike', label:'Anticipated traffic spike', desc:'Marketing campaign or press event expected during this window?'},
+  {id:'novelty', label:'Novelty effect risk', desc:'Could users be reacting to newness rather than genuine improvement?'},
+];
+
+// ── STATISTICS ─────────────────────────
+function normCDF(z) {
+  const a=[0.254829592,-0.284496736,1.421413741,-1.453152027,1.061405429], p=0.3275911;
+  const s=z<0?-1:1; z=Math.abs(z)/Math.SQRT2;
+  const t=1/(1+p*z);
+  const y=1-(((((a[4]*t+a[3])*t+a[2])*t+a[1])*t+a[0])*t)*Math.exp(-z*z);
+  return .5*(1+s*y);
+}
+function normInv(p) {
+  const c=[-7.784894002430293e-03,-3.223964580411365e-01,-2.400758277161838,
+    -2.549732539343734,4.374664141464968,2.938163982698783];
+  const d=[7.784695709041462e-03,3.224671290700398e-01,2.445134137142996,3.754408661907416];
+  const lo=0.02425,hi=1-lo; let q,r;
+  if(p<lo){q=Math.sqrt(-2*Math.log(p));return(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1)}
+  if(p<=hi){
+    const a2=[0,-3.969683028665376e1,2.209460984245205e2,-2.759285104469687e2,1.383577518672690e2,-3.066479806614716e1,2.506628277459239];
+    const b=[0,-5.447609879822406e1,1.615858368580409e2,-1.556989798598866e2,6.680131188771972e1,-1.328068155288572e1];
+    q=p-0.5;r=q*q;
+    return(((((a2[1]*r+a2[2])*r+a2[3])*r+a2[4])*r+a2[5])*r+a2[6])*q/(((((b[1]*r+b[2])*r+b[3])*r+b[4])*r+b[5])*r+1);
+  }
+  q=Math.sqrt(-2*Math.log(1-p));
+  return-(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5])/((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+}
+function sampleSize(base,mde,power,alpha) {
+  const p1=base/100, p2=p1+mde/100;
+  if(p2<=0||p2>=1||p1<=0||p1>=1) return null;
+  const za=normInv(1-alpha/2), zb=normInv(power/100);
+  return Math.ceil(Math.pow(za*Math.sqrt(2*p1*(1-p1))+zb*Math.sqrt(p1*(1-p1)+p2*(1-p2)),2)/Math.pow(p1-p2,2));
+}
+function zTest(n1,x1,n2,x2) {
+  const p1=x1/n1, p2=x2/n2, pp=(x1+x2)/(n1+n2);
+  const se=Math.sqrt(pp*(1-pp)*(1/n1+1/n2));
+  if(se===0) return null;
+  const z=(p2-p1)/se, pv=2*(1-normCDF(Math.abs(z)));
+  const sed=Math.sqrt(p1*(1-p1)/n1+p2*(1-p2)/n2), diff=p2-p1;
+  return {z, pv, diff, ci:[diff-1.96*sed,diff+1.96*sed], p1, p2};
+}
+
+const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+// ── NAVIGATION ─────────────────────────
+function setPage(id) { document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+function goHome() { cur=null; renderHome(); setPage('pgHome'); }
+function showNew() { cur=newExp(); renderExpPage(); setPage('pgExp'); }
+function openExp(id) { cur=exps.find(x=>x.id===id); if(!cur) return; renderExpPage(); setPage('pgExp'); }
+
+// ── HOME ───────────────────────────────
+function renderHome() {
+  const list=document.getElementById('expList');
+  document.getElementById('expCount').textContent=exps.length+' experiment'+(exps.length!==1?'s':'');
+  if(!exps.length){list.innerHTML='<div class="empty-state">No experiments yet.</div>';return;}
+  list.innerHTML=[...exps].reverse().map(x=>`
+    <div class="exp-card" onclick="openExp('${x.id}')">
+      <div><div class="cn">${esc(x.name)||'(Untitled)'}</div>
+      <div class="cm">${esc(x.primaryMetric==='Custom...'?x.customMetric:x.primaryMetric)||'No metric'} · ${new Date(x.created).toLocaleDateString()}</div></div>
+      <span style="color:var(--tx3);font-size:18px">›</span>
+    </div>`).join('');
+}
+
+// ── EXPERIMENT PAGE ─────────────────────
+function renderExpPage() {
+  document.getElementById('expActions').innerHTML = exps.find(x=>x.id===cur.id)
+    ? `<button class="btn btn-d btn-sm" onclick="deleteExp()">Delete</button>` : '';
+  document.getElementById('expMain').innerHTML = renderMain();
+  document.getElementById('expSidebar').innerHTML = renderSidebar();
+}
+
+// ── MAIN COLUMN ────────────────────────
+function renderMain() {
+  const x=cur;
+  const metricOpts=METRICS.map(m=>`<option value="${esc(m)}" ${x.primaryMetric===m?'selected':''}>${esc(m)}</option>`).join('');
+  const guardrailHTML=(x.guardrails.length?x.guardrails:[''])
+    .map((m,i)=>`<div style="display:flex;gap:8px;margin-bottom:8px">
+      <input type="text" value="${esc(m)}" placeholder="e.g. Support tickets, Load time, Error rate..." oninput="setGuardrail(${i},this.value)" style="flex:1">
+      <button class="btn btn-s btn-sm" onclick="removeGuardrail(${i})">×</button>
+    </div>`).join('');
+  const confoundsHTML=CONFOUNDS.map(c=>{
+    const st=x.confounds[c.id]||{};
+    return `<div class="chk-item">
+      <input type="checkbox" ${st.checked?'checked':''} onchange="setConf('${c.id}','checked',this.checked)">
+      <div style="flex:1"><div class="ci-label">${esc(c.label)}</div><div class="ci-desc">${esc(c.desc)}</div>
+      <textarea rows="2" placeholder="Notes (optional)..." oninput="setConf('${c.id}','note',this.value)">${esc(st.note||'')}</textarea></div>
+    </div>`;
+  }).join('');
+  const segsHTML=x.segments.length
+    ? x.segments.map((s,i)=>`<span class="tag">${esc(s)}<span class="x" onclick="removeSeg(${i})">×</span></span>`).join('')
+    : '<span style="color:var(--tx3);font-size:12px">None declared — aggregate analysis only</span>';
+  const r=x.results;
+  let timelineWarn='';
+  if(x.startDate&&x.endDate){
+    const days=Math.round((new Date(x.endDate)-new Date(x.startDate))/86400000);
+    if(days<=0) timelineWarn=`<div class="alert err" style="margin-top:12px"><span class="ai">🚨</span><span>End date is not after start date.</span></div>`;
+    else if(days<14) timelineWarn=`<div class="alert warn" style="margin-top:12px"><span class="ai">⚠</span><span><strong>${days} days is under two weeks.</strong> Weekday and weekend shoppers behave differently — one business cycle is not enough to average that out. Run at least 14 days, in whole weeks.</span></div>`;
+    else if(days%7!==0) timelineWarn=`<div class="alert warn" style="margin-top:12px"><span class="ai">⚠</span><span><strong>${days} days is not a whole number of weeks.</strong> Your sample will over-represent whichever weekdays occur ${Math.ceil(days/7)} times. End on the same weekday you started (${days-days%7} or ${days+7-days%7} days).</span></div>`;
+    else timelineWarn=`<div style="font-size:11px;color:var(--g);margin-top:10px;font-family:var(--mono)">✓ ${days} days = ${days/7} full weeks — day-of-week effects balanced.</div>`;
+  }
+  const peek=r.enteredAt&&r.enteredAt<x.endDate;
+  const peekWarn=peek?`<div class="alert err"><span class="ai">🚨</span><div><strong>EARLY STOPPING DETECTED</strong><br>
+    Results entered before pre-committed end date (${x.endDate}). Early stopping inflates false positive rates — your α of ${x.alpha} is no longer valid.</div></div>`:'';
+
+  return `
+  <!-- 01 IDENTITY -->
+  <div class="panel">
+    <div class="ph-hdr"><div class="ph-title">01 — Experiment Identity</div></div>
+    <div class="ph-body">
+      <div class="fg"><label>Experiment Name <span class="req">*</span></label>
+        <input type="text" value="${esc(x.name)}" oninput="setF('name',this.value)" placeholder="e.g. Homepage CTA Color Test">
+      </div>
+      <div class="fg"><label>Hypothesis <span class="hint">— what you expect and why</span></label>
+        <textarea oninput="setF('hypothesis',this.value)" placeholder="e.g. Changing the CTA from gray to blue will increase conversion by ≥5% because...">${esc(x.hypothesis)}</textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- 02 METRICS -->
+  <div class="panel">
+    <div class="ph-hdr"><div class="ph-title">02 — Metrics</div></div>
+    <div class="ph-body">
+      <div class="sec-title">Primary Decision Metric — one metric only</div>
+      <div class="row2">
+        <div class="fg"><label>Metric</label>
+          <select onchange="setF('primaryMetric',this.value);toggleCustom(this.value)">${metricOpts}</select>
+        </div>
+        <div class="fg" id="customGroup" style="${x.primaryMetric==='Custom...'?'':'display:none'}">
+          <label>Custom Metric Name</label>
+          <input type="text" value="${esc(x.customMetric)}" oninput="setF('customMetric',this.value)" placeholder="Name your metric">
+        </div>
+      </div>
+      <div class="fg" style="max-width:220px"><label>Baseline Rate (current %)</label>
+        <div class="iu"><input type="number" value="${esc(x.baselineRate)}" min="0.01" max="99.99" step="0.01" oninput="setF('baselineRate',this.value);calcSS()"><span class="unit">%</span></div>
+      </div>
+      <hr class="div">
+      <div class="sec-title">Guardrail Metrics — non-decision, regression tracking</div>
+      <div id="guardrailList">${guardrailHTML}</div>
+      <button class="btn btn-s btn-sm" onclick="addGuardrail()">+ Add Guardrail</button>
+    </div>
+  </div>
+
+  <!-- 03 STATISTICAL DESIGN -->
+  <div class="panel">
+    <div class="ph-hdr"><div class="ph-title">03 — Statistical Design</div></div>
+    <div class="ph-body">
+      <div class="row3">
+        <div class="fg"><label>Min. Detectable Effect</label>
+          <div style="display:flex;gap:8px">
+            <div class="iu" style="flex:1"><input type="number" value="${esc(x.mde)}" min="0.1" max="100" step="0.1" oninput="setF('mde',this.value);calcSS()"><span class="unit">%</span></div>
+            <select style="width:130px" onchange="setF('mdeType',this.value);calcSS()">
+              <option value="rel" ${(x.mdeType||'abs')==='rel'?'selected':''}>relative lift</option>
+              <option value="abs" ${(x.mdeType||'abs')==='abs'?'selected':''}>absolute pp</option>
+            </select>
+          </div>
+        </div>
+        <div class="fg"><label>Statistical Power</label>
+          <div class="iu"><input type="number" value="${esc(x.power)}" min="60" max="99" step="1" oninput="setF('power',this.value);calcSS()"><span class="unit">%</span></div>
+        </div>
+        <div class="fg"><label>Significance Threshold (α)</label>
+          <select onchange="setF('alpha',parseFloat(this.value));calcSS()">
+            <option value="0.10" ${x.alpha==0.1?'selected':''}>0.10 — 90% confidence</option>
+            <option value="0.05" ${x.alpha==0.05?'selected':''}>0.05 — 95% confidence</option>
+            <option value="0.01" ${x.alpha==0.01?'selected':''}>0.01 — 99% confidence</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg" style="max-width:320px"><label>Weekly traffic on test page <span class="hint">(visitors entering the test, all arms)</span></label>
+        <input type="number" value="${esc(x.weeklyTraffic||'')}" min="0" oninput="setF('weeklyTraffic',this.value);calcSS()" placeholder="e.g. 12000">
+      </div>
+      <div id="ssBox"></div>
+    </div>
+  </div>
+
+  <!-- 04 TIMELINE -->
+  <div class="panel">
+    <div class="ph-hdr"><div class="ph-title">04 — Timeline & Traffic</div></div>
+    <div class="ph-body">
+      <div class="row2">
+        <div class="fg"><label>Start Date</label>
+          <input type="date" value="${esc(x.startDate)}" onchange="setF('startDate',this.value);renderExpPage()">
+        </div>
+        <div class="fg"><label>End Date</label>
+          <input type="date" value="${esc(x.endDate)}" onchange="setF('endDate',this.value);renderExpPage()">
+        </div>
+      </div>
+      ${timelineWarn}
+      <div class="fg" style="max-width:320px"><label>Traffic Split — Control / Variant</label>
+        <div class="range-row">
+          <input type="range" min="10" max="90" step="5" value="${x.traffic}" oninput="setF('traffic',parseInt(this.value));document.getElementById('tVal').textContent=(100-parseInt(this.value))+'% / '+parseInt(this.value)+'%'">
+          <span class="range-val" id="tVal">${100-x.traffic}% / ${x.traffic}%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 05 SEGMENTS -->
+  <div class="panel">
+    <div class="ph-hdr"><div class="ph-title">05 — Pre-declared Segment Analyses</div></div>
+    <div class="ph-body">
+      <div class="alert warn"><span class="ai">⚠</span><span>Declare ALL subgroup analyses before running. Anything not listed here will be flagged as <strong>post-hoc exploratory</strong> and cannot be used as a decision criterion.</span></div>
+      <div id="segTags" style="margin-top:8px">${segsHTML}</div>
+      <div class="add-row">
+        <input type="text" id="segInput" placeholder="e.g. Mobile users, New users, US region..." onkeydown="if(event.key==='Enter')addSeg()">
+        <button class="btn btn-s btn-sm" onclick="addSeg()">+ Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 06 CONFOUNDS -->
+  <div class="panel">
+    <div class="ph-hdr"><div class="ph-title">06 — Confound Acknowledgment</div></div>
+    <div class="ph-body">
+      <p style="font-size:12px;color:var(--tx2);margin-bottom:14px">Check each item to confirm you've considered these threats to validity.</p>
+      ${confoundsHTML}
+    </div>
+  </div>
+
+  <!-- 07 RESULTS -->
+  <div class="panel">
+    <div class="ph-hdr"><div class="ph-title">07 — Results</div></div>
+    <div class="ph-body">
+      ${peekWarn}
+      <div class="sec-title">Primary Metric: ${esc(x.primaryMetric==='Custom...'?x.customMetric:x.primaryMetric)}</div>
+      <div class="row2" style="margin-bottom:14px">
+        <div>
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--tx3);font-weight:700;margin-bottom:10px">CONTROL</div>
+          <div class="fg"><label>Sample Size (n)</label><input type="number" value="${esc(r.cn)}" min="1" oninput="setR('cn',this.value);refreshStats()" placeholder="e.g. 5000"></div>
+          <div class="fg"><label>Conversions</label><input type="number" value="${esc(r.cx)}" min="0" oninput="setR('cx',this.value);refreshStats()" placeholder="e.g. 152"></div>
+        </div>
+        <div>
+          <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--tx3);font-weight:700;margin-bottom:10px">VARIANT</div>
+          <div class="fg"><label>Sample Size (n)</label><input type="number" value="${esc(r.vn)}" min="1" oninput="setR('vn',this.value);refreshStats()" placeholder="e.g. 5000"></div>
+          <div class="fg"><label>Conversions</label><input type="number" value="${esc(r.vx)}" min="0" oninput="setR('vx',this.value);refreshStats()" placeholder="e.g. 187"></div>
+        </div>
+      </div>
+      <div class="alert warn" style="font-size:11px;margin-bottom:14px"><span class="ai">⚠</span><span><strong>Sample size = visitors, not sessions or impressions.</strong> The denominator must match the unit your platform randomizes (almost always the visitor). Session-level numbers double-count returning users and fabricate confidence — if switching denominators "improves" your result, that's a red flag, not evidence.</span></div>
+      <div class="fg" style="max-width:200px"><label>Results Date</label>
+        <input type="date" value="${esc(r.enteredAt)}" onchange="setR('enteredAt',this.value);renderExpPage()">
+      </div>
+      <div id="statsOut">${renderStats()}</div>
+    </div>
+  </div>`;
+}
+
+// ── STATS ──────────────────────────────
+function renderStats() {
+  const x=cur, r=x.results;
+  const n1=parseInt(r.cn),x1=parseInt(r.cx),n2=parseInt(r.vn),x2=parseInt(r.vx);
+  if(!n1||!x1||!n2||!x2||isNaN(n1)||isNaN(x1)||isNaN(n2)||isNaN(x2))
+    return `<div style="padding:16px;text-align:center;color:var(--tx3);font-size:12px;border:1px dashed var(--bdr);margin-top:10px">Enter data above to see results.</div>`;
+  if(x1>n1||x2>n2) return `<div class="alert err"><span class="ai">✕</span>Conversions cannot exceed sample size.</div>`;
+  const res=zTest(n1,x1,n2,x2); if(!res) return '';
+  const {z,pv,diff,ci,p1,p2}=res;
+  const alpha=parseFloat(x.alpha);
+  const peek=r.enteredAt&&r.enteredAt<x.endDate;
+  let vc='meh',vi='⚠️',vl='INCONCLUSIVE',vs=`p = ${pv.toFixed(4)} ≥ α = ${alpha}. Insufficient evidence.`;
+  if(peek){vc='meh';vi='🚫';vl='EARLY STOP — INVALID';vs='Results gathered before pre-committed end date.';}
+  else if(pv<alpha){
+    if(diff>0){vc='ship';vi='✅';vl='SHIP IT';vs=`p = ${pv.toFixed(4)} < α = ${alpha}. Significant positive effect.`;}
+    else{vc='nope';vi='❌';vl="DON'T SHIP";vs=`p = ${pv.toFixed(4)} < α = ${alpha}. Significant negative effect detected.`;}
+  }
+  const pc=pv<alpha?'var(--g)':pv<0.1?'var(--y)':'var(--r)';
+  const dc=diff>=0?'var(--g)':'var(--r)';
+  const nReq=sampleSize(parseFloat(x.baselineRate),parseFloat(x.mde),parseFloat(x.power),alpha);
+  const underPow=nReq&&(n1<nReq||n2<nReq)?`<div class="alert warn"><span class="ai">⚠</span>Sample below pre-committed target of ${nReq.toLocaleString()} per group. Test may be underpowered.</div>`:'';
+  return `${underPow}
+  <div class="stat-grid">
+    <div class="stat-cell"><div class="sl">Control Rate</div><div class="sv" style="color:var(--tx2)">${(p1*100).toFixed(3)}%</div><div class="sc">${x1.toLocaleString()} / ${n1.toLocaleString()}</div></div>
+    <div class="stat-cell"><div class="sl">Variant Rate</div><div class="sv" style="color:var(--ac-bright)">${(p2*100).toFixed(3)}%</div><div class="sc">${x2.toLocaleString()} / ${n2.toLocaleString()}</div></div>
+    <div class="stat-cell"><div class="sl">Observed Lift</div><div class="sv" style="color:${dc}">${diff>=0?'+':''}${(diff*100).toFixed(3)}%</div><div class="sc">95% CI: [${(ci[0]*100).toFixed(3)}%, ${(ci[1]*100).toFixed(3)}%]</div></div>
+    <div class="stat-cell"><div class="sl">P-value (two-sided)</div><div class="sv" style="color:${pc}">${pv<0.0001?'< 0.0001':pv.toFixed(4)}</div><div class="sc">z = ${z.toFixed(3)}</div></div>
+  </div>
+  <div class="verdict ${vc}"><span class="vi">${vi}</span><div class="vl">${vl}</div><div class="vs">${vs}</div></div>`;
+}
+
+function refreshStats() {
+  const el=document.getElementById('statsOut');
+  if(el) el.innerHTML=renderStats();
+}
+
+// ── SIDEBAR ────────────────────────────
+function renderSidebar() {
+  const x=cur, r=x.results;
+  let risk=0;
+  CONFOUNDS.forEach(c=>{
+    const st=x.confounds[c.id]||{};
+    if(st.note&&st.note.trim()){
+      if(c.id==='concurrent') risk+=30;
+      else if(c.id==='seasonal'||c.id==='product_change') risk+=20;
+      else if(c.id==='novelty') risk+=15;
+      else risk+=10;
+    }
+  });
+  risk=Math.min(risk,100);
+  const rl=risk<20?'low':risk<50?'med':'hi';
+  const rc=rl==='low'?'var(--g)':rl==='med'?'var(--y)':'var(--r)';
+  const rt=rl==='low'?'LOW RISK':rl==='med'?'MEDIUM RISK':'HIGH RISK';
+  const peek=r.enteredAt&&r.enteredAt<x.endDate;
+  const checks=[
+    {l:'Results within window',s:r.enteredAt?(peek?'fail':'pass'):'na'},
+    {l:'Confounds acknowledged',s:CONFOUNDS.every(c=>x.confounds[c.id]?.checked)?'pass':'warn'},
+    {l:'Primary metric selected',s:x.primaryMetric?'pass':'warn'},
+    {l:'Dates set',s:(x.startDate&&x.endDate)?'pass':'warn'},
+    {l:'Baseline rate set',s:x.baselineRate?'pass':'warn'},
+  ];
+  const gcount=x.guardrails.filter(g=>g.trim()).length;
+  const mcWarn=gcount>3?`<div class="alert warn" style="font-size:11px;margin-top:10px"><span class="ai">⚠</span><div><strong>Multiple Comparisons</strong><br>${gcount} guardrail metrics tracked. Consider Bonferroni: αᵢ = ${(parseFloat(x.alpha)/gcount).toFixed(4)} per metric.</div></div>`:'';
+  const confNotes=CONFOUNDS.filter(c=>x.confounds[c.id]?.note?.trim()).map(c=>`
+    <div style="padding:7px 0;border-bottom:1px solid var(--bdr);font-size:11px">
+      <div style="color:var(--y);font-weight:600;margin-bottom:2px">${esc(c.label)}</div>
+      <div style="color:var(--tx2)">${esc(x.confounds[c.id].note)}</div>
+    </div>`).join('');
+  const ev=x.externalValidity||{};
+
+  return `<div class="sidebar">
+    <div class="ph-hdr"><div class="ph-title">⚡ Causal Integrity</div></div>
+    <div class="ph-body" style="padding:14px">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--tx3);font-weight:700;margin-bottom:6px">Confound Risk</div>
+      <div class="risk-bar-wrap"><div class="risk-fill ${rl}" style="width:${risk}%"></div></div>
+      <div class="risk-row"><span style="color:${rc}">${rt}</span><span style="color:var(--tx3)">${risk}/100</span></div>
+      ${confNotes?`<div style="margin-top:8px;margin-bottom:4px">${confNotes}</div>`:'<div style="font-size:11px;color:var(--tx3);margin:8px 0">No confounds noted.</div>'}
+      <hr class="div">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--tx3);font-weight:700;margin-bottom:10px">Checks</div>
+      ${checks.map(c=>`<div class="ic-row">
+        <div class="ic-dot ${c.s}">${c.s==='pass'?'✓':c.s==='fail'?'✕':c.s==='warn'?'!':'–'}</div>
+        <span style="color:${c.s==='fail'?'var(--r)':c.s==='warn'?'var(--y)':c.s==='pass'?'var(--tx)':'var(--tx3)'}">${c.l}</span>
+      </div>`).join('')}
+      ${mcWarn}
+      <hr class="div">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--tx3);font-weight:700;margin-bottom:10px">External Validity</div>
+      <div class="fg"><label style="font-size:11px">Test population vs. full audience?</label>
+        <select onchange="setEV('representative',this.value);renderSidebarOnly()" style="font-size:12px;padding:6px 10px">
+          <option value="">— Select —</option>
+          <option value="yes" ${ev.representative==='yes'?'selected':''}>Representative sample</option>
+          <option value="partial" ${ev.representative==='partial'?'selected':''}>Partially representative</option>
+          <option value="no" ${ev.representative==='no'?'selected':''}>Limited population</option>
+        </select>
+      </div>
+      ${ev.representative==='no'?`<div class="alert warn" style="font-size:11px"><span class="ai">⚠</span>Results may not generalize to all users.</div>`:''}
+      <div class="fg"><label style="font-size:11px">Known selection bias?</label>
+        <textarea rows="2" style="font-size:12px" placeholder="Describe concerns..." oninput="setEV('bias',this.value)">${esc(ev.bias||'')}</textarea>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderSidebarOnly() {
+  const el=document.getElementById('expSidebar');
+  if(el) el.innerHTML=renderSidebar();
+}
+
+// ── SETTERS ────────────────────────────
+function setF(k,v) {
+  cur[k]=v;
+  const idx=exps.findIndex(x=>x.id===cur.id);
+  if(idx>=0){exps[idx]=cur;save();}
+  // Re-render sidebar for live integrity checks
+  renderSidebarOnly();
+}
+function setR(k,v) {
+  cur.results[k]=v;
+  const idx=exps.findIndex(x=>x.id===cur.id);
+  if(idx>=0){exps[idx]=cur;save();}
+}
+function setConf(id,k,v) {
+  if(!cur.confounds[id]) cur.confounds[id]={};
+  cur.confounds[id][k]=v; setF('confounds',cur.confounds);
+}
+function setEV(k,v) {
+  if(!cur.externalValidity) cur.externalValidity={};
+  cur.externalValidity[k]=v; setF('externalValidity',cur.externalValidity);
+}
+function setGuardrail(i,v){cur.guardrails[i]=v;setF('guardrails',cur.guardrails);}
+function addGuardrail(){cur.guardrails.push('');renderExpPage();}
+function removeGuardrail(i){cur.guardrails.splice(i,1);if(!cur.guardrails.length)cur.guardrails=[''];renderExpPage();}
+function addSeg(){const inp=document.getElementById('segInput');if(!inp||!inp.value.trim())return;cur.segments.push(inp.value.trim());renderExpPage();}
+function removeSeg(i){cur.segments.splice(i,1);renderExpPage();}
+function toggleCustom(v){const g=document.getElementById('customGroup');if(g)g.style.display=v==='Custom...'?'':'none';}
+function detectableMDE(base,nAvail,power,alpha){
+  // smallest absolute-pp effect detectable with nAvail users per (smaller) arm
+  let lo=0.005, hi=Math.min(50,99-base);
+  const reqHi=sampleSize(base,hi,power,alpha);
+  if(!reqHi||reqHi>nAvail) return null;
+  for(let i=0;i<50;i++){
+    const mid=(lo+hi)/2;
+    const req=sampleSize(base,mid,power,alpha);
+    if(!req||req>nAvail) lo=mid; else hi=mid;
+  }
+  return hi;
+}
+function calcSS(){
+  const box=document.getElementById('ssBox');if(!box)return;
+  const base=parseFloat(cur.baselineRate),mdeIn=parseFloat(cur.mde);
+  if(!base||!mdeIn){box.innerHTML=`<div style="padding:10px;background:var(--bg);border:1px dashed var(--bdr);text-align:center;color:var(--tx3);font-size:12px;margin-top:10px">Enter baseline rate and MDE to calculate required sample size.</div>`;return;}
+  const isRel=(cur.mdeType||'abs')==='rel';
+  const absMde=isRel?base*mdeIn/100:mdeIn;
+  const relMde=absMde/base*100;
+  const n=sampleSize(base,absMde,parseFloat(cur.power),parseFloat(cur.alpha));
+  if(!n){box.innerHTML='';return;}
+
+  const translate=isRel
+    ? `Detecting a <span style="color:var(--tx)">${mdeIn}% relative lift</span> = ${base}% → <span style="color:var(--tx)">${(base+absMde).toFixed(2)}%</span> conversion.`
+    : `Detecting <span style="color:var(--tx)">${mdeIn}pp absolute</span> = ${base}% → <span style="color:var(--tx)">${(base+absMde).toFixed(2)}%</span> conversion (a <span style="color:var(--tx)">${relMde.toFixed(0)}% relative</span> lift${relMde>50?' — that is a huge effect; are you sure you meant absolute?':''}).`;
+
+  // ── duration ──
+  const weekly=parseFloat(cur.weeklyTraffic);
+  let durHTML='';
+  if(weekly>0){
+    const minShare=Math.min(cur.traffic,100-cur.traffic)/100;
+    const weeks=n/(weekly*minShare);
+    const wkColor=weeks<=4?'var(--g)':weeks<=8?'var(--y)':'var(--r)';
+    durHTML=`<div class="calc-box" style="border-color:${wkColor}"><div class="lbl" style="color:${wkColor}">Duration</div><div class="val" style="color:${wkColor}">${weeks<1?'<1':weeks.toFixed(1)}</div><div class="sub">weeks at your traffic</div></div>`;
+
+    if(weeks>8){
+      const power=parseFloat(cur.power),alpha=parseFloat(cur.alpha);
+      const rows=[4,6,8].map(wk=>{
+        const d=detectableMDE(base,weekly*minShare*wk,power,alpha);
+        return d?`<tr><td style="padding:4px 10px;font-family:var(--mono);color:var(--tx2)">${wk} weeks</td><td style="padding:4px 10px;font-family:var(--mono);color:var(--tx)">≥ ${(d/base*100).toFixed(1)}% relative</td><td style="padding:4px 10px;font-family:var(--mono);color:var(--tx3)">${base}% → ${(base+d).toFixed(2)}%</td></tr>`:'';
+      }).join('');
+      durHTML+=`</div><div class="alert warn" style="margin-top:12px"><span class="ai">⚠</span><div>
+        <strong>This test needs ${Math.ceil(weeks)} weeks at your traffic — most teams should not run it as designed.</strong><br>
+        <span style="font-size:11px;line-height:1.7">Long tests rot: cookies churn, campaigns overlap, seasonality drifts in. Your realistic options:</span>
+        <table style="margin:8px 0;border-collapse:collapse;font-size:11px"><tr><th style="text-align:left;padding:4px 10px;color:var(--tx3);font-size:10px;text-transform:uppercase">If you run</th><th style="text-align:left;padding:4px 10px;color:var(--tx3);font-size:10px;text-transform:uppercase">You can detect</th><th style="text-align:left;padding:4px 10px;color:var(--tx3);font-size:10px;text-transform:uppercase">Meaning</th></tr>${rows}</table>
+        <span style="font-size:11px;line-height:1.7">So either <strong>test a bigger swing</strong> (bold changes that could plausibly hit the detectable lift), <strong>move to a higher-traffic page</strong>, or accept the honest conclusion: <strong>this page cannot support this test</strong>. Running it anyway and "seeing what happens" produces exactly the inflated false winners Reality Check exists to catch.</span>
+      </div><div style="display:none">`;
+    }
+  } else {
+    durHTML=`<div class="calc-box" style="border-style:dashed"><div class="lbl">Duration</div><div class="val" style="color:var(--tx3);font-size:14px;padding-top:6px">enter traffic</div><div class="sub">weekly visitors above</div></div>`;
+  }
+
+  box.innerHTML=`<div class="calc-row">
+    <div class="calc-box"><div class="lbl">Per Variant</div><div class="val">${n.toLocaleString()}</div><div class="sub">users needed</div></div>
+    <div class="calc-box"><div class="lbl">Total Sample</div><div class="val">${(n*2).toLocaleString()}</div><div class="sub">both groups</div></div>
+    <div class="calc-box"><div class="lbl">Target Rate</div><div class="val">${(base+absMde).toFixed(2)}%</div><div class="sub">if H₁ is true</div></div>
+    ${durHTML}
+  </div>
+  <div style="font-size:11px;color:var(--tx3);margin-top:8px;line-height:1.6">${translate}</div>`;
+}
+function deleteExp(){if(!cur||!confirm(`Delete "${cur.name||'Untitled'}"?`))return;exps=exps.filter(x=>x.id!==cur.id);save();goHome();}
+
+// ── BOOT ───────────────────────────────
+renderHome();
+
+// Auto-save new experiment on first field input
+const origSetF=setF;
+window.setF=function(k,v){
+  if(!exps.find(x=>x.id===cur.id)){exps.push(cur);save();}
+  cur[k]=v;
+  const idx=exps.findIndex(x=>x.id===cur.id);
+  if(idx>=0){exps[idx]=cur;save();}
+  renderSidebarOnly();
+};
+</script>
+</body>
+</html>

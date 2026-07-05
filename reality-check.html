@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reality Check — Zijlstra Testing Stack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0D1117;--bg2:#161B22;--bg3:#1C2128;
+    --bdr:#30363D;
+    --tx:#E6EDF3;--tx2:#A0AAB6;--tx3:#7D8590;
+    --ac:#4F8EF7;--ac2:#1F6FEB;
+    --g:#3FB950;--r:#F85149;--y:#D29922;--o:#F0883E;--p:#BC8CFF;
+    --mono:'JetBrains Mono',monospace;
+    --sans:'Inter',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{min-height:100vh;background:var(--bg);color:var(--tx);font-family:var(--sans);font-size:14px}
+
+  .hdr{background:var(--bg2);border-bottom:1px solid var(--bdr);padding:0 24px;height:52px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100}
+  .hdr-back{font-family:var(--mono);font-size:11px;color:var(--tx3);text-decoration:none;padding:4px 10px;border:1px solid var(--bdr)}
+  .hdr-back:hover{color:var(--tx);border-color:var(--tx3)}
+  .hdr-title{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--tx)}
+  .hdr-tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.5px;padding:4px 8px;border:1px solid var(--o);color:var(--o)}
+  .hdr-right{margin-left:auto;font-size:11px;color:var(--tx3)}
+
+  .wrap{max-width:1200px;margin:0 auto;padding:24px}
+  .layout{display:grid;grid-template-columns:1fr 300px;gap:20px}
+  .main>*+*{margin-top:18px}
+
+  .panel{background:var(--bg2);border:1px solid var(--bdr)}
+  .ph{padding:12px 16px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between}
+  .ph-title{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--tx2)}
+  .ph-body{padding:16px}
+
+  label{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--tx3);margin-bottom:5px}
+  input[type=text]{
+    width:100%;background:var(--bg);border:1px solid var(--bdr);color:var(--tx);
+    padding:8px 10px;font-family:var(--mono);font-size:13px;outline:none;
+  }
+  input:focus{border-color:var(--ac)}
+  select{width:100%;background:var(--bg);border:1px solid var(--bdr);color:var(--tx);padding:8px 10px;font-family:var(--mono);font-size:12px;outline:none}
+  .fg{margin-bottom:14px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .hint{font-size:10px;font-weight:400;text-transform:none;letter-spacing:0;color:var(--tx3)}
+
+  .variant-box{border:1px solid var(--bdr);padding:14px}
+  .vb-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+  .live-rate{font-size:11px;color:var(--tx3);margin-top:6px;font-family:var(--mono);min-height:15px}
+
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:14px}
+  .stat-card{background:var(--bg);border:1px solid var(--bdr);padding:14px}
+  .stat-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--tx3);margin-bottom:4px}
+  .stat-val{font-family:var(--mono);font-size:22px;font-weight:700}
+  .stat-sub{font-size:11px;color:var(--tx3);margin-top:3px}
+
+  .alert{display:flex;gap:8px;padding:10px 12px;font-size:12px;line-height:1.6;margin-bottom:8px;border:1px solid}
+  .alert.ok{border-color:rgba(63,185,80,.3);background:rgba(63,185,80,.06);color:var(--tx2)}
+  .alert.warn{border-color:rgba(210,153,34,.3);background:rgba(210,153,34,.06);color:var(--tx2)}
+  .alert.err{border-color:rgba(248,81,73,.3);background:rgba(248,81,73,.06);color:var(--tx2)}
+  .alert.info{border-color:rgba(79,142,247,.3);background:rgba(79,142,247,.06);color:var(--tx2)}
+  .ai{flex-shrink:0}
+  .alert strong{color:var(--tx)}
+
+  /* shrinkage viz */
+  .shrink-viz{background:var(--bg);border:1px solid var(--bdr);padding:16px;margin-bottom:14px}
+  #shrinkSvg{width:100%;display:block}
+
+  /* sidebar */
+  .sidebar{position:sticky;top:72px;align-self:start}
+  .sidebar>*+*{margin-top:14px}
+  .verdict-box{padding:20px 16px;text-align:center}
+  .verdict-title{font-family:var(--mono);font-size:20px;font-weight:700;margin-bottom:8px}
+  .verdict-desc{font-size:12px;color:var(--tx2);line-height:1.6}
+
+  /* explainer */
+  .explainer{max-width:820px;margin:48px auto 24px;padding:0 24px}
+  .exp-title{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--o);margin-bottom:8px}
+  .exp-h1{font-size:26px;font-weight:700;margin-bottom:24px;letter-spacing:-.5px}
+  .exp-body{font-size:14px;color:var(--tx2);line-height:1.85}
+  .exp-body p{margin-bottom:18px}
+  .exp-body strong{color:var(--tx)}
+  .exp-body h3{font-size:16px;color:var(--tx);margin:32px 0 12px;font-weight:700}
+  .exp-body .formula{font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--bdr);padding:12px 16px;margin:16px 0;color:var(--ac);overflow-x:auto}
+  .vs-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+  .vs-col{background:var(--bg2);border:1px solid var(--bdr);padding:18px}
+  .vs-col h4{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
+  .vs-col ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .vs-col li{font-size:12px;color:var(--tx2);line-height:1.6;padding-left:14px;position:relative}
+  .vs-col li::before{content:'—';position:absolute;left:0;color:var(--tx3)}
+  .callout{border-left:3px solid var(--o);background:var(--bg2);padding:14px 18px;margin:20px 0;font-size:13px;color:var(--tx2);line-height:1.7}
+  .callout strong{color:var(--o)}
+
+  /* ── THE MATH ── */
+  details.math{background:var(--bg2);border:1px solid var(--bdr);margin:18px 0}
+  details.math summary{cursor:pointer;padding:14px 18px;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--o);list-style:none;user-select:none}
+  details.math summary::-webkit-details-marker{display:none}
+  details.math summary::before{content:'▸ '}
+  details.math[open] summary::before{content:'▾ '}
+  details.math summary:hover{color:var(--tx)}
+  .math-body{padding:0 22px 20px;font-size:12.5px;color:var(--tx2);line-height:1.8;max-width:820px}
+  .math-body h4{font-size:12px;color:var(--tx);margin:18px 0 6px;font-family:var(--mono);letter-spacing:.3px}
+  .math-body h4:first-child{margin-top:4px}
+  .math-body p{margin-bottom:8px}
+  .math-body code{font-family:var(--mono);font-size:11px;background:var(--bg);border:1px solid var(--bdr);padding:1px 5px;color:var(--o)}
+  .math-body .formula{font-family:var(--mono);font-size:11.5px;background:var(--bg);border:1px solid var(--bdr);padding:10px 14px;margin:8px 0;color:var(--tx);overflow-x:auto;line-height:1.8}
+
+  @media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{position:static}.vs-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <a class="hdr-back" href="index.html">← Home</a>
+  <div class="hdr-title">Reality Check</div>
+  <div class="hdr-tag">RCK</div>
+  <div class="hdr-right">04 — Winner's Curse & Bayesian Analysis</div>
+</header>
+
+<div class="wrap">
+  <div style="margin-bottom:20px">
+    <h1 style="font-size:22px;font-weight:700;margin-bottom:14px">Reality Check</h1>
+    <div style="background:var(--bg2);border:1px solid var(--bdr);padding:24px 28px;margin-bottom:4px">
+      <div style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--o);margin-bottom:14px">// why deflate a winner?</div>
+      <p style="font-size:13px;color:var(--tx2);line-height:1.8;margin-bottom:14px">
+        You ran a test and it won. Here is the uncomfortable math: in an underpowered test, real effects are usually too small
+        for the noise to let them reach significance. <strong style="color:var(--tx)">The only way a modest true effect passes a noisy test
+        is by getting a lucky bounce that makes it look bigger than it is.</strong> So the tests that "win" are precisely the ones whose
+        measured lift is inflated. Statisticians call it the winner's curse, and it punishes small samples hardest.
+      </p>
+      <p style="font-size:13px;color:var(--tx2);line-height:1.8;margin-bottom:14px">
+        Science measured this on itself. In 2015, the Open Science Collaboration reran 100 psychology studies that had
+        already passed peer review. <strong style="color:var(--tx)">On the second run, the average effect was roughly half the published
+        size.</strong> The originals weren't fabricated. They were selected: journals printed the lucky bounces. Every time you announce
+        the observed lift of a barely-significant test, you are running the same selection process on your own company.
+      </p>
+      <p style="font-size:13px;color:var(--tx2);line-height:1.8;margin-bottom:18px">
+        Reality Check deflates your observed lift with Bayesian shrinkage, shows the probability your variant is better at all,
+        and turns the honest estimate into an honest revenue projection. <strong style="color:var(--tx)">The first number you announce becomes
+        the anchor. Make sure it's one reality can live up to.</strong>
+      </p>
+      <div style="border-left:3px solid var(--o);padding:10px 16px;background:var(--bg)">
+        <p style="font-size:13px;color:var(--tx);line-height:1.7;font-style:italic">"Extraordinary claims require extraordinary evidence."</p>
+        <p style="font-family:var(--mono);font-size:10px;color:var(--tx3);margin-top:6px">CARL SAGAN — astronomer and science communicator</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="main">
+
+      <!-- 01 INPUT -->
+      <div class="panel">
+        <div class="ph"><div class="ph-title">01 — Your "Winning" Result</div></div>
+        <div class="ph-body">
+          <div class="row2" style="margin-bottom:14px">
+            <div class="variant-box">
+              <div class="vb-title" style="color:var(--ac)">▲ Control (A)</div>
+              <div class="row2">
+                <div class="fg" style="margin-bottom:0">
+                  <label>Visitors</label>
+                  <input type="text" inputmode="numeric" id="nA" placeholder="e.g. 4800" oninput="this.value=this.value.replace(/[^0-9]/g,'');compute()">
+                </div>
+                <div class="fg" style="margin-bottom:0">
+                  <label>Conversions</label>
+                  <input type="text" inputmode="numeric" id="cA" placeholder="e.g. 96" oninput="this.value=this.value.replace(/[^0-9]/g,'');compute()">
+                </div>
+              </div>
+              <div class="live-rate" id="rateA"></div>
+            </div>
+            <div class="variant-box">
+              <div class="vb-title" style="color:var(--g)">▲ Variant (B)</div>
+              <div class="row2">
+                <div class="fg" style="margin-bottom:0">
+                  <label>Visitors</label>
+                  <input type="text" inputmode="numeric" id="nB" placeholder="e.g. 4750" oninput="this.value=this.value.replace(/[^0-9]/g,'');compute()">
+                </div>
+                <div class="fg" style="margin-bottom:0">
+                  <label>Conversions</label>
+                  <input type="text" inputmode="numeric" id="cB" placeholder="e.g. 122" oninput="this.value=this.value.replace(/[^0-9]/g,'');compute()">
+                </div>
+              </div>
+              <div class="live-rate" id="rateB"></div>
+            </div>
+          </div>
+          <div class="row2">
+            <div class="fg" style="margin-bottom:0">
+              <label>How sceptical should the prior be? <span class="hint">(what lift is realistic before seeing data)</span></label>
+              <select id="prior" onchange="compute()">
+                <option value="tight">Sceptical — most ecom tests move nothing (±2.5% rel.)</option>
+                <option value="medium" selected>Realistic — typical CRO programme (±5% rel.)</option>
+                <option value="wide">Optimistic — big swing / radical change (±10% rel.)</option>
+              </select>
+            </div>
+            <div class="fg" style="margin-bottom:0">
+              <label>Monthly revenue <span class="hint">(optional — for the honest projection)</span></label>
+              <input type="text" inputmode="numeric" id="monthlyRev" placeholder="e.g. 250000" oninput="this.value=this.value.replace(/[^0-9]/g,'');compute()">
+            </div>
+          </div>
+          <div class="alert warn" style="margin-top:14px;margin-bottom:0"><span class="ai">⚠</span><span><strong>Use visitors, not sessions or impressions.</strong> Your denominator must match the unit your platform randomizes — almost always the visitor. Session-level numbers with a standard test double-count returning users, understate the variance, and fabricate confidence. If switching the denominator "improves" your result, that's not extra evidence — it's the winner's curse with a different coat on.</span></div>
+        </div>
+      </div>
+
+      <!-- 02 SHRINKAGE -->
+      <div class="panel">
+        <div class="ph"><div class="ph-title">02 — The Deflation</div></div>
+        <div class="ph-body" id="shrinkBody">
+          <div style="color:var(--tx3);font-size:12px">Enter your test numbers above.</div>
+        </div>
+      </div>
+
+      <!-- 03 BAYES -->
+      <div class="panel">
+        <div class="ph"><div class="ph-title">03 — Bayesian Read</div></div>
+        <div class="ph-body" id="bayesBody">
+          <div style="color:var(--tx3);font-size:12px">Enter your test numbers above.</div>
+        </div>
+      </div>
+
+      <!-- 04 REVENUE -->
+      <div class="panel">
+        <div class="ph"><div class="ph-title">04 — Honest Revenue Projection</div></div>
+        <div class="ph-body" id="revBody">
+          <div style="color:var(--tx3);font-size:12px">Enter monthly revenue above to see the naive vs honest projection.</div>
+        </div>
+      </div>
+
+    </div><!-- /main -->
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="panel">
+        <div class="ph"><div class="ph-title">Verdict</div></div>
+        <div class="verdict-box">
+          <div class="verdict-title" id="verdictTitle" style="color:var(--tx3)">—</div>
+          <div class="verdict-desc" id="verdictDesc">Waiting for data.</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ph"><div class="ph-title">Key Numbers</div></div>
+        <div class="ph-body" id="keyNums">
+          <div style="color:var(--tx3);font-size:12px">—</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ph"><div class="ph-title">What is shrinkage?</div></div>
+        <div class="ph-body">
+          <p style="font-size:11px;color:var(--tx2);line-height:1.7">
+            When a test is underpowered, only <em>inflated</em> effects reach significance — real-but-modest effects get filtered out by noise.
+            Shrinkage corrects this by combining your observed result with a realistic prior about how big ecom effects usually are.
+            The smaller your sample, the more the estimate gets pulled toward reality. This is standard practice in
+            academic meta-analysis and at companies like Netflix, Airbnb and Booking — and almost unheard of in ecom.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- THE MATH -->
+<div style="max-width:1200px;margin:0 auto;padding:0 24px">
+  <details class="math">
+    <summary>// the math — every calculation this tool runs, in full</summary>
+    <div class="math-body">
+      <h4>Observed effect and its uncertainty</h4>
+      <p>From your four inputs: p_A = c_A/n_A, p_B = c_B/n_B, observed absolute difference d = p_B − p_A. Its standard error:</p>
+      <div class="formula">SE = √( p_A(1−p_A)/n_A + p_B(1−p_B)/n_B )</div>
+      <p>SE is the size of a typical random fluctuation in d. When SE is large relative to d, the data alone can't pin the effect down — that's where the prior starts to matter.</p>
+
+      <h4>The sceptical prior</h4>
+      <p>The prior encodes "before seeing this test, what lifts are plausible?" as a normal distribution centred on zero effect:</p>
+      <div class="formula">prior: N( 0, τ² )&nbsp;&nbsp;·&nbsp;&nbsp;τ = prior% × p_A&nbsp;&nbsp;(sceptical 2.5% · realistic 5% · optimistic 10%)</div>
+      <p>Centred on zero because most ecom tests move nothing; the width says how surprised you'd be by a big true effect. This must be chosen before looking at results — choosing the prior that flatters your result is p-hacking with extra steps.</p>
+
+      <h4>Bayesian shrinkage — the posterior</h4>
+      <p>With a normal prior and (approximately) normal data, the posterior has a closed form: a precision-weighted average of prior and data. Precision = 1/variance.</p>
+      <div class="formula">σ²_post = 1 / ( 1/τ² + 1/SE² )&nbsp;&nbsp;·&nbsp;&nbsp;μ_post = σ²_post · ( d / SE² )</div>
+      <p>Read it as a tug-of-war: when your sample is large, SE is tiny, the data term dominates, and μ_post ≈ d (barely any deflation). When the sample is small, the prior pulls the estimate toward zero. The "inflation shaved off" figure is <code>1 − μ_post/d</code>. This is the same mechanism used in empirical-Bayes estimation at large experimentation platforms.</p>
+
+      <h4>P(B beats A) and the credible interval</h4>
+      <div class="formula">P(B &gt; A) = Φ( μ_post / σ_post )&nbsp;&nbsp;·&nbsp;&nbsp;95% CrI: μ_post ± 1.96·σ_post&nbsp;&nbsp;(shown relative: ÷ p_A)</div>
+      <p>Unlike a confidence interval, the credible interval means what people think it means: given the data and prior, there's a 95% probability the true lift is inside it.</p>
+
+      <h4>The frequentist p-value (for comparison)</h4>
+      <div class="formula">z = d / √( p̂(1−p̂)(1/n_A + 1/n_B) )&nbsp;&nbsp;·&nbsp;&nbsp;p = 2·(1 − Φ(|z|))&nbsp;&nbsp;·&nbsp;&nbsp;p̂ = pooled rate</div>
+      <p>Shown so you can watch it disagree with the Bayesian read: an underpowered test can be "significant" while P(B&gt;A) stays unconvincing under a sceptical prior. That disagreement is the winner's curse being caught in real time.</p>
+
+      <h4>Revenue projections</h4>
+      <div class="formula">naive = 12 × monthly revenue × d/p_A&nbsp;&nbsp;·&nbsp;&nbsp;honest = … × μ_post/p_A&nbsp;&nbsp;·&nbsp;&nbsp;floor = … × max(0, CrI lower bound)</div>
+      <p>Same arithmetic, three different effect estimates. The gap between naive and honest is what your slide deck would have over-promised.</p>
+    </div>
+  </details>
+</div>
+
+<!-- ═══════════ EXPLAINER ═══════════ -->
+<div class="explainer">
+  <div class="exp-title">// the logic</div>
+  <h2 class="exp-h1">Why ecommerce A/B testing needs Bayesian thinking</h2>
+  <div class="exp-body">
+
+    <p>
+      There's a recurring argument — on Reddit, in CRO communities, everywhere — that A/B testing is
+      <strong>"statistically not viable"</strong> for most ecommerce stores. The math behind the complaint is real:
+      a store with 30,000 monthly sessions and a 2% conversion rate needs roughly <strong>8–12 weeks per test</strong>
+      to detect a 10% relative lift with classical (frequentist) statistics. Most stores don't have that patience,
+      so they either stop testing or — worse — run underpowered tests and trust the results anyway.
+    </p>
+
+    <p>
+      But the conclusion "testing isn't viable" is wrong. What's not viable is <strong>using the wrong statistical
+      framework for the traffic you have</strong>.
+    </p>
+
+    <h3>The frequentist problem</h3>
+    <p>
+      Classical testing answers a strange question: <em>"If there were truly no difference between A and B,
+      how surprising is my data?"</em> That's what a p-value is. It never tells you the probability that B is better —
+      it tells you how weird your data would look in a hypothetical world where B does nothing.
+    </p>
+    <p>
+      This framework was designed for agriculture experiments in the 1920s, where you plant a field once and
+      analyse once. It demands a <strong>fixed sample size decided upfront</strong>, forbids looking at results early
+      (peeking inflates false positives dramatically), and gives a binary significant/not-significant answer
+      that's routinely misread. For a low-traffic store, this is brutal: you commit to 10 weeks blind, you can't
+      stop early even when the signal is obvious, and at the end you get a yes/no instead of a decision-ready number.
+    </p>
+
+    <h3>The Bayesian alternative</h3>
+    <p>
+      Bayesian analysis answers the question you actually have: <em>"Given the data I've seen, what's the
+      probability that B is better than A — and by how much?"</em>
+    </p>
+    <div class="formula">P(B > A | data) = 94.2%  ·  Expected lift: +3.1% (95% credible: −0.4% to +7.2%)</div>
+    <p>
+      That statement is directly usable in a business decision. You can weigh it against implementation cost,
+      risk appetite, and opportunity cost — the way you'd weigh any other business decision under uncertainty.
+    </p>
+
+    <div class="vs-grid">
+      <div class="vs-col">
+        <h4 style="color:var(--r)">Frequentist (classical)</h4>
+        <ul>
+          <li>Needs a fixed sample size committed upfront</li>
+          <li>Peeking at results invalidates the test</li>
+          <li>Answers: "how surprising is this data if nothing changed?"</li>
+          <li>Binary verdict at α = 0.05 — nothing in between</li>
+          <li>Underpowered + significant = inflated estimate (winner's curse)</li>
+          <li>Practical for high-traffic sites with discipline</li>
+        </ul>
+      </div>
+      <div class="vs-col">
+        <h4 style="color:var(--g)">Bayesian</h4>
+        <ul>
+          <li>Valid at any sample size — evidence just accumulates</li>
+          <li>Monitoring as you go is fine (with a decision rule)</li>
+          <li>Answers: "what's the probability B is better, and by how much?"</li>
+          <li>Continuous evidence — 94% is stronger than 82%</li>
+          <li>Priors provide built-in shrinkage against inflated effects</li>
+          <li>Practical at ecom traffic levels — this is why VWO and AB Tasty use it</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Why this is *the* choice for ecommerce specifically</h3>
+    <p>
+      <strong>1. Traffic reality.</strong> Bayesian inference doesn't collapse below a magic sample size.
+      With 2,000 visitors per arm you get a wider, more honest credible interval instead of a meaningless
+      "not significant". The evidence you have is quantified, not discarded.
+    </p>
+    <p>
+      <strong>2. Business decisions are already Bayesian.</strong> No merchant thinks in terms of rejecting null
+      hypotheses. They think "how confident am I this works, and what does it cost me if I'm wrong?" —
+      which is literally the Bayesian decision framework (expected loss). The statistics should match the decision.
+    </p>
+    <p>
+      <strong>3. Priors are honesty, not cheating.</strong> A decade of published CRO data shows most ecom tests
+      move conversion by very little — big lifts of +20% are rare and usually don't replicate. Encoding this as a
+      sceptical prior automatically deflates too-good-to-be-true results. That's the winner's curse protection
+      built directly into the math, which is exactly what the tool above does.
+    </p>
+    <p>
+      <strong>4. You can stop when you know enough.</strong> With a pre-agreed decision rule
+      (e.g. <em>"ship when P(B&gt;A) ≥ 95% and the expected loss of shipping is below 0.1pp"</em>),
+      monitoring continuously is legitimate. For a store that can't afford 12-week tests, this typically
+      cuts test duration by 30–50% versus fixed-horizon testing.
+    </p>
+
+    <div class="callout">
+      <strong>The honest caveat:</strong> Bayesian is not magic. A small sample still means high uncertainty — the credible
+      interval will be wide and it will include zero. What Bayesian buys you is that the uncertainty is <em>quantified
+      and usable</em> instead of hidden behind "not significant". And the prior must be chosen before you see results —
+      picking the prior that makes your result look best is p-hacking with extra steps. That's why this tool makes you
+      choose the scepticism level explicitly, and why Lockbox exists.
+    </div>
+
+    <p style="margin-top:28px">
+      <strong>The bottom line:</strong> if you have Amazon-scale traffic, frequentist testing works fine when you run it by the book.
+      If you're a normal ecom store, Bayesian methods are simply the correct way to make decisions under the uncertainty
+      you actually have. What's <em>not</em> viable is pretending your underpowered frequentist test gave you certainty.
+      That's what this tool is here to check.
+    </p>
+
+  </div>
+</div>
+
+<footer style="border-top:1px solid var(--bdr);padding:24px 40px;display:flex;align-items:center;justify-content:space-between;margin-top:40px">
+  <div style="font-family:var(--mono);font-size:11px;color:var(--tx3)">// <span style="color:var(--ac)">zijlstra</span> testing stack · reality check</div>
+  <div style="font-size:11px;color:var(--tx3)">all computation client-side</div>
+</footer>
+
+<script>
+// ═══════════════════════════════════════
+// MATH
+// ═══════════════════════════════════════
+function normCDF(x){
+  const a1=0.254829592,a2=-0.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429,p=0.3275911;
+  const sign=x<0?-1:1;
+  x=Math.abs(x)/Math.sqrt(2);
+  const t=1/(1+p*x);
+  const y=1-(((((a5*t+a4)*t)+a3)*t+a2)*t+a1)*t*Math.exp(-x*x);
+  return 0.5*(1+sign*y);
+}
+
+const PRIORS={ tight:0.025, medium:0.05, wide:0.10 }; // prior SD on relative lift
+
+function compute(){
+  const nA=parseInt(document.getElementById('nA').value)||0;
+  const cA=parseInt(document.getElementById('cA').value)||0;
+  const nB=parseInt(document.getElementById('nB').value)||0;
+  const cB=parseInt(document.getElementById('cB').value)||0;
+  const priorSD_rel=PRIORS[document.getElementById('prior').value];
+  const monthlyRev=parseInt(document.getElementById('monthlyRev').value)||0;
+
+  // live rates
+  document.getElementById('rateA').textContent=(nA>0&&cA>0)?`= ${(cA/nA*100).toFixed(2)}% conversion rate`:'';
+  document.getElementById('rateB').textContent=(nB>0&&cB>0)?`= ${(cB/nB*100).toFixed(2)}% conversion rate`:'';
+
+  if(nA<=0||nB<=0||cA<=0||cB<=0||cA>nA||cB>nB){ resetOutputs(); return; }
+
+  const pA=cA/nA, pB=cB/nB;
+  const absDiff=pB-pA;
+  const relLift=absDiff/pA;
+
+  // SE of the difference
+  const se=Math.sqrt(pA*(1-pA)/nA + pB*(1-pB)/nB);
+  if(se<=0){ resetOutputs(); return; }
+
+  // frequentist p (two-sided, pooled for the z-test)
+  const pPool=(cA+cB)/(nA+nB);
+  const sePool=Math.sqrt(pPool*(1-pPool)*(1/nA+1/nB));
+  const z=absDiff/sePool;
+  const pval=2*(1-normCDF(Math.abs(z)));
+
+  // ── Bayesian shrinkage on the ABSOLUTE difference ──
+  // prior: N(0, (priorSD_rel * pA)^2)   — sceptical prior centred on "no effect"
+  const priorSD_abs=priorSD_rel*pA;
+  const priorVar=priorSD_abs*priorSD_abs;
+  const dataVar=se*se;
+  // posterior precision-weighted combination
+  const postVar=1/(1/priorVar+1/dataVar);
+  const postMean=postVar*(absDiff/dataVar); // prior mean is 0
+  const postSD=Math.sqrt(postVar);
+
+  const shrunkRel=postMean/pA;
+  const shrinkFactor=absDiff!==0?(1-postMean/absDiff):0; // how much got shaved off
+
+  // P(B > A | data) — posterior probability the true diff > 0
+  const probBbeatsA=normCDF(postMean/postSD);
+
+  // 95% credible interval on relative lift
+  const ciLow=(postMean-1.96*postSD)/pA;
+  const ciHigh=(postMean+1.96*postSD)/pA;
+
+  // Exaggeration ratio (naive / shrunk) — the winner's curse multiplier
+  const exagg=Math.abs(shrunkRel)>1e-9?relLift/shrunkRel:null;
+
+  // ── RENDER: deflation ──
+  const naiveStr=(relLift*100).toFixed(1);
+  const shrunkStr=(shrunkRel*100).toFixed(1);
+  const deflColor=shrinkFactor>0.5?'var(--r)':shrinkFactor>0.25?'var(--y)':'var(--g)';
+
+  let deflAlert='';
+  if(shrinkFactor>0.5){
+    deflAlert=`<div class="alert err"><span class="ai">🚨</span><span><strong>Severe winner's curse risk.</strong> Your sample is small relative to the effect you're claiming — more than half of the observed lift is likely noise inflation. The honest estimate is <strong>${shrunkStr}%</strong>, not ${naiveStr}%. If you announce ${naiveStr}%, expect to be asked in six months why revenue didn't move.</span></div>`;
+  } else if(shrinkFactor>0.25){
+    deflAlert=`<div class="alert warn"><span class="ai">⚠</span><span><strong>Moderate inflation likely.</strong> A meaningful chunk of your observed lift is probably noise. Report the shrunk estimate of <strong>${shrunkStr}%</strong> as your central expectation — the observed ${naiveStr}% is the optimistic end, not the likely outcome.</span></div>`;
+  } else {
+    deflAlert=`<div class="alert ok"><span class="ai">✓</span><span><strong>Well-supported result.</strong> Your sample is large enough that the observed effect barely deflates under a sceptical prior. ${shrunkStr}% is a defensible number to report.</span></div>`;
+  }
+
+  document.getElementById('shrinkBody').innerHTML=`
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-label">What you'd announce</div>
+        <div class="stat-val" style="color:var(--tx2);text-decoration:${shrinkFactor>0.25?'line-through':'none'}">${relLift>=0?'+':''}${naiveStr}%</div>
+        <div class="stat-sub">naive observed lift</div>
+      </div>
+      <div class="stat-card" style="border-color:${deflColor}">
+        <div class="stat-label" style="color:${deflColor}">What it probably is</div>
+        <div class="stat-val" style="color:${deflColor}">${shrunkRel>=0?'+':''}${shrunkStr}%</div>
+        <div class="stat-sub">shrinkage-adjusted estimate</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Inflation shaved off</div>
+        <div class="stat-val" style="color:var(--tx)">${(shrinkFactor*100).toFixed(0)}%</div>
+        <div class="stat-sub">${exagg&&exagg>1?`observed is ${exagg.toFixed(1)}× the honest estimate`:'of the observed effect'}</div>
+      </div>
+    </div>
+    ${drawShrinkViz(relLift,shrunkRel,ciLow,ciHigh)}
+    ${deflAlert}
+  `;
+
+  // ── RENDER: bayes ──
+  const probPct=(probBbeatsA*100).toFixed(1);
+  const probColor=probBbeatsA>=0.95?'var(--g)':probBbeatsA>=0.85?'var(--y)':'var(--r)';
+  let bayesAlert='';
+  if(probBbeatsA>=0.95){
+    bayesAlert=`<div class="alert ok"><span class="ai">✓</span><span><strong>Strong evidence B is better.</strong> Under your chosen prior, there's a ${probPct}% probability the variant genuinely beats control. With a sensible decision rule this is shippable — just ship it with the <em>shrunk</em> lift expectation, not the observed one.</span></div>`;
+  } else if(probBbeatsA>=0.85){
+    bayesAlert=`<div class="alert warn"><span class="ai">⚠</span><span><strong>Promising but not conclusive.</strong> ${probPct}% probability that B is better. In frequentist terms you might already be claiming victory — in honest terms, there's still a ${(100-probBbeatsA*100).toFixed(1)}% chance you'd be shipping nothing (or a small negative). Decide based on implementation cost: cheap to ship → reasonable bet; expensive → keep collecting.</span></div>`;
+  } else {
+    bayesAlert=`<div class="alert err"><span class="ai">✗</span><span><strong>Not enough evidence.</strong> Only ${probPct}% probability that B is truly better — this result should not be announced as a win regardless of what the p-value says. The credible interval spans ${(ciLow*100).toFixed(1)}% to ${(ciHigh*100).toFixed(1)}%, which includes "no effect or worse".</span></div>`;
+  }
+
+  document.getElementById('bayesBody').innerHTML=`
+    <div class="stat-grid">
+      <div class="stat-card" style="border-color:${probColor}">
+        <div class="stat-label" style="color:${probColor}">P(B beats A)</div>
+        <div class="stat-val" style="color:${probColor}">${probPct}%</div>
+        <div class="stat-sub">posterior probability</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">95% credible interval</div>
+        <div class="stat-val" style="color:var(--tx);font-size:16px;padding-top:5px">${(ciLow*100).toFixed(1)}% … ${(ciHigh*100).toFixed(1)}%</div>
+        <div class="stat-sub">plausible range of true relative lift</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Frequentist p-value</div>
+        <div class="stat-val" style="color:var(--tx2)">${pval<0.0001?'<0.0001':pval.toFixed(4)}</div>
+        <div class="stat-sub">for comparison — ${pval<0.05?'"significant"':'"not significant"'}</div>
+      </div>
+    </div>
+    ${bayesAlert}
+    <p style="font-size:11px;color:var(--tx3);line-height:1.6;margin-top:8px">
+      The Bayesian probability answers the question your stakeholders are actually asking. Notice it can disagree with the p-value:
+      an underpowered test can be "significant" while P(B&gt;A) stays unconvincing under a sceptical prior — that's the winner's curse being caught in real time.
+    </p>
+  `;
+
+  // ── RENDER: revenue ──
+  if(monthlyRev>0){
+    const naiveAnnual=monthlyRev*12*relLift;
+    const honestAnnual=monthlyRev*12*shrunkRel;
+    const conservAnnual=monthlyRev*12*Math.max(0,ciLow);
+    document.getElementById('revBody').innerHTML=`
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-label">Naive projection</div>
+          <div class="stat-val" style="color:var(--tx2);text-decoration:line-through">${fmtMoney(naiveAnnual)}</div>
+          <div class="stat-sub">what the deck would say</div>
+        </div>
+        <div class="stat-card" style="border-color:var(--ac)">
+          <div class="stat-label" style="color:var(--ac)">Honest projection</div>
+          <div class="stat-val" style="color:var(--ac)">${fmtMoney(honestAnnual)}</div>
+          <div class="stat-sub">shrinkage-adjusted annual impact</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Conservative floor</div>
+          <div class="stat-val" style="color:var(--tx)">${fmtMoney(conservAnnual)}</div>
+          <div class="stat-sub">lower bound of credible interval</div>
+        </div>
+      </div>
+      <div class="alert info"><span class="ai">ℹ</span><span>Put the <strong>honest projection</strong> in the deck and the range in the footnote. If leadership hears the naive number, that becomes the anchor — and the testing programme takes the credibility hit when it doesn't materialise. Under-promise, over-deliver.</span></div>
+    `;
+  } else {
+    document.getElementById('revBody').innerHTML=`<div style="color:var(--tx3);font-size:12px">Enter monthly revenue above to see the naive vs honest projection.</div>`;
+  }
+
+  // ── RENDER: sidebar ──
+  let vTitle,vColor,vDesc;
+  if(probBbeatsA>=0.95&&shrinkFactor<=0.25){
+    vTitle='SHIP IT';vColor='var(--g)';
+    vDesc='Strong evidence, minimal inflation. Report the shrunk estimate and ship.';
+  } else if(probBbeatsA>=0.95){
+    vTitle='SHIP, BUT…';vColor='var(--y)';
+    vDesc='B is probably better, but the size of the win is inflated. Ship it — just don\'t book the naive number.';
+  } else if(probBbeatsA>=0.85){
+    vTitle='JUDGEMENT CALL';vColor='var(--y)';
+    vDesc='Promising, not proven. Cheap to implement → reasonable bet. Expensive → collect more data.';
+  } else {
+    vTitle='NOT A WIN';vColor='var(--r)';
+    vDesc='The evidence does not support announcing this as a winner, whatever the p-value says.';
+  }
+  document.getElementById('verdictTitle').textContent=vTitle;
+  document.getElementById('verdictTitle').style.color=vColor;
+  document.getElementById('verdictDesc').textContent=vDesc;
+
+  document.getElementById('keyNums').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:10px;font-size:12px">
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--tx3)">Observed lift</span><span style="font-family:var(--mono)">${relLift>=0?'+':''}${naiveStr}%</span></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--tx3)">Honest lift</span><span style="font-family:var(--mono);color:${deflColor}">${shrunkRel>=0?'+':''}${shrunkStr}%</span></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--tx3)">P(B beats A)</span><span style="font-family:var(--mono);color:${probColor}">${probPct}%</span></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--tx3)">p-value</span><span style="font-family:var(--mono);color:var(--tx2)">${pval<0.0001?'<0.0001':pval.toFixed(4)}</span></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--tx3)">Sample per arm</span><span style="font-family:var(--mono);color:var(--tx2)">${Math.min(nA,nB).toLocaleString()}</span></div>
+    </div>
+  `;
+}
+
+function drawShrinkViz(naive,shrunk,ciLow,ciHigh){
+  // number line: 0 ... naive, with shrunk marked and CI band
+  const W=640,H=90,padL=40,padR=40;
+  const cW=W-padL-padR;
+  const maxV=Math.max(Math.abs(naive),Math.abs(ciHigh),Math.abs(ciLow),0.01)*1.15;
+  const minV=Math.min(0,ciLow,naive)*1.15-0.005;
+  const xS=v=>padL+((v-minV)/(maxV-minV))*cW;
+
+  const y=48;
+  return `<div class="shrink-viz">
+    <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--tx3);margin-bottom:8px">Relative lift — observed vs honest</div>
+    <svg id="shrinkSvg" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+      <line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#30363D" stroke-width="1"/>
+      <line x1="${xS(0)}" y1="${y-16}" x2="${xS(0)}" y2="${y+16}" stroke="#7D8590" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="${xS(0)}" y="${y+30}" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#7D8590">0%</text>
+      <rect x="${xS(ciLow)}" y="${y-5}" width="${Math.max(1,xS(ciHigh)-xS(ciLow))}" height="10" fill="#4F8EF7" opacity=".15"/>
+      <circle cx="${xS(naive)}" cy="${y}" r="6" fill="none" stroke="#A0AAB6" stroke-width="2" stroke-dasharray="2,2"/>
+      <text x="${xS(naive)}" y="${y-14}" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#A0AAB6">observed ${(naive*100).toFixed(1)}%</text>
+      <circle cx="${xS(shrunk)}" cy="${y}" r="6" fill="#4F8EF7"/>
+      <text x="${xS(shrunk)}" y="${y+22}" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#4F8EF7">honest ${(shrunk*100).toFixed(1)}%</text>
+      <line x1="${xS(shrunk)+8}" y1="${y}" x2="${xS(naive)-8}" y2="${y}" stroke="#D29922" stroke-width="1.5" marker-end="none" opacity="${Math.abs(naive-shrunk)>0.001?.8:0}"/>
+    </svg>
+    <div style="font-size:10px;color:var(--tx3);font-family:var(--mono)">blue band = 95% credible interval</div>
+  </div>`;
+}
+
+function fmtMoney(v){
+  const abs=Math.abs(v);
+  const s=abs>=1e6?(abs/1e6).toFixed(2)+'M':abs>=1e3?(abs/1e3).toFixed(0)+'K':abs.toFixed(0);
+  return (v<0?'−':'+')+s;
+}
+
+function resetOutputs(){
+  document.getElementById('shrinkBody').innerHTML='<div style="color:var(--tx3);font-size:12px">Enter your test numbers above.</div>';
+  document.getElementById('bayesBody').innerHTML='<div style="color:var(--tx3);font-size:12px">Enter your test numbers above.</div>';
+  document.getElementById('revBody').innerHTML='<div style="color:var(--tx3);font-size:12px">Enter monthly revenue above to see the naive vs honest projection.</div>';
+  document.getElementById('verdictTitle').textContent='—';
+  document.getElementById('verdictTitle').style.color='var(--tx3)';
+  document.getElementById('verdictDesc').textContent='Waiting for data.';
+  document.getElementById('keyNums').innerHTML='<div style="color:var(--tx3);font-size:12px">—</div>';
+}
+</script>
+</body>
+</html>

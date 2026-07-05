@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zijlstra Testing Stack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0D1117;--bg2:#161B22;--bg3:#1C2128;
+    --bdr:#30363D;
+    --tx:#E6EDF3;--tx2:#A0AAB6;--tx3:#7D8590;
+    --ac:#4F8EF7;--ac2:#1F6FEB;
+    --g:#3FB950;--r:#F85149;--y:#D29922;--o:#F0883E;
+    --p:#BC8CFF;
+    --mono:'JetBrains Mono',monospace;
+    --sans:'Inter',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{min-height:100vh;background:var(--bg);color:var(--tx);font-family:var(--sans)}
+
+  /* ── NAV ── */
+  .nav{
+    height:56px;display:flex;align-items:center;justify-content:space-between;
+    padding:0 40px;border-bottom:1px solid var(--bdr);
+    position:sticky;top:0;z-index:100;background:var(--bg);
+  }
+  .nav-brand{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--tx2);letter-spacing:1px}
+  .nav-brand span{color:var(--ac)}
+  .nav-tag{font-size:11px;color:var(--tx3);font-family:var(--mono)}
+
+  /* ── HERO ── */
+  .hero{
+    max-width:900px;margin:0 auto;padding:56px 40px 8px;text-align:center;
+  }
+  .hero-eyebrow{
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:3px;
+    text-transform:uppercase;color:var(--ac);margin-bottom:20px;
+  }
+  .hero-title{
+    font-size:clamp(36px,6vw,72px);font-weight:900;line-height:1.05;
+    letter-spacing:-2px;margin-bottom:24px;
+  }
+  .hero-title .name{color:var(--ac)}
+  .hero-title .dim{color:var(--tx2)}
+  .hero-sub{
+    font-size:17px;color:var(--tx2);line-height:1.7;max-width:580px;
+    margin:0 auto 48px;font-weight:400;
+  }
+  .hero-sub strong{color:var(--tx)}
+  .hero-badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:64px}
+  .badge{
+    font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.5px;
+    padding:5px 12px;border:1px solid var(--bdr);color:var(--tx3);
+    text-transform:uppercase;
+  }
+  .badge.live{border-color:var(--g);color:var(--g)}
+
+  /* card sparkline */
+  .card-spark{margin-bottom:16px;opacity:.7}
+
+  /* ── TOOLS GRID ── */
+  .tools-section{max-width:1100px;margin:0 auto;padding:0 40px 100px}
+  .section-label{
+    font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:3px;
+    text-transform:uppercase;color:var(--tx3);margin-bottom:28px;
+    padding-bottom:12px;border-bottom:1px solid var(--bdr);
+  }
+  /* ── WORKFLOW STRIP ── */
+  .flow-strip{background:var(--bg2);border:1px solid var(--bdr);padding:18px 22px;margin-bottom:28px}
+  .flow-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);margin-bottom:14px}
+  .flow-steps{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap}
+  .flow-step{display:flex;flex-direction:column;gap:2px;padding:8px 12px;border:1px solid var(--bdr);text-decoration:none;background:var(--bg);min-width:118px;transition:border-color .15s}
+  a.flow-step:hover{border-color:var(--tx2)}
+  .flow-run{border-style:dashed;opacity:.75}
+  .fs-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--tx3)}
+  .fs-name{font-size:12px;font-weight:600;color:var(--tx)}
+  .fs-when{font-size:10px;color:var(--tx3)}
+  .flow-arrow{align-self:center;color:var(--tx3);font-family:var(--mono);font-size:13px}
+  @media(max-width:800px){.flow-arrow{display:none}.flow-steps{gap:6px}}
+
+  .tools-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+
+  .tool-card{
+    background:var(--bg2);border:1px solid var(--bdr);
+    padding:28px;cursor:pointer;text-decoration:none;color:inherit;
+    display:flex;flex-direction:column;gap:0;
+    transition:border-color .15s,background .15s;
+    position:relative;overflow:hidden;
+  }
+  .tool-card:hover{border-color:var(--ac);background:var(--bg3)}
+  .tool-card::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:2px;
+    background:var(--card-accent,var(--ac));opacity:0;transition:opacity .15s;
+  }
+  .tool-card:hover::before{opacity:1}
+
+  .tool-num{
+    font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;
+    color:var(--tx3);text-transform:uppercase;margin-bottom:16px;
+  }
+  .tool-icon{
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.5px;
+    padding:4px 8px;border:1px solid;display:inline-block;margin-bottom:16px;
+    width:fit-content;
+  }
+  .tool-name{font-size:18px;font-weight:700;margin-bottom:8px;line-height:1.2}
+  .tool-desc{font-size:13px;color:var(--tx2);line-height:1.6;flex:1;margin-bottom:20px}
+  .tool-checks{display:flex;flex-direction:column;gap:5px;margin-bottom:20px}
+  .tool-check{font-size:11px;color:var(--tx3);display:flex;gap:6px;align-items:flex-start}
+  .tool-check::before{content:'→';color:var(--card-accent,var(--ac));font-family:var(--mono);flex-shrink:0}
+  .tool-footer{
+    display:flex;align-items:center;justify-content:space-between;
+    padding-top:16px;border-top:1px solid var(--bdr);margin-top:auto;
+  }
+  .tool-status{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.5px}
+  .tool-status.ready{color:var(--g)}
+  .tool-status.soon{color:var(--tx3)}
+  .tool-arrow{font-size:16px;color:var(--tx3);transition:color .15s,transform .15s}
+  .tool-card:hover .tool-arrow{color:var(--ac);transform:translateX(4px)}
+
+  /* ── MANIFESTO ── */
+  .manifesto{
+    max-width:700px;margin:0 auto;padding:0 40px 100px;
+    border-top:1px solid var(--bdr);padding-top:80px;
+  }
+  .manifesto-title{
+    font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:3px;
+    text-transform:uppercase;color:var(--tx3);margin-bottom:24px;
+  }
+  .manifesto-body{font-size:14px;color:var(--tx2);line-height:1.9}
+  .manifesto-body p{margin-bottom:16px}
+  .manifesto-body strong{color:var(--tx)}
+
+  /* ── FOOTER ── */
+  .footer{
+    border-top:1px solid var(--bdr);padding:24px 40px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .footer-left{font-family:var(--mono);font-size:11px;color:var(--tx3)}
+  .footer-left span{color:var(--ac)}
+  .footer-right{font-size:11px;color:var(--tx3)}
+
+  @media(max-width:800px){
+    .tools-grid{grid-template-columns:1fr}
+    .hero{padding:60px 24px 48px}
+    .tools-section{padding:0 24px 60px}
+    .nav{padding:0 24px}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">// <span>zijlstra</span> testing stack</div>
+  <div class="nav-tag">v1.0 · ecommerce experimentation</div>
+</nav>
+
+<section class="hero">
+  <div class="hero-eyebrow">Ecommerce Experimentation Infrastructure</div>
+  <h1 class="hero-title">
+    A/B testing with<br>
+    <span class="name">experimental integrity.</span>
+  </h1>
+  <p class="hero-sub">
+    Check enough metrics and one wins by luck. Peek daily and stop on a good day.
+    Slice by segment until something shines. <strong>You can make almost any test look like a winner.</strong>
+    These tools protect the internal validity of your experiments, so that when you call something
+    a win, <strong>you can defend it in any room.</strong>
+  </p>
+  <div class="hero-badges">
+    <div class="badge live">● Live</div>
+    <div class="badge">Two-proportion z-test</div>
+    <div class="badge">SRM detection</div>
+    <div class="badge">Bonferroni correction</div>
+    <div class="badge">Peeking detection</div>
+    <div class="badge">Survival analysis</div>
+    <div class="badge">Platform calibration</div>
+    <div class="badge">Bayesian shrinkage</div>
+  </div>
+</section>
+
+<section class="tools-section">
+  <div class="section-label">// 07 tools · all client-side · no data leaves your browser</div>
+
+  <!-- WORKFLOW STRIP -->
+  <div class="flow-strip">
+    <div class="flow-label">The workflow</div>
+    <div class="flow-steps">
+      <a href="aa-validator.html" class="flow-step"><span class="fs-num" style="color:var(--g)">01</span><span class="fs-name">Validate the platform</span><span class="fs-when">once per quarter</span></a>
+      <span class="flow-arrow">→</span>
+      <a href="lockbox.html" class="flow-step"><span class="fs-num" style="color:var(--ac)">02</span><span class="fs-name">Register the test</span><span class="fs-when">before it runs</span></a>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step flow-run"><span class="fs-num">···</span><span class="fs-name">Run the test</span><span class="fs-when">don't touch it</span></span>
+      <span class="flow-arrow">→</span>
+      <a href="survival.html" class="flow-step"><span class="fs-num" style="color:var(--p)">03</span><span class="fs-name">Check conversion speed</span><span class="fs-when">with the results</span></a>
+      <span class="flow-arrow">→</span>
+      <a href="reality-check.html" class="flow-step"><span class="fs-num" style="color:var(--o)">04</span><span class="fs-name">Deflate the winner</span><span class="fs-when">before announcing</span></a>
+      <span class="flow-arrow">→</span>
+      <a href="subscriber-value.html" class="flow-step flow-run"><span class="fs-num" style="color:var(--t)">07</span><span class="fs-name">Value subscriptions</span><span class="fs-when">if the goal is subscribers</span></a>
+      <span class="flow-arrow">→</span>
+      <a href="receipt.html" class="flow-step"><span class="fs-num" style="color:var(--tx2)">05</span><span class="fs-name">Stamp the receipt</span><span class="fs-when">attach to readout</span></a>
+      <span class="flow-arrow">→</span>
+      <a href="ledger.html" class="flow-step"><span class="fs-num" style="color:var(--y)">06</span><span class="fs-name">Reconcile the ledger</span><span class="fs-when">every month</span></a>
+    </div>
+  </div>
+
+  <div class="tools-grid">
+
+    <!-- PLATFORM VALIDATOR -->
+    <a class="tool-card" href="aa-validator.html" style="--card-accent:var(--g)">
+      <div class="tool-num">01 — platform calibration</div>
+      <!-- sparkline: SRM bar chart -->
+      <svg class="card-spark" viewBox="0 0 200 48" xmlns="http://www.w3.org/2000/svg">
+        <text x="0" y="8" font-family="JetBrains Mono" font-size="7" fill="#7D8590">assignment split</text>
+        <!-- expected bars -->
+        <rect x="10" y="14" width="70" height="14" fill="#1C2128" stroke="#30363D" stroke-width="1"/>
+        <rect x="110" y="14" width="70" height="14" fill="#1C2128" stroke="#30363D" stroke-width="1"/>
+        <!-- actual bars — control slightly over, variant under -->
+        <rect x="10" y="14" width="76" height="14" fill="#3FB950" opacity=".7"/>
+        <rect x="110" y="14" width="62" height="14" fill="#F85149" opacity=".7"/>
+        <text x="10" y="38" font-family="JetBrains Mono" font-size="7" fill="#3FB950">control 53.1%</text>
+        <text x="110" y="38" font-family="JetBrains Mono" font-size="7" fill="#F85149">variant 46.9%</text>
+        <text x="88" y="24" font-family="JetBrains Mono" font-size="8" fill="#F85149" font-weight="700">!</text>
+      </svg>
+      <div class="tool-icon" style="color:var(--g);border-color:var(--g)">PVL</div>
+      <div class="tool-name">Platform Validator</div>
+      <div class="tool-desc">Verify your A/B platform is assigning and tracking users correctly before you trust any results. Surfaces assignment SRM, asymmetric tracking loss, and consent-driven coverage gaps.</div>
+      <div class="tool-checks">
+        <div class="tool-check">Assignment SRM via chi-squared test</div>
+        <div class="tool-check">Asymmetric tracking loss detection</div>
+        <div class="tool-check">Suspicious coverage flag</div>
+        <div class="tool-check">Metric balance check (Bonferroni-adjusted)</div>
+        <div class="tool-check">Platform trust score 0–100</div>
+      </div>
+      <div class="tool-footer">
+        <div class="tool-status ready">● Ready</div>
+        <div class="tool-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- LOCKBOX -->
+    <a class="tool-card" href="lockbox.html" style="--card-accent:var(--ac)">
+      <div class="tool-num">02 — experiment governance</div>
+      <!-- sparkline: normal distribution with significance shading -->
+      <svg class="card-spark" viewBox="0 0 200 48" xmlns="http://www.w3.org/2000/svg">
+        <text x="0" y="8" font-family="JetBrains Mono" font-size="7" fill="#7D8590">significance test</text>
+        <!-- distribution curve A (control) -->
+        <path d="M10,40 Q30,40 45,28 Q55,18 65,14 Q75,18 85,28 Q100,40 120,40" fill="none" stroke="#4F8EF7" stroke-width="1.5" opacity=".6"/>
+        <!-- distribution curve B (variant) — shifted right -->
+        <path d="M70,40 Q90,40 105,28 Q115,18 125,14 Q135,18 145,28 Q160,40 190,40" fill="none" stroke="#3FB950" stroke-width="1.5" opacity=".6"/>
+        <!-- critical region shading -->
+        <path d="M125,14 Q135,18 145,28 Q160,40 190,40 L190,40 L125,40 Z" fill="#3FB950" opacity=".15"/>
+        <!-- p < 0.05 label -->
+        <text x="148" y="36" font-family="JetBrains Mono" font-size="7" fill="#3FB950">p=.031</text>
+        <line x1="122" y1="12" x2="122" y2="42" stroke="#F85149" stroke-width="1" stroke-dasharray="2,2" opacity=".6"/>
+        <text x="124" y="11" font-family="JetBrains Mono" font-size="6" fill="#F85149">α</text>
+      </svg>
+      <div class="tool-icon" style="color:var(--ac);border-color:var(--ac)">LBX</div>
+      <div class="tool-name">Lockbox</div>
+      <div class="tool-desc">Pre-register your experiment before it runs. Lock in your hypothesis, sample size, and success metrics. Prevents p-hacking, segment fishing, and post-hoc goalpost moving.</div>
+      <div class="tool-checks">
+        <div class="tool-check">Sample size calculator with MDE & power</div>
+        <div class="tool-check">Two-proportion z-test results engine</div>
+        <div class="tool-check">Peeking & underpowered detection</div>
+        <div class="tool-check">Causal integrity sidebar</div>
+        <div class="tool-check">Experiment history in localStorage</div>
+      </div>
+      <div class="tool-footer">
+        <div class="tool-status ready">● Ready</div>
+        <div class="tool-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- SURVIVAL CURVES -->
+    <a class="tool-card" href="survival.html" style="--card-accent:var(--p)">
+      <div class="tool-num">03 — time-to-conversion</div>
+      <!-- sparkline: KM step curves -->
+      <svg class="card-spark" viewBox="0 0 200 48" xmlns="http://www.w3.org/2000/svg">
+        <text x="0" y="8" font-family="JetBrains Mono" font-size="7" fill="#7D8590">time-to-conversion</text>
+        <!-- control curve — slower descent -->
+        <path d="M10,42 H35 V36 H60 V30 H85 V25 H110 V21 H140 V18 H170 V16 H190" fill="none" stroke="#4F8EF7" stroke-width="1.5" opacity=".7"/>
+        <!-- variant curve — faster descent (lower = more converted) -->
+        <path d="M10,42 H28 V34 H50 V26 H72 V20 H95 V16 H120 V13 H150 V11 H190" fill="none" stroke="#BC8CFF" stroke-width="1.5" stroke-dasharray="4,2" opacity=".7"/>
+        <!-- axis -->
+        <line x1="10" y1="43" x2="190" y2="43" stroke="#30363D" stroke-width="1"/>
+        <text x="10" y="48" font-family="JetBrains Mono" font-size="6" fill="#7D8590">day 0</text>
+        <text x="170" y="48" font-family="JetBrains Mono" font-size="6" fill="#7D8590">day 14</text>
+      </svg>
+      <div class="tool-icon" style="color:var(--p);border-color:var(--p)">SRV</div>
+      <div class="tool-name">Survival Curves</div>
+      <div class="tool-desc">Conversion rate tells you who converts. This shows how fast, and whether the speed difference between variants is statistically real. A variant that converts faster is worth money even when the final rates look identical.</div>
+      <div class="tool-checks">
+        <div class="tool-check">Kaplan-Meier survival curves</div>
+        <div class="tool-check">Log-rank significance test</div>
+        <div class="tool-check">Median time-to-conversion per variant</div>
+        <div class="tool-check">Hazard ratio with confidence interval</div>
+        <div class="tool-check">CSV cohort data import</div>
+      </div>
+      <div class="tool-footer">
+        <div class="tool-status ready">● Ready</div>
+        <div class="tool-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- REALITY CHECK -->
+    <a class="tool-card" href="reality-check.html" style="--card-accent:var(--o)">
+      <div class="tool-num">04 — winner's curse & bayesian analysis</div>
+      <!-- sparkline: observed vs shrunk estimate -->
+      <svg class="card-spark" viewBox="0 0 200 48" xmlns="http://www.w3.org/2000/svg">
+        <text x="0" y="8" font-family="JetBrains Mono" font-size="7" fill="#7D8590">observed vs honest lift</text>
+        <line x1="10" y1="28" x2="190" y2="28" stroke="#30363D" stroke-width="1"/>
+        <line x1="40" y1="18" x2="40" y2="38" stroke="#7D8590" stroke-width="1" stroke-dasharray="2,2"/>
+        <text x="40" y="46" text-anchor="middle" font-family="JetBrains Mono" font-size="6" fill="#7D8590">0%</text>
+        <rect x="60" y="24" width="70" height="8" fill="#F0883E" opacity=".15"/>
+        <circle cx="160" cy="28" r="5" fill="none" stroke="#A0AAB6" stroke-width="1.5" stroke-dasharray="2,2"/>
+        <text x="160" y="15" text-anchor="middle" font-family="JetBrains Mono" font-size="6" fill="#A0AAB6">+18%?</text>
+        <circle cx="90" cy="28" r="5" fill="#F0883E"/>
+        <text x="90" y="46" text-anchor="middle" font-family="JetBrains Mono" font-size="6" fill="#F0883E">+6%</text>
+        <line x1="152" y1="28" x2="98" y2="28" stroke="#D29922" stroke-width="1.5"/>
+      </svg>
+      <div class="tool-icon" style="color:var(--o);border-color:var(--o)">RCK</div>
+      <div class="tool-name">Reality Check</div>
+      <div class="tool-desc">Your test came back a winner, but by how much, really? Underpowered tests that reach significance systematically overstate the effect. Deflate your result before you announce it, and see the probability your variant is actually better.</div>
+      <div class="tool-checks">
+        <div class="tool-check">Winner's curse detection & shrinkage estimation</div>
+        <div class="tool-check">Bayesian P(B beats A) with sceptical priors</div>
+        <div class="tool-check">95% credible interval on true lift</div>
+        <div class="tool-check">Naive vs honest revenue projection</div>
+        <div class="tool-check">Frequentist vs Bayesian explainer for ecom</div>
+      </div>
+      <div class="tool-footer">
+        <div class="tool-status ready">● Ready</div>
+        <div class="tool-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- TEST RECEIPT -->
+    <a class="tool-card" href="receipt.html" style="--card-accent:var(--tx2)">
+      <div class="tool-num">05 — experiment integrity report</div>
+      <!-- sparkline: receipt with grade stamp -->
+      <svg class="card-spark" viewBox="0 0 200 48" xmlns="http://www.w3.org/2000/svg">
+        <text x="0" y="8" font-family="JetBrains Mono" font-size="7" fill="#7D8590">stamped readout</text>
+        <rect x="10" y="12" width="110" height="34" fill="#1C2128" stroke="#30363D" stroke-width="1"/>
+        <line x1="18" y1="20" x2="80" y2="20" stroke="#7D8590" stroke-width="2"/>
+        <line x1="18" y1="27" x2="100" y2="27" stroke="#30363D" stroke-width="2"/>
+        <line x1="18" y1="34" x2="90" y2="34" stroke="#30363D" stroke-width="2"/>
+        <line x1="18" y1="41" x2="70" y2="41" stroke="#30363D" stroke-width="2"/>
+        <circle cx="150" cy="29" r="14" fill="none" stroke="#3FB950" stroke-width="2" transform="rotate(-8 150 29)"/>
+        <text x="150" y="34" text-anchor="middle" font-family="JetBrains Mono" font-size="14" font-weight="700" fill="#3FB950">A</text>
+        <text x="150" y="14" text-anchor="middle" font-family="JetBrains Mono" font-size="6" fill="#7D8590">integrity</text>
+      </svg>
+      <div class="tool-icon" style="color:var(--tx2);border-color:var(--tx2)">RCP</div>
+      <div class="tool-name">Test Receipt</div>
+      <div class="tool-desc">Anyone can screenshot a dashboard and call it a win. A receipt proves the win was earned: a stamped, printable integrity report covering registration, calibration, attestations, and the honest effect estimate.</div>
+      <div class="tool-checks">
+        <div class="tool-check">Imports registered experiments from Lockbox</div>
+        <div class="tool-check">7 integrity attestations, weighted A–F grade</div>
+        <div class="tool-check">Honest (shrunk) estimate + P(B beats A)</div>
+        <div class="tool-check">SHA-256 fingerprint — tamper-evident</div>
+        <div class="tool-check">Print-ready — attach to any test readout</div>
+      </div>
+      <div class="tool-footer">
+        <div class="tool-status ready">● Ready</div>
+        <div class="tool-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- PROGRAM LEDGER -->
+    <a class="tool-card" href="ledger.html" style="--card-accent:var(--y)">
+      <div class="tool-num">06 — claimed vs realized</div>
+      <!-- sparkline: diverging claimed vs actual lines -->
+      <svg class="card-spark" viewBox="0 0 200 48" xmlns="http://www.w3.org/2000/svg">
+        <text x="0" y="8" font-family="JetBrains Mono" font-size="7" fill="#7D8590">claimed vs actual</text>
+        <line x1="10" y1="43" x2="190" y2="43" stroke="#30363D" stroke-width="1"/>
+        <path d="M10,38 L55,32 L100,24 L145,18 L190,12" fill="none" stroke="#A0AAB6" stroke-width="1.5" stroke-dasharray="4,3" opacity=".7"/>
+        <path d="M10,38 L55,36 L100,35 L145,33 L190,32" fill="none" stroke="#3FB950" stroke-width="1.5"/>
+        <text x="188" y="10" text-anchor="end" font-family="JetBrains Mono" font-size="6" fill="#A0AAB6">claimed +40%</text>
+        <text x="188" y="29" text-anchor="end" font-family="JetBrains Mono" font-size="6" fill="#3FB950">actual +6%</text>
+        <line x1="60" y1="14" x2="60" y2="42" stroke="#D29922" stroke-width="1" stroke-dasharray="2,2" opacity=".5"/>
+        <line x1="120" y1="14" x2="120" y2="42" stroke="#D29922" stroke-width="1" stroke-dasharray="2,2" opacity=".5"/>
+      </svg>
+      <div class="tool-icon" style="color:var(--y);border-color:var(--y)">LGR</div>
+      <div class="tool-name">Program Ledger</div>
+      <div class="tool-desc">"You announced +40% cumulative lift this year. Why is revenue flat?" Log every shipped winner, enter your actual monthly numbers, and see whether the wins are showing up in reality. No platform builds this view, because it audits them too.</div>
+      <div class="tool-checks">
+        <div class="tool-check">Ledger of shipped winners — claimed & honest lift</div>
+        <div class="tool-check">Monthly actuals from your analytics</div>
+        <div class="tool-check">Claimed vs honest vs actual CVR trajectory</div>
+        <div class="tool-check">Program realization rate</div>
+        <div class="tool-check">JSON export / import for backup</div>
+      </div>
+      <div class="tool-footer">
+        <div class="tool-status ready">● Ready</div>
+        <div class="tool-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- SUBSCRIBER VALUE -->
+    <a class="tool-card" href="subscriber-value.html" style="--card-accent:#2DD4BF">
+      <div class="tool-num">07 — subscription ltv & test valuation</div>
+      <!-- sparkline: retention decay with LTV area -->
+      <svg class="card-spark" viewBox="0 0 200 48" xmlns="http://www.w3.org/2000/svg">
+        <text x="0" y="8" font-family="JetBrains Mono" font-size="7" fill="#7D8590">subscriber retention → value</text>
+        <line x1="10" y1="43" x2="190" y2="43" stroke="#30363D" stroke-width="1"/>
+        <path d="M10,14 C50,20 90,30 130,36 C150,39 170,41 190,42 L190,43 L10,43 Z" fill="#2DD4BF" opacity=".12"/>
+        <path d="M10,14 C50,20 90,30 130,36 C150,39 170,41 190,42" fill="none" stroke="#2DD4BF" stroke-width="1.5"/>
+        <line x1="66" y1="14" x2="66" y2="42" stroke="#D29922" stroke-width="1" stroke-dasharray="2,2" opacity=".6"/>
+        <text x="69" y="18" font-family="JetBrains Mono" font-size="6" fill="#D29922">break-even 4.2 mo</text>
+        <text x="12" y="20" font-family="JetBrains Mono" font-size="6" fill="#2DD4BF">100% active</text>
+      </svg>
+      <div class="tool-icon" style="color:#2DD4BF;border-color:#2DD4BF">SUB</div>
+      <div class="tool-name">Subscriber Value</div>
+      <div class="tool-desc">When the test goal is subscriptions, your analytics counts a signup as one order and quietly buries your best variant. Model subscriber LTV in scenarios, get the exchange rate against one-off orders, and value the trade-off — even with zero subscription data.</div>
+      <div class="tool-checks">
+        <div class="tool-check">LTV in three churn scenarios, not one guess</div>
+        <div class="tool-check">1 subscriber = X one-off orders exchange rate</div>
+        <div class="tool-check">Value-per-visitor comparison across arms</div>
+        <div class="tool-check">Break-even lifetime — no churn data needed</div>
+        <div class="tool-check">Industry churn benchmarks built in</div>
+      </div>
+      <div class="tool-footer">
+        <div class="tool-status ready">● Ready</div>
+        <div class="tool-arrow">→</div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<section class="manifesto">
+  <div class="manifesto-title">// why this exists</div>
+  <div class="manifesto-body">
+    <p>
+      Most ecommerce A/B testing is <strong>governance theatre</strong>. Teams pick their metric after seeing the results, peek at significance daily, and ship winners produced by platforms nobody ever bothered to calibrate. The math was never the problem.
+    </p>
+    <p>
+      Each tool here guards a different failure point. The <strong>Validator</strong> checks whether your testing platform is telling you the truth. <strong>Lockbox</strong> locks your hypothesis in before any data exists. <strong>Reality Check</strong> deflates inflated winners before you announce them, and the <strong>Ledger</strong> asks the uncomfortable year-end question: did any of it actually show up in revenue?
+    </p>
+    <p>
+      Everything runs in your browser. There are no accounts and nothing gets sent to a server, which also means you can use these on client data without asking anyone's permission.
+    </p>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-left">// <span>zijlstra</span> testing stack · built for valid ecom research</div>
+  <div class="footer-right">all computation client-side · localStorage only</div>
+</footer>
+
+</body>
+</html>

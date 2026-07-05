@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Subscriber Value — Zijlstra Testing Stack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0D1117;--bg2:#161B22;--bg3:#1C2128;
+    --bdr:#30363D;
+    --tx:#E6EDF3;--tx2:#A0AAB6;--tx3:#7D8590;
+    --ac:#4F8EF7;--g:#3FB950;--r:#F85149;--y:#D29922;--o:#F0883E;--p:#BC8CFF;--t:#2DD4BF;
+    --mono:'JetBrains Mono',monospace;
+    --sans:'Inter',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{min-height:100vh;background:var(--bg);color:var(--tx);font-family:var(--sans);font-size:14px}
+
+  .hdr{background:var(--bg2);border-bottom:1px solid var(--bdr);padding:0 24px;height:52px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100}
+  .hdr-back{font-family:var(--mono);font-size:11px;color:var(--tx3);text-decoration:none;padding:4px 10px;border:1px solid var(--bdr)}
+  .hdr-back:hover{color:var(--tx);border-color:var(--tx3)}
+  .hdr-title{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--tx)}
+  .hdr-tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.5px;padding:4px 8px;border:1px solid var(--t);color:var(--t)}
+  .hdr-right{margin-left:auto;font-size:11px;color:var(--tx3)}
+
+  .wrap{max-width:1200px;margin:0 auto;padding:24px}
+  .layout{display:grid;grid-template-columns:1fr 300px;gap:20px}
+  .main>*+*{margin-top:18px}
+
+  .panel{background:var(--bg2);border:1px solid var(--bdr)}
+  .ph{padding:12px 16px;border-bottom:1px solid var(--bdr)}
+  .ph-title{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--tx2)}
+  .ph-body{padding:16px}
+
+  label{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--tx3);margin-bottom:5px}
+  input[type=text]{
+    width:100%;background:var(--bg);border:1px solid var(--bdr);color:var(--tx);
+    padding:8px 10px;font-family:var(--mono);font-size:13px;outline:none;
+  }
+  input:focus{border-color:var(--t)}
+  .fg{margin-bottom:14px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+  .row4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px}
+  .hint{font-size:10px;font-weight:400;text-transform:none;letter-spacing:0;color:var(--tx3)}
+
+  .bench{display:inline-block;font-family:var(--mono);font-size:10px;padding:3px 9px;border:1px solid var(--bdr);color:var(--tx3);cursor:pointer;margin:2px 3px 2px 0}
+  .bench:hover{border-color:var(--t);color:var(--t)}
+
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:14px}
+  .stat-card{background:var(--bg);border:1px solid var(--bdr);padding:14px}
+  .stat-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--tx3);margin-bottom:4px}
+  .stat-val{font-family:var(--mono);font-size:22px;font-weight:700}
+  .stat-sub{font-size:11px;color:var(--tx3);margin-top:3px}
+
+  .scen-table{width:100%;border-collapse:collapse;margin-bottom:12px}
+  .scen-table th{font-family:var(--mono);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--tx3);padding:8px 10px;text-align:left;border-bottom:1px solid var(--bdr)}
+  .scen-table td{padding:8px 10px;font-size:12px;border-bottom:1px solid var(--bg3);font-family:var(--mono)}
+
+  .alert{display:flex;gap:8px;padding:10px 12px;font-size:12px;line-height:1.6;margin-bottom:8px;border:1px solid}
+  .alert.ok{border-color:rgba(63,185,80,.3);background:rgba(63,185,80,.06);color:var(--tx2)}
+  .alert.warn{border-color:rgba(210,153,34,.3);background:rgba(210,153,34,.06);color:var(--tx2)}
+  .alert.err{border-color:rgba(248,81,73,.3);background:rgba(248,81,73,.06);color:var(--tx2)}
+  .alert.info{border-color:rgba(79,142,247,.3);background:rgba(79,142,247,.06);color:var(--tx2)}
+  .ai{flex-shrink:0}
+  .alert strong{color:var(--tx)}
+
+  .variant-box{border:1px solid var(--bdr);padding:14px}
+  .vb-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+
+  .sidebar{position:sticky;top:72px;align-self:start}
+  .sidebar>*+*{margin-top:14px}
+
+  /* why panel */
+  .why{background:var(--bg2);border:1px solid var(--bdr);padding:24px 28px;margin-bottom:4px}
+  .why-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--t);margin-bottom:14px}
+  .why p{font-size:13px;color:var(--tx2);line-height:1.8;margin-bottom:14px}
+  .why strong{color:var(--tx)}
+  .why-quote{border-left:3px solid var(--t);padding:10px 16px;background:var(--bg)}
+  .why-quote p{font-size:13px;color:var(--tx);line-height:1.7;font-style:italic;margin:0}
+  .why-quote .attr{font-family:var(--mono);font-size:10px;color:var(--tx3);margin-top:6px;font-style:normal}
+
+  /* the math */
+  details.math{background:var(--bg2);border:1px solid var(--bdr);margin:18px 0}
+  details.math summary{cursor:pointer;padding:14px 18px;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--t);list-style:none;user-select:none}
+  details.math summary::-webkit-details-marker{display:none}
+  details.math summary::before{content:'▸ '}
+  details.math[open] summary::before{content:'▾ '}
+  details.math summary:hover{color:var(--tx)}
+  .math-body{padding:0 22px 20px;font-size:12.5px;color:var(--tx2);line-height:1.8;max-width:820px}
+  .math-body h4{font-size:12px;color:var(--tx);margin:18px 0 6px;font-family:var(--mono);letter-spacing:.3px}
+  .math-body h4:first-child{margin-top:4px}
+  .math-body p{margin-bottom:8px}
+  .math-body code{font-family:var(--mono);font-size:11px;background:var(--bg);border:1px solid var(--bdr);padding:1px 5px;color:var(--t)}
+  .math-body .formula{font-family:var(--mono);font-size:11.5px;background:var(--bg);border:1px solid var(--bdr);padding:10px 14px;margin:8px 0;color:var(--tx);overflow-x:auto;line-height:1.8}
+
+  @media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{position:static}.row4{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <a class="hdr-back" href="index.html">← Home</a>
+  <div class="hdr-title">Subscriber Value</div>
+  <div class="hdr-tag">SUB</div>
+  <div class="hdr-right">07 — Subscription LTV & Test Valuation</div>
+</header>
+
+<div class="wrap">
+  <div style="margin-bottom:20px">
+    <h1 style="font-size:22px;font-weight:700;margin-bottom:14px">Subscriber Value</h1>
+    <div class="why">
+      <div class="why-label">// why value a subscriber?</div>
+      <p>
+        When the test goal is subscription signups, your analytics is nearly blind. It sees single payments,
+        not who became a subscriber, how long they stay, or what their orders are worth over time.
+        So teams fall back on what they can see, and <strong>a subscriber gets counted like a one-off conversion:
+        one order, one AOV, done</strong>. A variant that trades a few one-off sales for subscription signups looks
+        like a loser on the dashboard while quietly being the most valuable test of the year.
+      </p>
+      <p>
+        You don't need perfect data to fix this. You need a defensible model with explicit assumptions.
+        Subscription economics reduce to three numbers: order value, order frequency, and monthly churn.
+        Since you rarely know churn, this tool works in <strong>scenarios (conservative, base, optimistic)</strong> and,
+        for test decisions, inverts the question entirely: <strong>how long must a subscriber stay for the variant to win?</strong>
+        That break-even number is defensible even with zero subscription data, because it doesn't claim to know
+        the answer. It tells the room exactly what they're betting on.
+      </p>
+      <div class="why-quote">
+        <p>"It is better to be roughly right than precisely wrong."</p>
+        <p class="attr">ATTRIBUTED TO JOHN MAYNARD KEYNES</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="main">
+
+      <!-- 01 ECONOMICS -->
+      <div class="panel">
+        <div class="ph"><div class="ph-title">01 — Subscription Economics</div></div>
+        <div class="ph-body">
+          <div class="row3">
+            <div class="fg">
+              <label>Avg subscription order value <span class="hint">per delivery</span></label>
+              <input type="text" inputmode="decimal" id="s_val" placeholder="e.g. 34.50" oninput="this.value=this.value.replace(/[^0-9.]/g,'');compute()">
+            </div>
+            <div class="fg">
+              <label>Deliveries per month</label>
+              <input type="text" inputmode="decimal" id="s_freq" placeholder="e.g. 1" oninput="this.value=this.value.replace(/[^0-9.]/g,'');compute()">
+            </div>
+            <div class="fg">
+              <label>Gross margin % <span class="hint">(optional, default 100 = revenue terms)</span></label>
+              <input type="text" inputmode="decimal" id="s_margin" placeholder="e.g. 40" oninput="this.value=this.value.replace(/[^0-9.]/g,'');compute()">
+            </div>
+          </div>
+          <div class="fg" style="margin-bottom:6px">
+            <label>Monthly churn % — three scenarios <span class="hint">(what share of subscribers cancel each month)</span></label>
+            <div class="row3">
+              <input type="text" inputmode="decimal" id="s_churn_hi" placeholder="conservative, e.g. 15" oninput="this.value=this.value.replace(/[^0-9.]/g,'');compute()">
+              <input type="text" inputmode="decimal" id="s_churn_base" placeholder="base, e.g. 10" oninput="this.value=this.value.replace(/[^0-9.]/g,'');compute()">
+              <input type="text" inputmode="decimal" id="s_churn_lo" placeholder="optimistic, e.g. 6" oninput="this.value=this.value.replace(/[^0-9.]/g,'');compute()">
+            </div>
+          </div>
+          <div style="margin-bottom:12px">
+            <span style="font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:1px;margin-right:6px">No idea? Industry reference points:</span>
+            <span class="bench" onclick="setChurn(18,12,8)">Subscription boxes 8–18%</span>
+            <span class="bench" onclick="setChurn(12,8,5)">Replenishment (food, care) 5–12%</span>
+            <span class="bench" onclick="setChurn(9,6,4)">Memberships 4–9%</span>
+          </div>
+          <div class="fg" style="max-width:280px;margin-bottom:0">
+            <label>Valuation horizon <span class="hint">(months — caps the LTV tail)</span></label>
+            <input type="text" inputmode="numeric" id="s_horizon" value="24" oninput="this.value=this.value.replace(/[^0-9]/g,'');compute()">
+          </div>
+          <div id="ltvOut" style="margin-top:16px"></div>
+        </div>
+      </div>
+
+      <!-- 02 ONE-OFF COMPARISON -->
+      <div class="panel">
+        <div class="ph"><div class="ph-title">02 — One Subscriber = How Many Regular Orders?</div></div>
+        <div class="ph-body">
+          <div class="fg" style="max-width:320px">
+            <label>Avg one-off order value <span class="hint">(non-subscription AOV)</span></label>
+            <input type="text" inputmode="decimal" id="s_aov" placeholder="e.g. 52.00" oninput="this.value=this.value.replace(/[^0-9.]/g,'');compute()">
+          </div>
+          <div id="ratioOut"><div style="color:var(--tx3);font-size:12px">Fill in the economics above and the one-off AOV to see the exchange rate.</div></div>
+        </div>
+      </div>
+
+      <!-- 03 TEST TRANSLATOR -->
+      <div class="panel">
+        <div class="ph"><div class="ph-title">03 — Value an A/B Test Result</div></div>
+        <div class="ph-body">
+          <p style="font-size:11px;color:var(--tx3);margin-bottom:14px;line-height:1.6">
+            For tests where the arms trade one-off orders against subscription signups. Enter what each arm produced.
+            Statistical significance is checked per metric in <a href="lockbox.html" style="color:var(--ac)">Lockbox</a>;
+            this panel answers the different question of which arm produced more <em>value</em>.
+          </p>
+          <div class="row2" style="margin-bottom:0">
+            <div class="variant-box">
+              <div class="vb-title" style="color:var(--ac)">▲ Control (A)</div>
+              <div class="row3">
+                <div class="fg" style="margin-bottom:0">
+                  <label>Visitors</label>
+                  <input type="text" inputmode="numeric" id="t_nA" placeholder="24 000" oninput="this.value=this.value.replace(/[^0-9]/g,'');compute()">
+                </div>
+                <div class="fg" style="margin-bottom:0">
+                  <label>One-off orders</label>
+                  <input type="text" inputmode="numeric" id="t_sA" placeholder="480" oninput="this.value=this.value.replace(/[^0-9]/g,'');compute()">
+                </div>
+                <div class="fg" style="margin-bottom:0">
+                  <label>New subscribers</label>
+                  <input type="text" inputmode="numeric" id="t_subA" placeholder="22" oninput="this.value=this.value.replace(/[^0-9]/g,'');compute()">
+                </div>
+              </div>
+            </div>
+            <div class="variant-box">
+              <div class="vb-title" style="color:var(--g)">▲ Variant (B)</div>
+              <div class="row3">
+                <div class="fg" style="margin-bottom:0">
+                  <label>Visitors</label>
+                  <input type="text" inputmode="numeric" id="t_nB" placeholder="23 800" oninput="this.value=this.value.replace(/[^0-9]/g,'');compute()">
+                </div>
+                <div class="fg" style="margin-bottom:0">
+                  <label>One-off orders</label>
+                  <input type="text" inputmode="numeric" id="t_sB" placeholder="455" oninput="this.value=this.value.replace(/[^0-9]/g,'');compute()">
+                </div>
+                <div class="fg" style="margin-bottom:0">
+                  <label>New subscribers</label>
+                  <input type="text" inputmode="numeric" id="t_subB" placeholder="41" oninput="this.value=this.value.replace(/[^0-9]/g,'');compute()">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="testOut" style="margin-top:14px"></div>
+        </div>
+      </div>
+
+    </div><!-- /main -->
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="panel">
+        <div class="ph"><div class="ph-title">Subscriber LTV</div></div>
+        <div class="ph-body" id="sideLTV"><div style="color:var(--tx3);font-size:12px">—</div></div>
+      </div>
+      <div class="panel">
+        <div class="ph"><div class="ph-title">The exchange rate</div></div>
+        <div class="ph-body" id="sideRatio"><div style="color:var(--tx3);font-size:12px">—</div></div>
+      </div>
+      <div class="panel">
+        <div class="ph"><div class="ph-title">Honest caveats</div></div>
+        <div class="ph-body">
+          <p style="font-size:11px;color:var(--tx2);line-height:1.7">
+            This is a model, and every input is an assumption. Churn is the one that moves LTV the most, which is why
+            it's forced into three scenarios instead of one guess. Where possible, replace assumptions with data:
+            finance usually knows subscription revenue even when analytics doesn't, and even three months of cancellation
+            counts beats a benchmark chip. Present the range, never a single number.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE MATH -->
+  <details class="math">
+    <summary>// the math — every calculation this tool runs, in full</summary>
+    <div class="math-body">
+      <h4>Lifetime value with geometric retention</h4>
+      <p>With monthly churn c, the chance a subscriber is still active in month m is (1−c)ᵐ. Expected active months within a horizon of H months:</p>
+      <div class="formula">E[months] = ( 1 − (1−c)ᴴ ) / c&nbsp;&nbsp;·&nbsp;&nbsp;→ 1/c as H → ∞</div>
+      <div class="formula">LTV = order value × deliveries/month × margin × E[months]</div>
+      <p>The horizon cap keeps the model honest: an uncapped 1/c at 4% churn claims 25 months of revenue, most of it far in the future. The default 24-month cap limits how much the distant tail can inflate today's decision. Churn is assumed constant, which slightly overstates early-month retention for most programs (real churn is highest in months 1–3), so treat results as mildly optimistic.</p>
+
+      <h4>The exchange rate</h4>
+      <div class="formula">1 subscriber = LTV / (one-off AOV × margin)&nbsp;&nbsp;one-off orders</div>
+      <p>Computed per scenario. This is the single number that changes how a subscription test is read.</p>
+
+      <h4>Test valuation</h4>
+      <p>Per arm, per scenario:</p>
+      <div class="formula">value per visitor = ( one-offs × AOV × margin + subscribers × LTV ) / visitors</div>
+      <p>The verdict compares arms in all three scenarios. If the same arm wins in all three, the decision is robust to the churn assumption. If the winner flips between scenarios, the tool says so — that means the decision genuinely depends on a number you don't have, and the break-even below is the honest way to present it.</p>
+
+      <h4>Break-even lifetime — inverting the unknown</h4>
+      <p>When one arm has fewer one-off orders but more subscribers, the value tie-point is the subscriber lifetime that exactly cancels the one-off deficit:</p>
+      <div class="formula">E*[months] = − Δone-offs × AOV / ( Δsubscribers × monthly value )</div>
+      <p>Reported in months, with the implied churn rate solved numerically from the capped-geometric formula. The claim "the variant wins if subscribers stay at least 4.2 months" requires no subscription data at all — it's a threshold, not an estimate, and the room can judge whether 4.2 months is a safe bet for your product.</p>
+    </div>
+  </details>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════
+function num(id){const v=parseFloat(document.getElementById(id).value);return isNaN(v)?null:v;}
+function setChurn(hi,base,lo){
+  document.getElementById('s_churn_hi').value=hi;
+  document.getElementById('s_churn_base').value=base;
+  document.getElementById('s_churn_lo').value=lo;
+  compute();
+}
+function fmt(v){
+  if(v===null||!isFinite(v))return '—';
+  return v>=1000?(v/1000).toFixed(1)+'K':v.toFixed(2);
+}
+function expMonths(c,H){return (1-Math.pow(1-c,H))/c;}
+
+function ltvFor(churnPct){
+  const val=num('s_val'),freq=num('s_freq');
+  if(!val||!freq||!churnPct)return null;
+  const margin=(num('s_margin')||100)/100;
+  const H=num('s_horizon')||24;
+  const c=churnPct/100;
+  if(c<=0||c>=1)return null;
+  const v=val*freq*margin;
+  const em=expMonths(c,H);
+  return {v,em,ltv:v*em};
+}
+
+// solve churn % that produces a given expected months (capped geometric)
+function churnForMonths(target,H){
+  if(target>=H)return 0.1;
+  let lo=0.05,hi=95;
+  for(let i=0;i<60;i++){
+    const mid=(lo+hi)/2;
+    if(expMonths(mid/100,H)>target)lo=mid;else hi=mid;
+  }
+  return (lo+hi)/2;
+}
+
+// ═══════════════════════════════════════
+// COMPUTE
+// ═══════════════════════════════════════
+function compute(){
+  const scens=[
+    {name:'Conservative',churn:num('s_churn_hi'),color:'var(--r)'},
+    {name:'Base',churn:num('s_churn_base'),color:'var(--t)'},
+    {name:'Optimistic',churn:num('s_churn_lo'),color:'var(--g)'},
+  ];
+  const results=scens.map(s=>({...s,r:s.churn?ltvFor(s.churn):null}));
+  const anyLTV=results.some(s=>s.r);
+
+  // ── 01 output ──
+  if(anyLTV){
+    document.getElementById('ltvOut').innerHTML=`
+      <table class="scen-table">
+        <tr><th>Scenario</th><th>Monthly churn</th><th>Expected lifetime</th><th>Subscriber LTV</th></tr>
+        ${results.map(s=>s.r?`<tr>
+          <td style="color:${s.color}">${s.name}</td>
+          <td style="color:var(--tx2)">${s.churn}% / mo</td>
+          <td style="color:var(--tx2)">${s.r.em.toFixed(1)} months</td>
+          <td style="color:${s.color};font-weight:700">${fmt(s.r.ltv)}</td>
+        </tr>`:'').join('')}
+      </table>
+      <div style="font-size:11px;color:var(--tx3);line-height:1.6">LTV = order value × deliveries/month × margin × expected months, capped at your ${num('s_horizon')||24}-month horizon. Present the range, not one number.</div>`;
+
+    const base=results[1].r||results.find(s=>s.r).r;
+    document.getElementById('sideLTV').innerHTML=`
+      <div style="text-align:center">
+        <div style="font-family:var(--mono);font-size:30px;font-weight:700;color:var(--t)">${fmt(base.ltv)}</div>
+        <div style="font-size:11px;color:var(--tx3);margin-top:2px">base scenario · ${base.em.toFixed(1)} expected months</div>
+        <div style="font-family:var(--mono);font-size:12px;color:var(--tx2);margin-top:8px">${results[0].r?fmt(results[0].r.ltv):'—'} … ${results[2].r?fmt(results[2].r.ltv):'—'}</div>
+        <div style="font-size:10px;color:var(--tx3)">conservative … optimistic</div>
+      </div>`;
+  } else {
+    document.getElementById('ltvOut').innerHTML='';
+    document.getElementById('sideLTV').innerHTML='<div style="color:var(--tx3);font-size:12px">Enter order value, frequency and churn scenarios.</div>';
+  }
+
+  // ── 02 exchange rate ──
+  const aov=num('s_aov');
+  const margin=(num('s_margin')||100)/100;
+  if(anyLTV&&aov){
+    const oneOffVal=aov*margin;
+    document.getElementById('ratioOut').innerHTML=`
+      <div class="stat-grid" style="margin-bottom:8px">
+        ${results.map(s=>s.r?`<div class="stat-card" style="border-color:${s.color}">
+          <div class="stat-label" style="color:${s.color}">${s.name}</div>
+          <div class="stat-val" style="color:${s.color}">${(s.r.ltv/oneOffVal).toFixed(1)}×</div>
+          <div class="stat-sub">one-off orders per subscriber</div>
+        </div>`:'').join('')}
+      </div>
+      <div class="alert info"><span class="ai">ℹ</span><span>Even in the conservative case, every subscriber your test wins is worth <strong>${results[0].r?(results[0].r.ltv/oneOffVal).toFixed(1):'—'} regular orders</strong>. Any dashboard that counts a signup as one conversion is undervaluing it by that factor.</span></div>`;
+    document.getElementById('sideRatio').innerHTML=`
+      <div style="text-align:center">
+        <div style="font-family:var(--mono);font-size:30px;font-weight:700;color:var(--t)">${results[1].r?(results[1].r.ltv/oneOffVal).toFixed(1):'—'}×</div>
+        <div style="font-size:11px;color:var(--tx3);margin-top:2px">1 subscriber ≈ this many one-off orders (base)</div>
+      </div>`;
+  } else {
+    document.getElementById('ratioOut').innerHTML='<div style="color:var(--tx3);font-size:12px">Fill in the economics above and the one-off AOV to see the exchange rate.</div>';
+    document.getElementById('sideRatio').innerHTML='<div style="color:var(--tx3);font-size:12px">—</div>';
+  }
+
+  // ── 03 test translator ──
+  const nA=num('t_nA'),sA=num('t_sA'),subA=num('t_subA');
+  const nB=num('t_nB'),sB=num('t_sB'),subB=num('t_subB');
+  const ready=nA&&nB&&sA!==null&&sB!==null&&subA!==null&&subB!==null&&aov&&anyLTV;
+  if(!ready){
+    document.getElementById('testOut').innerHTML='<div style="color:var(--tx3);font-size:12px">Fill in the economics, one-off AOV, and both arms to value the test.</div>';
+    return;
+  }
+
+  const oneOffVal=aov*margin;
+  const rows=results.filter(s=>s.r).map(s=>{
+    const vA=(sA*oneOffVal+subA*s.r.ltv)/nA;
+    const vB=(sB*oneOffVal+subB*s.r.ltv)/nB;
+    return {...s,vA,vB,lift:(vB-vA)/vA*100};
+  });
+  const winners=rows.map(r=>r.vB>r.vA?'B':'A');
+  const robust=winners.every(w=>w===winners[0]);
+
+  let verdict='';
+  if(robust){
+    const w=winners[0];
+    verdict=`<div class="alert ${w==='B'?'ok':'err'}"><span class="ai">${w==='B'?'✓':'✗'}</span><span><strong>${w==='B'?'Variant':'Control'} wins in value terms in all three scenarios.</strong> The decision does not depend on the churn assumption — the value difference survives even the conservative case.</span></div>`;
+  } else {
+    verdict=`<div class="alert warn"><span class="ai">⚠</span><span><strong>The winner flips between scenarios.</strong> This decision genuinely depends on subscriber lifetime, a number you don't have. Use the break-even below to frame the bet honestly instead of picking the scenario that suits the preferred outcome.</span></div>`;
+  }
+
+  // break-even: only when arms trade one-offs against subscribers
+  let breakeven='';
+  const dSingles=sB-sA, dSubs=subB-subA;
+  const val=num('s_val'),freq=num('s_freq');
+  if(dSubs!==0&&val&&freq&&((dSingles<0&&dSubs>0)||(dSingles>0&&dSubs<0))){
+    const mv=val*freq*margin;
+    const needMonths=-(dSingles*oneOffVal)/(dSubs*mv);
+    if(needMonths>0){
+      const H=num('s_horizon')||24;
+      const impliedChurn=churnForMonths(needMonths,H);
+      const gainer=dSubs>0?'Variant':'Control';
+      breakeven=`<div class="alert info"><span class="ai">⚖</span><span>
+        <strong>The break-even, with zero subscription data needed:</strong> ${gainer} gives up ${Math.abs(dSingles)} one-off orders and gains ${Math.abs(dSubs)} subscribers.
+        It comes out ahead if the average subscriber stays at least <strong>${needMonths.toFixed(1)} months</strong> (monthly churn below ~<strong>${impliedChurn.toFixed(1)}%</strong>).
+        You don't have to estimate subscriber lifetime — you only have to judge whether ${needMonths.toFixed(1)} months is a safe bet for your product. That's a question the room can actually answer.</span></div>`;
+    }
+  }
+
+  document.getElementById('testOut').innerHTML=`
+    <table class="scen-table">
+      <tr><th>Scenario</th><th>Control value / visitor</th><th>Variant value / visitor</th><th>Value lift</th></tr>
+      ${rows.map(r=>`<tr>
+        <td style="color:${r.color}">${r.name}</td>
+        <td style="color:var(--ac)">${r.vA.toFixed(3)}</td>
+        <td style="color:var(--g)">${r.vB.toFixed(3)}</td>
+        <td style="color:${r.lift>=0?'var(--g)':'var(--r)'};font-weight:700">${r.lift>=0?'+':''}${r.lift.toFixed(1)}%</td>
+      </tr>`).join('')}
+    </table>
+    ${verdict}
+    ${breakeven}
+    <div style="font-size:11px;color:var(--tx3);line-height:1.6;margin-top:6px">Value lift is a point estimate — it inherits the statistical uncertainty of both metrics. If neither the one-off nor the subscription difference is statistically solid on its own, the value lift isn't either.</div>`;
+}
+</script>
+</body>
+</html>
