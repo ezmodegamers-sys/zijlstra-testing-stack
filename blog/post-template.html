@@ -112,6 +112,14 @@
   .footer-right{font-size:11px;color:var(--tx3)}
 
   @media(max-width:800px){.article{padding:40px 24px 60px}.nav{padding:0 24px}}
+
+  /* ── craft pass (site-wide) ── */
+  html{scroll-behavior:smooth}
+  body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+  @media screen{body{background:radial-gradient(circle at 1px 1px,rgba(230,237,243,.022) 1px,transparent 0) 0 0/34px 34px,var(--bg)}}
+  ::selection{background:rgba(79,142,247,.26);color:#fff}
+  a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--ac);outline-offset:3px}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
