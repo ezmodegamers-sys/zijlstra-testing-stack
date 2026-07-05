@@ -127,7 +127,7 @@
   <nav class="crumbs" aria-label="Breadcrumb">
     <a href="/">Home</a><span class="sep">/</span><a href="/blog/">Blog</a><span class="sep">/</span><span class="here">Traffic &amp; sample size</span>
   </nav>
-  <div class="a-meta"><time datetime="2026-07-05">Jul 5, 2026</time><span class="cat">sample size</span><span>4 min read</span></div>
+  <div class="a-meta"><time datetime="2026-07-05">Jul 5, 2026</time><span class="cat">sample size</span><span>7 min read</span></div>
   <h1>How much traffic do you need to A/B test an online store?</h1>
   <p class="a-standfirst">Some version of this question shows up every week on r/shopify, r/CRO, and r/ecommerce: "My store does about 10,000 visitors a month. Everyone says test everything, but my tests never reach significance. Am I doing something wrong?" No. The math was against you before you started.</p>
   <div class="a-byline">by Sebastian Zijlstra · <a href="/blog/">more essays</a></div>
@@ -149,7 +149,19 @@
   <p>The tempting move at low traffic is to run the test anyway and hope. Sometimes p dips under .05 and it feels like beating the odds. What actually happened is less cheerful. When a test with 20 or 30% power comes back significant, it almost had to get lucky to clear the bar, so the measured lift is inflated, routinely by a factor of two or three. This is the <strong>winner's curse</strong>, and it means the +14% you're about to announce is probably a +5% in disguise. You ship it, the baseline doesn't move, and six months later someone in finance starts asking why none of the wins show up anywhere.</p>
   <p>An underpowered test that "wins" is worse than no test, because it converts a guess into false certainty. If you have one of these marginal winners on your hands right now, <a href="/reality-check">Reality Check</a> will deflate it to an honest estimate before you announce anything you'll have to defend later.</p>
 
-  <h2><span class="num">03</span>What actually works at 10,000 visitors a month</h2>
+  <h2><span class="num">03</span>Doesn't switching to Bayesian fix this?</h2>
+  <p>It's the obvious objection, and worth taking seriously, because most of the tools people admire have already switched. Dynamic Yield runs on a Bayesian engine and reports a "probability to be best" instead of a p-value. VWO's SmartStats is Bayesian too. So if the industry leaders moved, maybe the frequentist math above is just the wrong tool, and a small store can test fine once it drops p-values.</p>
+  <p>Here is the part the vendor pages skip. Bayesian and frequentist statistics are two ways of reading the same data, and the data is where the information lives. If 10,000 visitors and 250 conversions can't separate a 10% lift from noise, no choice of statistical philosophy invents the missing signal. Feed that thin sample into a Bayesian model and you get a wide posterior: "probability B is better, 66%." That is not a green light. It is an honest way of writing "close to a coin flip". The arithmetic from the chart doesn't vanish when you change notation. It gets reported in a different unit.</p>
+  <p>So why did serious teams adopt it? Three reasons, and none of them is "it needs less traffic":</p>
+  <ul>
+    <li><strong>It gives you a decision, not a verdict.</strong> A frequentist test hands a small store a binary "not significant", which reads as failure. Bayesian output is a probability paired with an expected loss: "72% chance B wins, and if we're wrong it costs about 0.2% of conversion". You can act on that with the traffic you have, as long as you treat 72% as 72% and not as a win.</li>
+    <li><strong>The prior is the winner's-curse fix, built in.</strong> Point a Bayesian model at a skeptical prior, one that starts from "most changes do nothing", and it automatically pulls a wild observed lift back toward zero. That's the same shrinkage the last section asked for, done in one step instead of bolted on after.</li>
+    <li><strong>It reads like a business answer.</strong> "92% to win, worst case costs this much" maps to a decision a merchant can defend in a meeting. A p-value of 0.04 gets misread in almost every meeting it appears in.</li>
+  </ul>
+  <p>Two cautions before you treat Bayesian as an escape hatch. First, it does not make peeking free. Ship the moment "probability to be best" crosses 95% and you inflate your error rate the same way early frequentist stopping does. The expected-loss framing limits the damage, it doesn't remove it. Second, the paradigm split isn't even the real divide. Optimizely's Stats Engine solved the peeking problem while staying frequentist, using sequential always-valid p-values. "Bayesian versus frequentist" is not the axis that decides whether a small store can test. Sample size is.</p>
+  <p>The honest takeaway is narrower. Bayesian methods are better suited to deciding under the uncertainty a small store lives with, because they hand you a calibrated bet instead of a pass/fail stamp. They change what you do with a thin result. They do not thicken it. That's exactly why the honest-estimate tool in this stack, <a href="/reality-check">Reality Check</a>, is Bayesian: give it your observed lift and a skeptical prior, and it returns the probability B truly beats A, plus a credible interval you can explain to anyone.</p>
+
+  <h2><span class="num">04</span>What actually works at 10,000 visitors a month</h2>
   <p>The line in the chart isn't fixed. Each of these moves it in your favour, and none of them requires more traffic.</p>
   <ul>
     <li><strong>Test bigger swings.</strong> Small stores earn their significance by testing things that can plausibly move conversion 30% or more: the offer itself, pricing presentation, bundling, a rebuilt product page. Button colours are for stores with a million visitors.</li>
@@ -163,7 +175,7 @@
     Before any test: put your numbers into a sample size calculator and read the duration. Under eight weeks, run it. Over eight weeks, change the plan: a bigger swing, an upstream metric, or no test at all. Shipping the change and watching your baseline is more honest than a test that was never going to conclude.
   </div>
 
-  <h2><span class="num">04</span>Do the two minutes of paperwork</h2>
+  <h2><span class="num">05</span>Do the two minutes of paperwork</h2>
   <p>All of the above only pays off if it's decided before the test starts. <a href="/lockbox">Lockbox</a> has the sample size calculator built in and locks your metric, sample size, and stopping rule up front, so the temptation to peek daily or to quietly switch goals mid-test has nowhere to go. When a winner ships, log it in the <a href="/ledger">Program Ledger</a> next to your actual monthly numbers. That's how you find out whether your testing program produces revenue or just announcements.</p>
   <p>The whole workflow is free and runs in your browser. Nothing gets uploaded, so you can put real client numbers in without asking anyone. Start with the calculator: two minutes of arithmetic before the test beats three months of arguing after it.</p>
 
