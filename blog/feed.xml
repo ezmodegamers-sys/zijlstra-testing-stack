@@ -8,11 +8,11 @@
   <lastBuildDate>Sun, 05 Jul 2026 18:00:00 GMT</lastBuildDate>
   <atom:link href="https://abintegrity.com/blog/feed.xml" rel="self" type="application/rss+xml"/>
   <item>
-    <title>Your A/B test won. So why is revenue flat?</title>
-    <link>https://abintegrity.com/blog/why-ab-test-wins-dont-show-up-in-revenue</link>
-    <guid>https://abintegrity.com/blog/why-ab-test-wins-dont-show-up-in-revenue</guid>
+    <title>How much traffic do you need to A/B test an online store?</title>
+    <link>https://abintegrity.com/blog/how-much-traffic-do-you-need-to-ab-test</link>
+    <guid>https://abintegrity.com/blog/how-much-traffic-do-you-need-to-ab-test</guid>
     <pubDate>Sun, 05 Jul 2026 18:00:00 GMT</pubDate>
-    <description>Where announced A/B test lift actually goes: winner's curse, peeking, and uncalibrated platforms. How to run a program whose wins survive contact with reality.</description>
+    <description>At 10,000 visitors a month, detecting a 10% lift takes 56 weeks. The arithmetic to run before any test, and what actually works at small-store traffic.</description>
   </item>
 </channel>
 </rss>
