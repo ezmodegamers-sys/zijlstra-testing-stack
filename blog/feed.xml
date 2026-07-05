@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>Zijlstra Testing Stack — Blog</title>
+  <link>https://abintegrity.com/blog/</link>
+  <description>Essays on honest ecommerce experimentation.</description>
+  <language>en</language>
+  <lastBuildDate>Sun, 05 Jul 2026 18:00:00 GMT</lastBuildDate>
+  <atom:link href="https://abintegrity.com/blog/feed.xml" rel="self" type="application/rss+xml"/>
+  <item>
+    <title>Your A/B test won. So why is revenue flat?</title>
+    <link>https://abintegrity.com/blog/why-ab-test-wins-dont-show-up-in-revenue</link>
+    <guid>https://abintegrity.com/blog/why-ab-test-wins-dont-show-up-in-revenue</guid>
+    <pubDate>Sun, 05 Jul 2026 18:00:00 GMT</pubDate>
+    <description>Winner's curse, peeking, and uncalibrated platforms — where announced A/B test lift actually goes, and how to run a program whose wins survive contact with reality.</description>
+  </item>
+</channel>
+</rss>

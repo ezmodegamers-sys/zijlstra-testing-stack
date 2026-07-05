@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Your A/B test won. So why is revenue flat? — Zijlstra Testing Stack</title>
+<meta name="description" content="Testing programs announce double-digit lifts all year while the P&L stays flat. Winner's curse, peeking, and uncalibrated platforms explain the gap — here's how each one eats your lift, and what to do about it.">
+<link rel="canonical" href="https://abintegrity.com/blog/why-ab-test-wins-dont-show-up-in-revenue">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Zijlstra Testing Stack">
+<meta property="og:title" content="Your A/B test won. So why is revenue flat?">
+<meta property="og:description" content="Winner's curse, peeking, and uncalibrated platforms — where announced A/B test lift actually goes, and how to run a program whose wins survive contact with reality.">
+<meta property="og:url" content="https://abintegrity.com/blog/why-ab-test-wins-dont-show-up-in-revenue">
+<meta property="og:image" content="https://abintegrity.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://abintegrity.com/og-image.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting",
+ "headline":"Your A/B test won. So why is revenue flat?",
+ "datePublished":"2026-07-05","dateModified":"2026-07-05",
+ "author":{"@type":"Person","name":"Sebastian Zijlstra"},
+ "publisher":{"@type":"Organization","name":"Zijlstra Testing Stack","url":"https://abintegrity.com/"},
+ "mainEntityOfPage":"https://abintegrity.com/blog/why-ab-test-wins-dont-show-up-in-revenue",
+ "image":"https://abintegrity.com/og-image.png"}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0D1117;--bg2:#161B22;--bg3:#1C2128;
+    --bdr:#30363D;
+    --tx:#E6EDF3;--tx2:#A0AAB6;--tx3:#7D8590;
+    --ac:#4F8EF7;--g:#3FB950;--r:#F85149;--y:#D29922;--o:#F0883E;--p:#BC8CFF;
+    --mono:'JetBrains Mono',monospace;--sans:'Inter',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{min-height:100vh;background:var(--bg);color:var(--tx);font-family:var(--sans)}
+
+  .nav{height:56px;display:flex;align-items:center;justify-content:space-between;
+    padding:0 40px;border-bottom:1px solid var(--bdr);
+    position:sticky;top:0;z-index:100;background:var(--bg)}
+  .nav-brand{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--tx2);letter-spacing:1px;text-decoration:none}
+  .nav-brand span{color:var(--ac)}
+  .nav-links{display:flex;gap:18px;align-items:center}
+  .nav-link{font-family:var(--mono);font-size:11px;color:var(--tx3);text-decoration:none}
+  .nav-link:hover{color:var(--tx)}
+  .nav-link.active{color:var(--ac)}
+
+  .article{max-width:720px;margin:0 auto;padding:56px 40px 80px}
+  .a-meta{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1.5px;
+    text-transform:uppercase;color:var(--tx3);margin-bottom:18px;display:flex;gap:14px;flex-wrap:wrap}
+  .a-meta .cat{color:var(--o)}
+  h1{font-size:clamp(28px,4.5vw,44px);font-weight:900;letter-spacing:-1px;line-height:1.12;margin-bottom:14px}
+  .a-standfirst{font-size:16px;color:var(--tx2);line-height:1.7;margin-bottom:36px}
+  .a-byline{font-family:var(--mono);font-size:11px;color:var(--tx3);padding-bottom:28px;border-bottom:1px solid var(--bdr);margin-bottom:36px}
+  .a-byline a{color:var(--ac);text-decoration:none}
+
+  .article h2{font-size:21px;font-weight:700;letter-spacing:-.3px;margin:40px 0 14px}
+  .article h2 .num{font-family:var(--mono);font-size:13px;color:var(--ac);margin-right:8px}
+  .article p{font-size:15px;color:var(--tx2);line-height:1.85;margin-bottom:18px}
+  .article p strong{color:var(--tx);font-weight:600}
+  .article a{color:var(--ac);text-decoration:none;border-bottom:1px solid rgba(79,142,247,.35)}
+  .article a:hover{border-bottom-color:var(--ac)}
+  .callout{background:var(--bg2);border:1px solid var(--bdr);border-left:2px solid var(--ac);
+    padding:16px 20px;margin:24px 0;font-size:13.5px;color:var(--tx2);line-height:1.75}
+  .callout .c-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;
+    text-transform:uppercase;color:var(--ac);display:block;margin-bottom:8px}
+
+  .a-cta{background:var(--bg2);border:1px solid var(--bdr);padding:24px 28px;margin-top:48px}
+  .a-cta .c-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;
+    text-transform:uppercase;color:var(--g);display:block;margin-bottom:10px}
+  .a-cta p{font-size:13.5px;margin-bottom:0}
+
+  .footer{border-top:1px solid var(--bdr);padding:24px 40px;
+    display:flex;align-items:center;justify-content:space-between}
+  .footer-left{font-family:var(--mono);font-size:11px;color:var(--tx3)}
+  .footer-left span{color:var(--ac)}
+  .footer-right{font-size:11px;color:var(--tx3)}
+
+  @media(max-width:800px){.article{padding:40px 24px 60px}.nav{padding:0 24px}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="/">// <span>zijlstra</span> testing stack</a>
+  <div class="nav-links">
+    <a class="nav-link" href="/">tools</a>
+    <a class="nav-link active" href="/blog/">blog</a>
+  </div>
+</nav>
+
+<article class="article">
+  <div class="a-meta"><span>2026-07-05</span><span class="cat">winner's curse</span><span>6 min read</span></div>
+  <h1>Your A/B test won. So why is revenue flat?</h1>
+  <p class="a-standfirst">Every testing program eventually faces the year-end question. You announced +12% here, +8% there, +40% cumulative for the year — and the P&amp;L didn't move. Nobody stole the lift. Most of it was never real.</p>
+  <div class="a-byline">by Sebastian Zijlstra · <a href="/blog/">more essays</a></div>
+
+  <p>This gap has a name in the research literature — the <strong>replication crisis</strong> — and ecommerce testing has quietly imported every one of its causes. The difference is that in academia, a result that doesn't replicate embarrasses a journal. In ecommerce, it ships to production, gets announced in the all-hands, and becomes a line in someone's promotion packet. The feedback that it never worked arrives a year later, diffused across a flat revenue chart that nobody connects back to any single decision.</p>
+
+  <p>Here is where the lift actually goes.</p>
+
+  <h2><span class="num">01</span>The winner's curse eats the biggest share</h2>
+  <p>Suppose a change gives you a true +2% lift, and your test only has 40% power to detect an effect that size — which describes most ecommerce tests, because traffic is finite and minimum detectable effects are chosen optimistically. The tests that <em>do</em> reach significance are not a random sample of reality. They are the lucky draws: the runs where random noise happened to push in the same direction as the true effect. <strong>Conditional on winning, your measured lift is systematically inflated</strong> — often by 2–3x when power is low. You measured +6%, announced +6%, and shipped +2%. The other four points existed only in that one sample.</p>
+  <p>This isn't a rare edge case; it's the default outcome of running underpowered tests and only shipping the significant ones. It's also correctable: shrinkage estimation deflates the observed effect toward what's plausible given your test's power. That's what <a href="/reality-check">Reality Check</a> computes — the honest estimate you should have announced, and the probability the variant is better at all.</p>
+
+  <h2><span class="num">02</span>Peeking converts noise into "winners"</h2>
+  <p>A significance test controls false positives at 5% <strong>only if you look once, at a sample size you fixed in advance</strong>. Check the dashboard daily for a month and stop the first time p dips under .05, and your real false-positive rate climbs toward 25–30%. A meaningful fraction of your annual "wins" are pure noise that you caught on a good day — and noise, by definition, contributes nothing to the P&amp;L.</p>
+  <p>The fix costs nothing: decide the sample size before the test starts, and don't call it early. Committing to that in writing is the entire point of pre-registration — <a href="/lockbox">Lockbox</a> locks the hypothesis, the metric, and the stopping rule before any data exists, so there's nothing left to negotiate with afterwards.</p>
+
+  <h2><span class="num">03</span>Your platform may be lying to you</h2>
+  <p>Before any statistics, there's plumbing. If your platform assigns 53/47 when it promised 50/50 — <strong>sample ratio mismatch</strong> — something is systematically excluding users from one arm, and every downstream number is biased in an unknown direction. Asymmetric tracking loss (the variant's conversion pixel fires less reliably than control's) does the same damage in the other direction. These failures don't announce themselves; the dashboard renders confident-looking results either way.</p>
+  <p>The only way to know is to test the platform itself: run an A/A test — both arms identical — and check that nothing "wins". Once a quarter is enough. The <a href="/aa-validator">Platform Validator</a> runs the full battery: assignment SRM via chi-squared, tracking-loss asymmetry, and a trust score you can show whoever asks why you're not just believing the tool you pay for.</p>
+
+  <h2><span class="num">04</span>Cumulative lift is a fiction</h2>
+  <p>Even if every individual win were real, adding announced lifts is arithmetic theatre. Effects overlap (two checkout improvements draw from the same pool of hesitant buyers), decay (novelty fades, competitors respond), and interact. The honest question isn't "what do the announced numbers sum to?" but <strong>"did baseline conversion actually move over the year?"</strong> — measured in your analytics, not your testing tool.</p>
+  <p>That reconciliation is uncomfortable precisely because no testing platform will ever build it: it audits them. The <a href="/ledger">Program Ledger</a> is that view — every shipped winner logged with its claimed and honest lift, your actual monthly numbers alongside, and a realization rate that tells you how much of what you announce tends to be real. Programs that track this number get better. Programs that don't get slide decks.</p>
+
+  <div class="callout">
+    <span class="c-label">// the pattern</span>
+    All four failures share a structure: <strong>the error is invisible at decision time and expensive later.</strong> The test looks significant, the dashboard looks healthy, the announcement lands well. The costs arrive months later as flat revenue — anonymized, deniable, and attributed to the market.
+  </div>
+
+  <h2><span class="num">05</span>What a defensible program looks like</h2>
+  <p>None of this requires abandoning testing. It requires running it like the measurement discipline it claims to be. Validate the platform quarterly with an A/A test. Pre-register every experiment before it collects a single visitor. Don't peek — or if you must monitor, use methods built for it. Deflate winners before announcing them. Reconcile claimed lift against realized revenue monthly, and let the realization rate calibrate how much you trust next quarter's announcements.</p>
+  <p>Each of those steps has a free, client-side tool on this site, built in the order you'd use them. Your data never leaves the browser, which means you can run client work through them without asking anyone's permission. Start with the <a href="/aa-validator">Validator</a> — if the platform fails, nothing else matters yet.</p>
+
+  <div class="a-cta">
+    <span class="c-label">// the stack</span>
+    <p>Seven free tools for honest ecommerce experimentation: <a href="/aa-validator">platform validation</a>, <a href="/lockbox">pre-registration</a>, <a href="/survival">survival analysis</a>, <a href="/reality-check">winner deflation</a>, <a href="/receipt">integrity receipts</a>, <a href="/ledger">the program ledger</a>, and <a href="/subscriber-value">subscription valuation</a>. All client-side. <a href="/">Explore the stack →</a></p>
+  </div>
+</article>
+
+<footer class="footer">
+  <div class="footer-left">// <span>zijlstra</span> testing stack · built for valid ecom research</div>
+  <div class="footer-right">all computation client-side · localStorage only</div>
+</footer>
+
+</body>
+</html>
