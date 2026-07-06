@@ -168,11 +168,18 @@
   }
 
   /* hero blog pill */
-  .hero-note{display:inline-flex;gap:9px;align-items:center;font-family:var(--mono);font-size:11px;
-    color:var(--tx2);border:1px solid var(--bdr);padding:8px 16px;margin-bottom:40px;
-    text-decoration:none;transition:border-color .15s,color .15s}
-  .hero-note:hover{border-color:var(--ac);color:var(--tx)}
-  .hero-note .tag{color:var(--g);font-weight:700}
+  .hero-note{display:inline-flex;gap:11px;align-items:center;font-family:var(--mono);font-size:12.5px;font-weight:500;
+    color:var(--tx);background:rgba(79,142,247,.10);border:1px solid rgba(79,142,247,.55);border-radius:999px;
+    padding:8px 8px;margin-bottom:40px;text-decoration:none;position:relative;
+    box-shadow:0 0 0 0 rgba(79,142,247,.45);animation:notePulse 3s ease-out infinite;
+    transition:transform .18s ease,box-shadow .18s ease,background .18s ease,border-color .18s ease}
+  @keyframes notePulse{0%{box-shadow:0 0 0 0 rgba(79,142,247,.4)}70%{box-shadow:0 0 0 11px rgba(79,142,247,0)}100%{box-shadow:0 0 0 0 rgba(79,142,247,0)}}
+  .hero-note:hover{background:rgba(79,142,247,.20);border-color:var(--ac);transform:translateY(-2px);
+    box-shadow:0 10px 26px -10px rgba(79,142,247,.75);animation:none}
+  .hero-note .tag{background:var(--ac);color:#fff;font-weight:700;font-size:10px;letter-spacing:.6px;
+    text-transform:uppercase;padding:4px 9px;border-radius:999px;flex-shrink:0}
+  .hero-note .arr{color:var(--ac);font-weight:700;padding-right:6px;transition:transform .18s ease}
+  .hero-note:hover .arr{transform:translateX(4px)}
   .nav-link-blog{color:var(--ac);font-weight:700}
 
   /* ── MANIFESTO ── */
@@ -227,7 +234,7 @@
     These tools protect the internal validity of your experiments, so that when you call something
     a win, <strong>you can defend it in any room.</strong>
   </p>
-  <a class="hero-note" href="/blog/how-much-traffic-do-you-need-to-ab-test"><span class="tag">NEW</span> on the blog: How much traffic do you need to A/B test? →</a>
+  <a class="hero-note" href="/blog/how-much-traffic-do-you-need-to-ab-test"><span class="tag">New</span><span class="txt">On the blog: How much traffic do you need to A/B test?</span><span class="arr">→</span></a>
   <div class="hero-badges">
     <div class="badge live">● Live</div>
     <div class="badge">Two-proportion z-test</div>
