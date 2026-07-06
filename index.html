@@ -102,17 +102,34 @@
     padding-bottom:12px;border-bottom:1px solid var(--bdr);
   }
   /* ── WORKFLOW STRIP ── */
-  .flow-strip{background:var(--bg2);border:1px solid var(--bdr);padding:18px 22px;margin-bottom:28px}
-  .flow-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);margin-bottom:14px}
-  .flow-steps{display:flex;align-items:stretch;gap:8px;flex-wrap:wrap}
-  .flow-step{display:flex;flex-direction:column;gap:2px;padding:8px 12px;border:1px solid var(--bdr);text-decoration:none;background:var(--bg);min-width:118px;transition:border-color .15s}
-  a.flow-step:hover{border-color:var(--tx2)}
-  .flow-run{border-style:dashed;opacity:.75}
-  .fs-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--tx3)}
+  .flow-strip{background:var(--bg2);border:1px solid var(--bdr);padding:24px 26px;margin-bottom:28px}
+  .flow-head{margin-bottom:20px}
+  .flow-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);margin-bottom:8px}
+  .flow-intro{font-size:13px;color:var(--tx2);line-height:1.6;max-width:640px}
+  .flow-intro strong{color:var(--tx)}
+  .flow-phases{display:grid;grid-template-columns:repeat(4,1fr)}
+  .phase{padding:2px 20px;position:relative}
+  .phase:first-child{padding-left:0}
+  .phase:last-child{padding-right:0}
+  .phase + .phase{border-left:1px solid var(--bdr)}
+  .phase-tag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;color:var(--pc,var(--ac))}
+  .phase-tag .pn{opacity:.55}
+  .phase-when{font-family:var(--mono);font-size:10px;color:var(--tx3);margin-bottom:9px}
+  .phase-why{font-size:11px;color:var(--tx2);line-height:1.55;margin-bottom:14px;min-height:48px}
+  .phase-steps{display:flex;flex-direction:column;gap:6px}
+  .fstep{display:flex;flex-direction:column;gap:1px;padding:8px 10px;border:1px solid var(--bdr);border-left:2px solid var(--pc,var(--ac));background:var(--bg);text-decoration:none;transition:border-color .15s,transform .15s,background .15s}
+  a.fstep:hover{border-color:var(--pc,var(--ac));background:var(--bg3);transform:translateX(2px)}
+  .fstep.passive{border-left-style:dashed;opacity:.72}
   .fs-name{font-size:12px;font-weight:600;color:var(--tx)}
-  .fs-when{font-size:10px;color:var(--tx3)}
-  .flow-arrow{align-self:center;color:var(--tx3);font-family:var(--mono);font-size:13px}
-  @media(max-width:800px){.flow-arrow{display:none}.flow-steps{gap:6px}}
+  .fs-tool{font-family:var(--mono);font-size:9.5px;color:var(--tx3);letter-spacing:.3px}
+  @media(max-width:820px){
+    .flow-phases{grid-template-columns:1fr 1fr}
+    .phase{padding:16px 16px;border-left:1px solid var(--bdr)}
+    .phase:first-child{padding-left:16px}
+    .phase:nth-child(odd){border-left:none}
+    .phase-why{min-height:0}
+  }
+  @media(max-width:480px){.flow-phases{grid-template-columns:1fr}.phase:nth-child(odd){border-left:1px solid var(--bdr)}.phase{padding:16px}}
 
   .tools-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
 
@@ -258,23 +275,52 @@
 
   <!-- WORKFLOW STRIP -->
   <div class="flow-strip">
-    <div class="flow-label">The workflow</div>
-    <div class="flow-steps">
-      <a href="aa-validator.html" class="flow-step"><span class="fs-num" style="color:var(--g)">01</span><span class="fs-name">Validate the platform</span><span class="fs-when">once per quarter</span></a>
-      <span class="flow-arrow">→</span>
-      <a href="lockbox.html" class="flow-step"><span class="fs-num" style="color:var(--ac)">02</span><span class="fs-name">Register the test</span><span class="fs-when">before it runs</span></a>
-      <span class="flow-arrow">→</span>
-      <span class="flow-step flow-run"><span class="fs-num">···</span><span class="fs-name">Run the test</span><span class="fs-when">don't touch it</span></span>
-      <span class="flow-arrow">→</span>
-      <a href="survival.html" class="flow-step"><span class="fs-num" style="color:var(--p)">03</span><span class="fs-name">Check conversion speed</span><span class="fs-when">with the results</span></a>
-      <span class="flow-arrow">→</span>
-      <a href="reality-check.html" class="flow-step"><span class="fs-num" style="color:var(--o)">04</span><span class="fs-name">Deflate the winner</span><span class="fs-when">before announcing</span></a>
-      <span class="flow-arrow">→</span>
-      <a href="subscriber-value.html" class="flow-step flow-run"><span class="fs-num" style="color:#2DD4BF">07</span><span class="fs-name">Value subscriptions</span><span class="fs-when">if the goal is subscribers</span></a>
-      <span class="flow-arrow">→</span>
-      <a href="receipt.html" class="flow-step"><span class="fs-num" style="color:var(--tx2)">05</span><span class="fs-name">Stamp the receipt</span><span class="fs-when">attach to readout</span></a>
-      <span class="flow-arrow">→</span>
-      <a href="ledger.html" class="flow-step"><span class="fs-num" style="color:var(--y)">06</span><span class="fs-name">Reconcile the ledger</span><span class="fs-when">every month</span></a>
+    <div class="flow-head">
+      <div class="flow-label">The discipline, end to end</div>
+      <div class="flow-intro">Any single test can be gamed. What makes a result defensible is the <strong>order you do things in</strong>. Each phase closes off a different way of fooling yourself, long before the number reaches a slide.</div>
+    </div>
+    <div class="flow-phases">
+
+      <div class="phase" style="--pc:var(--g)">
+        <div class="phase-tag"><span class="pn">01 ·</span> Before</div>
+        <div class="phase-when">set the rules</div>
+        <div class="phase-why">Fix the question before the data arrives, so nobody can move the goalposts once results are in.</div>
+        <div class="phase-steps">
+          <a href="aa-validator.html" class="fstep"><span class="fs-name">Validate the platform</span><span class="fs-tool">Platform Validator · quarterly</span></a>
+          <a href="lockbox.html" class="fstep" style="--pc:var(--ac)"><span class="fs-name">Register the test</span><span class="fs-tool">Lockbox · before launch</span></a>
+        </div>
+      </div>
+
+      <div class="phase" style="--pc:var(--tx3)">
+        <div class="phase-tag"><span class="pn">02 ·</span> During</div>
+        <div class="phase-when">hands off the dashboard</div>
+        <div class="phase-why">Collect the sample you committed to. Peeking daily and stopping on a good day turns noise into "winners."</div>
+        <div class="phase-steps">
+          <span class="fstep passive"><span class="fs-name">Run the test</span><span class="fs-tool">no peeking, no early stop</span></span>
+        </div>
+      </div>
+
+      <div class="phase" style="--pc:var(--o)">
+        <div class="phase-tag"><span class="pn">03 ·</span> After</div>
+        <div class="phase-when">read it honestly</div>
+        <div class="phase-why">Where most lift quietly evaporates. Read the speed, deflate the winner, then stamp what survives.</div>
+        <div class="phase-steps">
+          <a href="survival.html" class="fstep" style="--pc:var(--p)"><span class="fs-name">Check time-to-conversion</span><span class="fs-tool">Survival Curves</span></a>
+          <a href="reality-check.html" class="fstep" style="--pc:var(--o)"><span class="fs-name">Deflate the winner</span><span class="fs-tool">Reality Check</span></a>
+          <a href="subscriber-value.html" class="fstep passive" style="--pc:#2DD4BF"><span class="fs-name">Value subscriptions</span><span class="fs-tool">Subscriber Value · if relevant</span></a>
+          <a href="receipt.html" class="fstep" style="--pc:var(--tx2)"><span class="fs-name">Stamp the receipt</span><span class="fs-tool">Test Receipt</span></a>
+        </div>
+      </div>
+
+      <div class="phase" style="--pc:var(--y)">
+        <div class="phase-tag"><span class="pn">04 ·</span> Ongoing</div>
+        <div class="phase-when">prove it paid off</div>
+        <div class="phase-why">The audit no testing platform builds: did a year of announced wins actually show up in revenue?</div>
+        <div class="phase-steps">
+          <a href="ledger.html" class="fstep" style="--pc:var(--y)"><span class="fs-name">Reconcile the ledger</span><span class="fs-tool">Program Ledger · monthly</span></a>
+        </div>
+      </div>
+
     </div>
   </div>
 
