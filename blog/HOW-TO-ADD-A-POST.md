@@ -20,6 +20,8 @@ Then commit and push — Cloudflare Pages deploys it in under a minute.
 
 Voice notes: direct, technically precise, no hedging. Short declarative openers. Bold the one sentence per section the reader must keep. Every claim about statistics should be checkable, the same standard as the "// the math" sections in the tools.
 
+Length & accessibility: aim for a ~4-minute read (about 900 words, 5 max). Nobody finishes a 9-minute A/B-testing essay, so cut a whole section before you let a post run long. Explain each concept the first time it appears, in plain English, for a store owner who is not a statistician: define "significance," "power," "lift," "p-value," and the like inline or in a short callout, and use a plain analogy where one helps (a low-power test is a smoke detector with a flat battery). The reader should never hit a term they were expected to already know.
+
 Anti-AI-tells checklist (run every draft through this before publishing):
 - No em dashes or en dashes in prose. Use a period, comma, colon, or parentheses instead. (Title-tag separators like "Post Title — Zijlstra Testing Stack" are the site's naming convention and stay.)
 - No rule-of-three rhythm ("X, Y, and Z" as a rhetorical flourish). Lists are fine only when they enumerate real things.

@@ -56,10 +56,7 @@
   }
   .nav-brand{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--tx2);letter-spacing:1px}
   .nav-brand span{color:var(--ac)}
-  .nav-tag{font-size:11px;color:var(--tx3);font-family:var(--mono);display:flex;align-items:center;gap:8px}
-  .status-dot{width:6px;height:6px;border-radius:50%;background:var(--g);flex-shrink:0;
-    box-shadow:0 0 0 0 rgba(63,185,80,.5);animation:statusPulse 2.6s ease-out infinite}
-  @keyframes statusPulse{0%{box-shadow:0 0 0 0 rgba(63,185,80,.45)}70%{box-shadow:0 0 0 5px rgba(63,185,80,0)}100%{box-shadow:0 0 0 0 rgba(63,185,80,0)}}
+  .nav-tag{font-size:11px;color:var(--tx3);font-family:var(--mono)}
   .nav-right{display:flex;gap:18px;align-items:center}
   .nav-link{font-family:var(--mono);font-size:11px;color:var(--tx3);text-decoration:none}
   .nav-link:hover{color:var(--tx)}
@@ -133,11 +130,8 @@
   .tool-check::before{content:'→';color:var(--card-accent,var(--ac));font-family:var(--mono);flex-shrink:0}
   .tool-footer{
     display:flex;align-items:center;justify-content:space-between;
-    padding-top:16px;border-top:1px solid var(--bdr);margin-top:auto;
+    padding-top:16px;border-top:1px solid var(--bdr);margin-top:auto;justify-content:flex-end;
   }
-  .tool-status{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.5px}
-  .tool-status.ready{color:var(--g)}
-  .tool-status.soon{color:var(--tx3)}
   .tool-arrow{font-size:16px;color:var(--tx3);transition:color .15s,transform .15s}
   .tool-card:hover .tool-arrow{color:var(--ac);transform:translateX(4px)}
 
@@ -171,11 +165,9 @@
   .hero-note{display:inline-flex;gap:11px;align-items:center;font-family:var(--mono);font-size:12.5px;font-weight:500;
     color:var(--tx);background:rgba(79,142,247,.10);border:1px solid rgba(79,142,247,.55);border-radius:999px;
     padding:8px 8px;margin-bottom:40px;text-decoration:none;position:relative;
-    box-shadow:0 0 0 0 rgba(79,142,247,.45);animation:notePulse 3s ease-out infinite;
     transition:transform .18s ease,box-shadow .18s ease,background .18s ease,border-color .18s ease}
-  @keyframes notePulse{0%{box-shadow:0 0 0 0 rgba(79,142,247,.4)}70%{box-shadow:0 0 0 11px rgba(79,142,247,0)}100%{box-shadow:0 0 0 0 rgba(79,142,247,0)}}
   .hero-note:hover{background:rgba(79,142,247,.20);border-color:var(--ac);transform:translateY(-2px);
-    box-shadow:0 10px 26px -10px rgba(79,142,247,.75);animation:none}
+    box-shadow:0 10px 26px -10px rgba(79,142,247,.75)}
   .hero-note .tag{background:var(--ac);color:#fff;font-weight:700;font-size:10px;letter-spacing:.6px;
     text-transform:uppercase;padding:4px 9px;border-radius:999px;flex-shrink:0}
   .hero-note .arr{color:var(--ac);font-weight:700;padding-right:6px;transition:transform .18s ease}
@@ -218,7 +210,7 @@
   <div class="nav-brand">// <span>zijlstra</span> testing stack</div>
   <div class="nav-right">
     <a class="nav-link nav-link-blog" href="/blog/">blog</a>
-    <div class="nav-tag"><span class="status-dot"></span>v1.0 · ecommerce experimentation</div>
+    <div class="nav-tag">v1.0 · ecommerce experimentation</div>
   </div>
 </nav>
 
@@ -236,7 +228,6 @@
   </p>
   <a class="hero-note" href="/blog/how-much-traffic-do-you-need-to-ab-test"><span class="tag">New</span><span class="txt">On the blog: How much traffic do you need to A/B test?</span><span class="arr">→</span></a>
   <div class="hero-badges">
-    <div class="badge live">● Live</div>
     <div class="badge">Two-proportion z-test</div>
     <div class="badge">SRM detection</div>
     <div class="badge">Bonferroni correction</div>
@@ -279,7 +270,6 @@
         <div class="tool-check">Platform trust score 0-100</div>
       </div>
       <div class="tool-footer">
-        <div class="tool-status ready">● Ready</div>
         <div class="tool-arrow">→</div>
       </div>
     </a>
@@ -312,7 +302,6 @@
         <div class="tool-check">Experiment history in localStorage</div>
       </div>
       <div class="tool-footer">
-        <div class="tool-status ready">● Ready</div>
         <div class="tool-arrow">→</div>
       </div>
     </a>
@@ -343,7 +332,6 @@
         <div class="tool-check">CSV cohort data import</div>
       </div>
       <div class="tool-footer">
-        <div class="tool-status ready">● Ready</div>
         <div class="tool-arrow">→</div>
       </div>
     </a>
@@ -375,7 +363,6 @@
         <div class="tool-check">Frequentist vs Bayesian explainer for ecom</div>
       </div>
       <div class="tool-footer">
-        <div class="tool-status ready">● Ready</div>
         <div class="tool-arrow">→</div>
       </div>
     </a>
@@ -406,7 +393,6 @@
         <div class="tool-check">Print-ready, attach to any test readout</div>
       </div>
       <div class="tool-footer">
-        <div class="tool-status ready">● Ready</div>
         <div class="tool-arrow">→</div>
       </div>
     </a>
@@ -436,7 +422,6 @@
         <div class="tool-check">JSON export / import for backup</div>
       </div>
       <div class="tool-footer">
-        <div class="tool-status ready">● Ready</div>
         <div class="tool-arrow">→</div>
       </div>
     </a>
@@ -465,7 +450,6 @@
         <div class="tool-check">Industry churn benchmarks built in</div>
       </div>
       <div class="tool-footer">
-        <div class="tool-status ready">● Ready</div>
         <div class="tool-arrow">→</div>
       </div>
     </a>
