@@ -16,6 +16,8 @@ Each post is a standalone HTML file in `/blog/`. No build step. Five steps, ~5 m
 
 Then commit and push — Cloudflare Pages deploys it in under a minute.
 
+The template already carries the LinkedIn link (`https://www.linkedin.com/in/sebastianzijlstra`) in the author bio and the `sameAs` in the BlogPosting JSON-LD, so a new post inherits both. Leave them.
+
 **Give each post an image.** Posts with a relevant image get better click-through in search and social, and the image itself can rank in Google Images. Build a 1200×630 PNG the same way the site's charts are made: write an HTML file styled with the site's CSS variables, then render it with headless Chrome (`"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --screenshot=out.png --window-size=1200,630 file://$PWD/chart.html`). Always give the `<img>` a descriptive `alt` that states what the chart shows — that alt text is itself an SEO signal.
 
 Voice notes: direct, technically precise, no hedging. Short declarative openers. Bold the one sentence per section the reader must keep. Every claim about statistics should be checkable, the same standard as the "// the math" sections in the tools.
