@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Learn A/B Testing From Zero — Interactive Lessons | Zijlstra Testing Stack</title>
+<meta name="description" content="Understand A/B testing by playing, not memorizing. Interactive lessons on noise, significance, power, sample size, the winner's curse, peeking, and Bayesian vs frequentist. Free.">
+<link rel="canonical" href="https://abintegrity.com/learn/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zijlstra Testing Stack">
+<meta property="og:title" content="Learn A/B Testing From Zero — Interactive Lessons">
+<meta property="og:description" content="Understand A/B testing by playing, not memorizing. Interactive lessons on noise, significance, power, sample size, peeking, and more.">
+<meta property="og:url" content="https://abintegrity.com/learn/">
+<meta property="og:image" content="https://abintegrity.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://abintegrity.com/og-image.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Course",
+ "name":"A/B Testing From Zero",
+ "description":"An interactive course that builds A/B testing intuition from the ground up: noise, significance, power, sample size, the winner's curse, peeking, and Bayesian vs frequentist.",
+ "url":"https://abintegrity.com/learn/",
+ "inLanguage":"en",
+ "provider":{"@type":"Organization","name":"Zijlstra Testing Stack","url":"https://abintegrity.com/"},
+ "isAccessibleForFree":true}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList",
+ "itemListElement":[
+   {"@type":"ListItem","position":1,"name":"Home","item":"https://abintegrity.com/"},
+   {"@type":"ListItem","position":2,"name":"Learn","item":"https://abintegrity.com/learn/"}
+ ]}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0D1117;--bg2:#161B22;--bg3:#1C2128;--bdr:#30363D;
+    --tx:#E6EDF3;--tx2:#A0AAB6;--tx3:#7D8590;
+    --ac:#4F8EF7;--g:#3FB950;--r:#F85149;--y:#D29922;--o:#F0883E;--p:#BC8CFF;--t:#2DD4BF;
+    --mono:'JetBrains Mono',monospace;--sans:'Inter',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  html,body{min-height:100vh;background:var(--bg);color:var(--tx);font-family:var(--sans)}
+  body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+    background:radial-gradient(circle at 1px 1px,rgba(230,237,243,.022) 1px,transparent 0) 0 0/34px 34px,var(--bg)}
+  ::selection{background:rgba(79,142,247,.26);color:#fff}
+  a:focus-visible{outline:2px solid var(--ac);outline-offset:3px}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+  .nav{height:56px;display:flex;align-items:center;justify-content:space-between;
+    padding:0 40px;border-bottom:1px solid var(--bdr);position:sticky;top:0;z-index:100;
+    background:rgba(13,17,23,.9);backdrop-filter:blur(8px)}
+  .nav-brand{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--tx2);letter-spacing:1px;text-decoration:none}
+  .nav-brand span{color:var(--ac)}
+  .nav-links{display:flex;gap:18px;align-items:center}
+  .nav-link{font-family:var(--mono);font-size:11px;color:var(--tx3);text-decoration:none}
+  .nav-link:hover{color:var(--tx)}
+  .nav-link.active{color:var(--ac)}
+
+  .wrap{max-width:820px;margin:0 auto;padding:0 40px}
+
+  .hero{padding:66px 0 34px;border-bottom:1px solid var(--bdr)}
+  .eyebrow{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--ac);margin-bottom:16px}
+  h1{font-size:clamp(32px,5vw,52px);font-weight:900;letter-spacing:-1.4px;line-height:1.06;margin-bottom:18px}
+  h1 .ac{color:var(--ac)}
+  .lede{font-size:16px;color:var(--tx2);line-height:1.7;max-width:620px}
+  .lede strong{color:var(--tx);font-weight:600}
+
+  .path{padding:34px 0 90px}
+  .path-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;
+    color:var(--tx3);margin-bottom:20px;display:flex;align-items:center;gap:14px}
+  .path-label::after{content:'';flex:1;height:1px;background:var(--bdr)}
+
+  .lesson{display:flex;gap:18px;align-items:flex-start;padding:18px 20px;border:1px solid var(--bdr);
+    background:var(--bg2);text-decoration:none;color:inherit;margin-bottom:10px;
+    transition:border-color .16s ease,background .16s ease,transform .16s ease}
+  a.lesson:hover{border-color:var(--ac);background:var(--bg3);transform:translateX(3px)}
+  .lesson.soon{opacity:.5}
+  .l-num{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--ac);flex-shrink:0;width:26px;padding-top:1px}
+  .lesson.soon .l-num{color:var(--tx3)}
+  .l-body{flex:1}
+  .l-title{font-size:17px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .l-tag{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;
+    color:var(--t);border:1px solid var(--t);padding:2px 6px}
+  .l-tag.next{color:var(--tx3);border-color:var(--bdr)}
+  .l-desc{font-size:13px;color:var(--tx2);line-height:1.6}
+  .l-go{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--ac);flex-shrink:0;align-self:center}
+
+  .footer{border-top:1px solid var(--bdr);padding:24px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  .footer-left{font-family:var(--mono);font-size:11px;color:var(--tx3)}
+  .footer-left span{color:var(--ac)}
+  .footer-left a{color:var(--ac);text-decoration:none}
+  .footer-right{font-size:11px;color:var(--tx3)}
+
+  @media(max-width:800px){.wrap{padding:0 22px}.nav{padding:0 22px}.footer{padding:24px 22px}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="/">// <span>zijlstra</span> testing stack</a>
+  <div class="nav-links">
+    <a class="nav-link" href="/">tools</a>
+    <a class="nav-link" href="/blog/">blog</a>
+    <a class="nav-link active" href="/learn/">learn</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">// Learn</div>
+    <h1>A/B testing, <span class="ac">learned by playing.</span></h1>
+    <p class="lede">You cannot run a test you can defend if you do not understand what the numbers mean. But you do not need to memorize formulas either. Every lesson here gives you <strong>plain words, a thing you can poke, and the tool that does it for real</strong>. Start with lesson one and watch a test lie to you with your own eyes.</p>
+  </div>
+</section>
+
+<section class="path">
+  <div class="wrap">
+    <div class="path-label">The path · from zero</div>
+
+    <a class="lesson" href="/learn/why-one-test-can-lie">
+      <div class="l-num">01</div>
+      <div class="l-body">
+        <div class="l-title">Why one test can lie to you <span class="l-tag">Interactive</span></div>
+        <div class="l-desc">Run two identical variants and watch one "win" by pure luck. The single idea that explains why every other lesson exists.</div>
+      </div>
+      <div class="l-go">Start →</div>
+    </a>
+
+    <div class="lesson soon">
+      <div class="l-num">02</div>
+      <div class="l-body">
+        <div class="l-title">Conversion, lift, and what actually counts <span class="l-tag next">Next</span></div>
+        <div class="l-desc">Conversion rate, absolute vs relative lift, and why "the metric" is a decision you make before the test, not after.</div>
+      </div>
+    </div>
+
+    <div class="lesson soon">
+      <div class="l-num">03</div>
+      <div class="l-body">
+        <div class="l-title">Noise and significance (what a p-value really is)</div>
+        <div class="l-desc">The honest, jargon-free version of the number everyone quotes and almost nobody can define.</div>
+      </div>
+    </div>
+
+    <div class="lesson soon">
+      <div class="l-num">04</div>
+      <div class="l-body">
+        <div class="l-title">Power and sample size</div>
+        <div class="l-desc">Why a weak test can miss a real winner, and how to work out how much traffic you actually need.</div>
+      </div>
+    </div>
+
+    <div class="lesson soon">
+      <div class="l-num">05</div>
+      <div class="l-body">
+        <div class="l-title">The winner's curse</div>
+        <div class="l-desc">Why the wins that squeak past the bar are almost always smaller than they first look.</div>
+      </div>
+    </div>
+
+    <div class="lesson soon">
+      <div class="l-num">06</div>
+      <div class="l-body">
+        <div class="l-title">Peeking, and why it manufactures winners</div>
+        <div class="l-desc">Checking daily and stopping on a good day quietly turns a 5% error rate into roughly 1 in 4. See it happen.</div>
+      </div>
+    </div>
+
+    <div class="lesson soon">
+      <div class="l-num">07</div>
+      <div class="l-body">
+        <div class="l-title">Bayesian vs frequentist</div>
+        <div class="l-desc">Two languages for the same data. What each one actually tells you, and why the choice is not what saves a small store.</div>
+      </div>
+    </div>
+
+    <div class="lesson soon">
+      <div class="l-num">08</div>
+      <div class="l-body">
+        <div class="l-title">SRM: is your platform even honest?</div>
+        <div class="l-desc">Sample ratio mismatch, tracking loss, and the one check that tells you whether to trust any of the above.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-left">// <span>zijlstra</span> testing stack · <a href="https://www.linkedin.com/in/sebastianzijlstra" target="_blank" rel="me noopener">LinkedIn ↗</a></div>
+  <div class="footer-right">runs in your browser · nothing is uploaded</div>
+</footer>
+
+</body>
+</html>

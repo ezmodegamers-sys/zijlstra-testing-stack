@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Why One A/B Test Can Lie to You — Interactive Lesson | Zijlstra Testing Stack</title>
+<meta name="description" content="Run two identical variants and watch one 'win' by pure chance. An interactive lesson on random noise, false positives, and why peeking manufactures fake winners in A/B tests.">
+<link rel="canonical" href="https://abintegrity.com/learn/why-one-test-can-lie">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Zijlstra Testing Stack">
+<meta property="og:title" content="Why one A/B test can lie to you">
+<meta property="og:description" content="Run two identical variants and watch one 'win' by pure chance. An interactive lesson on noise, false positives, and peeking.">
+<meta property="og:url" content="https://abintegrity.com/learn/why-one-test-can-lie">
+<meta property="og:image" content="https://abintegrity.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://abintegrity.com/og-image.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"LearningResource",
+ "name":"Why one A/B test can lie to you",
+ "description":"Interactive lesson: run two identical variants and watch one win by chance, to learn about noise, false positives, and peeking.",
+ "url":"https://abintegrity.com/learn/why-one-test-can-lie",
+ "learningResourceType":"interactive lesson",
+ "educationalLevel":"beginner",
+ "isPartOf":{"@type":"Course","name":"A/B Testing From Zero","url":"https://abintegrity.com/learn/"},
+ "isAccessibleForFree":true,
+ "author":{"@type":"Person","name":"Sebastian Zijlstra","sameAs":"https://www.linkedin.com/in/sebastianzijlstra"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList",
+ "itemListElement":[
+   {"@type":"ListItem","position":1,"name":"Home","item":"https://abintegrity.com/"},
+   {"@type":"ListItem","position":2,"name":"Learn","item":"https://abintegrity.com/learn/"},
+   {"@type":"ListItem","position":3,"name":"Why one test can lie","item":"https://abintegrity.com/learn/why-one-test-can-lie"}
+ ]}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0D1117;--bg2:#161B22;--bg3:#1C2128;--bdr:#30363D;
+    --tx:#E6EDF3;--tx2:#A0AAB6;--tx3:#7D8590;
+    --ac:#4F8EF7;--g:#3FB950;--r:#F85149;--y:#D29922;--o:#F0883E;--p:#BC8CFF;--t:#2DD4BF;
+    --mono:'JetBrains Mono',monospace;--sans:'Inter',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  html,body{min-height:100vh;background:var(--bg);color:var(--tx);font-family:var(--sans)}
+  body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+    background:radial-gradient(circle at 1px 1px,rgba(230,237,243,.022) 1px,transparent 0) 0 0/34px 34px,var(--bg)}
+  ::selection{background:rgba(79,142,247,.26);color:#fff}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--ac);outline-offset:3px}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+  .nav{height:56px;display:flex;align-items:center;justify-content:space-between;
+    padding:0 40px;border-bottom:1px solid var(--bdr);position:sticky;top:0;z-index:100;
+    background:rgba(13,17,23,.9);backdrop-filter:blur(8px)}
+  .nav-brand{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--tx2);letter-spacing:1px;text-decoration:none}
+  .nav-brand span{color:var(--ac)}
+  .nav-links{display:flex;gap:18px;align-items:center}
+  .nav-link{font-family:var(--mono);font-size:11px;color:var(--tx3);text-decoration:none}
+  .nav-link:hover{color:var(--tx)}
+  .nav-link.active{color:var(--ac)}
+
+  .article{max-width:760px;margin:0 auto;padding:52px 40px 40px}
+  .crumbs{font-family:var(--mono);font-size:11px;color:var(--tx3);margin-bottom:20px;display:flex;gap:8px;flex-wrap:wrap}
+  .crumbs a{color:var(--tx3);text-decoration:none}
+  .crumbs a:hover{color:var(--ac)}
+  .crumbs .sep{color:var(--bdr)}
+  .crumbs .here{color:var(--tx2)}
+  .a-meta{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:16px;display:flex;gap:14px;flex-wrap:wrap}
+  .a-meta .cat{color:var(--t)}
+  h1{font-size:clamp(28px,4.5vw,44px);font-weight:900;letter-spacing:-1px;line-height:1.12;margin-bottom:14px}
+  .standfirst{font-size:16px;color:var(--tx2);line-height:1.7;margin-bottom:34px;padding-bottom:28px;border-bottom:1px solid var(--bdr)}
+  .standfirst strong{color:var(--tx);font-weight:600}
+
+  .prose p{font-size:15px;color:var(--tx2);line-height:1.85;margin-bottom:18px}
+  .prose p strong{color:var(--tx);font-weight:600}
+  .prose h2{font-size:20px;font-weight:700;letter-spacing:-.3px;margin:36px 0 14px}
+  .prose a{color:var(--ac);text-decoration:none;border-bottom:1px solid rgba(79,142,247,.35)}
+  .prose a:hover{border-bottom-color:var(--ac)}
+
+  /* ── SIMULATOR ── */
+  .sim{background:var(--bg2);border:1px solid var(--bdr);margin:26px 0;overflow:hidden}
+  .sim-head{padding:14px 18px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .sim-title{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--tx2)}
+  .sim-note{font-family:var(--mono);font-size:10px;color:var(--tx3)}
+  .sim-body{padding:18px}
+
+  .controls{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+  .ctl label{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--tx3);margin-bottom:7px}
+  .ctl label b{color:var(--ac);font-family:var(--mono)}
+  .ctl input[type=range]{width:100%;accent-color:var(--ac)}
+  .ctl .hint{font-size:10px;color:var(--tx3);margin-top:5px}
+
+  .arms{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+  .arm{background:var(--bg);border:1px solid var(--bdr);padding:16px;text-align:center;position:relative;transition:border-color .2s ease}
+  .arm.win{border-color:var(--y)}
+  .arm-name{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--tx3);margin-bottom:8px}
+  .arm-a .arm-name{color:var(--ac)}
+  .arm-b .arm-name{color:var(--g)}
+  .arm-rate{font-family:var(--mono);font-size:30px;font-weight:700;line-height:1;margin-bottom:4px}
+  .arm-a .arm-rate{color:var(--ac)}
+  .arm-b .arm-rate{color:var(--g)}
+  .arm-raw{font-family:var(--mono);font-size:11px;color:var(--tx3)}
+
+  .verdict{padding:12px 16px;border:1px solid var(--bdr);font-size:13.5px;line-height:1.55;margin-bottom:16px;background:var(--bg)}
+  .verdict.correct{border-color:rgba(63,185,80,.4);background:rgba(63,185,80,.06)}
+  .verdict.false{border-color:rgba(248,81,73,.45);background:rgba(248,81,73,.08)}
+  .verdict.idle{color:var(--tx3)}
+  .verdict b{color:var(--tx)}
+  .verdict .flag{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;margin-right:8px}
+  .verdict.correct .flag{background:var(--g);color:var(--bg)}
+  .verdict.false .flag{background:var(--r);color:#fff}
+
+  .btns{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+  .btn{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.4px;padding:11px 18px;
+    border:1px solid var(--bdr);background:var(--bg3);color:var(--tx);cursor:pointer;transition:.15s}
+  .btn:hover{border-color:var(--tx2)}
+  .btn-p{background:var(--ac);border-color:var(--ac);color:#fff}
+  .btn-p:hover{background:#5f9bff;border-color:#5f9bff}
+  .btn-ghost{background:transparent}
+
+  .tally{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .tally-card{background:var(--bg);border:1px solid var(--bdr);padding:14px 16px}
+  .tally-num{font-family:var(--mono);font-size:26px;font-weight:700;line-height:1;margin-bottom:4px}
+  .tally-lbl{font-size:11px;color:var(--tx3);line-height:1.4}
+  .tally-card.rate .tally-num{color:var(--o)}
+  .bar-track{height:6px;background:var(--bg3);margin-top:10px;overflow:hidden}
+  .bar-fill{height:100%;background:var(--o);width:0%;transition:width .3s ease}
+
+  .callout{background:var(--bg2);border:1px solid var(--bdr);border-left:2px solid var(--ac);
+    padding:16px 20px;margin:24px 0;font-size:14px;color:var(--tx2);line-height:1.75}
+  .callout .c-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ac);display:block;margin-bottom:8px}
+  .callout b{color:var(--tx)}
+
+  .a-cta{background:var(--bg2);border:1px solid var(--bdr);padding:22px 26px;margin-top:36px}
+  .a-cta .c-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--g);display:block;margin-bottom:10px}
+  .a-cta p{font-size:13.5px;color:var(--tx2);line-height:1.7;margin-bottom:0}
+  .a-cta a{color:var(--ac);text-decoration:none}
+
+  .nextnav{display:flex;justify-content:space-between;gap:12px;margin-top:32px;padding-top:22px;border-top:1px solid var(--bdr);font-family:var(--mono);font-size:12px}
+  .nextnav a{color:var(--ac);text-decoration:none}
+  .nextnav span{color:var(--tx3)}
+
+  .footer{border-top:1px solid var(--bdr);padding:24px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  .footer-left{font-family:var(--mono);font-size:11px;color:var(--tx3)}
+  .footer-left span{color:var(--ac)}
+  .footer-left a{color:var(--ac);text-decoration:none}
+  .footer-right{font-size:11px;color:var(--tx3)}
+
+  @media(max-width:800px){.article{padding:40px 22px}.nav{padding:0 22px}.controls{grid-template-columns:1fr}.footer{padding:24px 22px}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="/">// <span>zijlstra</span> testing stack</a>
+  <div class="nav-links">
+    <a class="nav-link" href="/">tools</a>
+    <a class="nav-link" href="/blog/">blog</a>
+    <a class="nav-link active" href="/learn/">learn</a>
+  </div>
+</nav>
+
+<article class="article">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span class="sep">/</span><a href="/learn/">Learn</a><span class="sep">/</span><span class="here">Why one test can lie</span>
+  </nav>
+  <div class="a-meta"><span class="cat">Lesson 01</span><span>Interactive</span><span>6 min</span></div>
+  <h1>Why one A/B test can lie to you</h1>
+  <p class="standfirst">Here are two versions of a page that are <strong>exactly the same</strong>. Same design, same everything. There is no real difference between them, because they are identical. Run the test below anyway, and watch one of them "win."</p>
+
+  <div class="prose">
+    <p>This is the single most important idea in A/B testing, and it takes thirty seconds to feel instead of thirty pages to read. Every visitor is a coin flip: they buy or they don't. Even when two pages convert at the exact same true rate, the handful who happen to buy will not split perfectly evenly. One side gets a few lucky sales, its measured rate ticks up, and suddenly it looks like a winner. Nothing changed. That is just noise.</p>
+    <p>Hit <strong>Run one A/A test</strong> a few times. Both arms are set to the same true conversion rate, so any gap you see is pure chance.</p>
+  </div>
+
+  <!-- ── SIMULATOR ── -->
+  <div class="sim">
+    <div class="sim-head">
+      <div class="sim-title">// A/A test simulator</div>
+      <div class="sim-note">both arms are identical by design</div>
+    </div>
+    <div class="sim-body">
+
+      <div class="controls">
+        <div class="ctl">
+          <label>True conversion rate (both arms): <b id="crLabel">2.5%</b></label>
+          <input type="range" id="cr" min="1" max="10" step="0.1" value="2.5">
+          <div class="hint">The real rate A and B share. There is no winner to find.</div>
+        </div>
+        <div class="ctl">
+          <label>Visitors per arm: <b id="nLabel">2,000</b></label>
+          <input type="range" id="n" min="500" max="20000" step="500" value="2000">
+          <div class="hint">More visitors, less noise. Watch the false-winner rate barely change.</div>
+        </div>
+      </div>
+
+      <div class="arms">
+        <div class="arm arm-a" id="armA">
+          <div class="arm-name">Control (A)</div>
+          <div class="arm-rate" id="rateA">·</div>
+          <div class="arm-raw" id="rawA">press run</div>
+        </div>
+        <div class="arm arm-b" id="armB">
+          <div class="arm-name">Variant (B)</div>
+          <div class="arm-rate" id="rateB">·</div>
+          <div class="arm-raw" id="rawB">press run</div>
+        </div>
+      </div>
+
+      <div class="verdict idle" id="verdict">Run a test to see what the dashboard would tell you.</div>
+
+      <div class="btns">
+        <button class="btn btn-p" id="runOne">Run one A/A test</button>
+        <button class="btn" id="run100">Run 100 tests</button>
+        <button class="btn btn-ghost" id="reset">Reset</button>
+      </div>
+
+      <div class="tally">
+        <div class="tally-card">
+          <div class="tally-num" id="tTotal">0</div>
+          <div class="tally-lbl">tests run</div>
+        </div>
+        <div class="tally-card rate">
+          <div class="tally-num" id="tRate">0%</div>
+          <div class="tally-lbl"><span id="tFalse">0</span> came back a "significant winner", every one of them false</div>
+          <div class="bar-track"><div class="bar-fill" id="tBar"></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="prose">
+    <p>Keep running and the false-winner rate settles near <strong>5%</strong>. That is not a bug. It is the deal you signed. "Significant at 95% confidence" literally means <em>we accept being fooled by noise about 1 time in 20</em>. Run twenty A/A tests and, on average, one of them hands you a confident, statistically significant, completely fake winner.</p>
+    <p>Now crank the visitors slider up. The individual gaps get smaller, but that 5% false-winner rate barely moves. More traffic buys you <em>precision</em>, not immunity. A big test lies less wildly, but it still lies 1 time in 20 at a single look.</p>
+
+    <h2>Now watch peeking make it much worse</h2>
+    <p>Nobody runs a test and looks exactly once. They check the dashboard every day and stop when it looks good. That feels responsible. It is the fastest way to fool yourself. Below, the simulator checks the same identical-arms test once a "day" for two weeks and stops the moment it sees significance, exactly like a person watching a live dashboard.</p>
+  </div>
+
+  <!-- ── PEEKING SIM ── -->
+  <div class="sim">
+    <div class="sim-head">
+      <div class="sim-title">// the peeking simulator</div>
+      <div class="sim-note">checks daily, stops on the first "win"</div>
+    </div>
+    <div class="sim-body">
+      <div class="verdict idle" id="pVerdict">Run a peeking test. Same identical arms, but now you get to peek every day.</div>
+      <div class="btns">
+        <button class="btn btn-p" id="pRunOne">Run one peeking test</button>
+        <button class="btn" id="pRun100">Run 100 peeking tests</button>
+        <button class="btn btn-ghost" id="pReset">Reset</button>
+      </div>
+      <div class="tally">
+        <div class="tally-card">
+          <div class="tally-num" id="pTotal">0</div>
+          <div class="tally-lbl">peeking tests run</div>
+        </div>
+        <div class="tally-card rate">
+          <div class="tally-num" id="pRate">0%</div>
+          <div class="tally-lbl"><span id="pFalse">0</span> declared a false winner by stopping early</div>
+          <div class="bar-track"><div class="bar-fill" id="pBar"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <span class="c-label">// what you just proved</span>
+    Look at the two rates side by side. Looking once is honest at about <b>5%</b>, one in twenty. Peeking daily and stopping on a good day pushes the false-winner rate to <b>roughly one in four</b>. You did not change the pages, the traffic, or the math. You only changed <b>when you were allowed to look</b>. That is why a real test fixes its sample size in advance and does not touch the stop button.
+  </div>
+
+  <div class="prose">
+    <h2>Why this is the whole game</h2>
+    <p>Every tool on this site exists to survive the thing you just watched. If a single test can invent a winner out of noise, then a screenshot of a green dashboard proves nothing on its own. You need to know the test was big enough to hear a real signal, that nobody peeked, and that the lift was not just a lucky draw. That is the difference between a number and a number you can defend in a room.</p>
+    <p>From here the path gets concrete: how big the signal needs to be before it is worth chasing, how much traffic that takes, and how to shrink a lucky winner back to its honest size. But it all rests on this one lesson. A result is not true because it is significant. It is true because it would survive being tested again.</p>
+  </div>
+
+  <div class="a-cta">
+    <span class="c-label">// put it to work</span>
+    <p>Fix your sample size before you start with <a href="/lockbox">Lockbox</a>, so there is no stop button to abuse. Already have a "winner"? <a href="/reality-check">Reality Check</a> shrinks a lucky result back to an honest one. Not sure your platform even splits traffic evenly? <a href="/aa-validator">Platform Validator</a> runs this A/A idea on your real numbers.</p>
+  </div>
+
+  <div class="nextnav">
+    <a href="/learn/">← All lessons</a>
+    <span>Next: Conversion, lift &amp; what counts (soon)</span>
+  </div>
+</article>
+
+<footer class="footer">
+  <div class="footer-left">// <span>zijlstra</span> testing stack · <a href="https://www.linkedin.com/in/sebastianzijlstra" target="_blank" rel="me noopener">LinkedIn ↗</a></div>
+  <div class="footer-right">runs in your browser · nothing is uploaded</div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  // ── stats helpers ──
+  function erf(x){
+    var s = x < 0 ? -1 : 1; x = Math.abs(x);
+    var t = 1/(1+0.3275911*x);
+    var y = 1 - (((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);
+    return s*y;
+  }
+  function normcdf(z){ return 0.5*(1+erf(z/Math.SQRT2)); }
+  // two-sided p-value of a two-proportion z-test
+  function pValue(cA,nA,cB,nB){
+    var pPool=(cA+cB)/(nA+nB);
+    var se=Math.sqrt(pPool*(1-pPool)*(1/nA+1/nB));
+    if(se===0) return 1;
+    var z=(cB/nB - cA/nA)/se;
+    return 2*(1-normcdf(Math.abs(z)));
+  }
+  // number of successes in n trials at probability p
+  function rbinom(n,p){
+    // normal approximation for large n (fast, accurate enough for teaching)
+    if(n>1500){
+      var mean=n*p, sd=Math.sqrt(n*p*(1-p));
+      var u1=Math.random(), u2=Math.random();
+      var g=Math.sqrt(-2*Math.log(u1))*Math.cos(2*Math.PI*u2);
+      var v=Math.round(mean+sd*g);
+      return v<0?0:(v>n?n:v);
+    }
+    var c=0; for(var i=0;i<n;i++){ if(Math.random()<p) c++; } return c;
+  }
+  function fmt(n){ return n.toLocaleString('en-US'); }
+  function pct(x){ return (x*100).toFixed(2)+'%'; }
+  var $=function(id){ return document.getElementById(id); };
+
+  var ALPHA=0.05, DAYS=14;
+
+  // ── single-look simulator ──
+  var total=0, falses=0;
+  var crEl=$('cr'), nEl=$('n');
+  function trueP(){ return parseFloat(crEl.value)/100; }
+  function nPer(){ return parseInt(nEl.value,10); }
+  $('crLabel').textContent = parseFloat(crEl.value).toFixed(1)+'%';
+  $('nLabel').textContent = fmt(nPer());
+  crEl.addEventListener('input',function(){ $('crLabel').textContent=parseFloat(crEl.value).toFixed(1)+'%'; });
+  nEl.addEventListener('input',function(){ $('nLabel').textContent=fmt(nPer()); });
+
+  function renderTally(){
+    $('tTotal').textContent=fmt(total);
+    var r = total? falses/total : 0;
+    $('tRate').textContent=(r*100).toFixed(1)+'%';
+    $('tFalse').textContent=fmt(falses);
+    $('tBar').style.width=Math.min(100, r*100*3)+'%'; // scale x3 so ~5% fills a readable slice
+  }
+  function oneTest(render){
+    var p=trueP(), n=nPer();
+    var cA=rbinom(n,p), cB=rbinom(n,p);
+    var pv=pValue(cA,n,cB,n);
+    var sig=pv<ALPHA;
+    total++; if(sig) falses++;
+    if(render){
+      var rA=cA/n, rB=cB/n;
+      $('rateA').textContent=pct(rA); $('rawA').textContent=fmt(cA)+' / '+fmt(n);
+      $('rateB').textContent=pct(rB); $('rawB').textContent=fmt(cB)+' / '+fmt(n);
+      var lift = rA>0? (rB-rA)/rA*100 : 0;
+      var winner = rB>=rA ? 'B' : 'A';
+      $('armA').classList.toggle('win', sig && winner==='A');
+      $('armB').classList.toggle('win', sig && winner==='B');
+      var v=$('verdict');
+      if(sig){
+        v.className='verdict false';
+        v.innerHTML='<span class="flag">False winner</span> The dashboard calls <b>'+winner+'</b> the winner ('+(lift>=0?'+':'')+lift.toFixed(1)+'% for B, p='+pv.toFixed(3)+'). But you built them identical. This "win" is pure noise.';
+      } else {
+        v.className='verdict correct';
+        v.innerHTML='<span class="flag">No winner</span> Correctly inconclusive (B is '+(lift>=0?'+':'')+lift.toFixed(1)+'%, p='+pv.toFixed(2)+'). The gap is just chance, and the test says so.';
+      }
+    }
+    return sig;
+  }
+  $('runOne').addEventListener('click',function(){ oneTest(true); renderTally(); });
+  $('run100').addEventListener('click',function(){
+    for(var i=0;i<99;i++) oneTest(false);
+    oneTest(true); renderTally();
+  });
+  $('reset').addEventListener('click',function(){
+    total=0; falses=0; renderTally();
+    $('rateA').textContent='·'; $('rateB').textContent='·';
+    $('rawA').textContent='press run'; $('rawB').textContent='press run';
+    $('armA').classList.remove('win'); $('armB').classList.remove('win');
+    var v=$('verdict'); v.className='verdict idle'; v.textContent='Run a test to see what the dashboard would tell you.';
+  });
+
+  // ── peeking simulator ──
+  var pTotal=0, pFalse=0;
+  function peekTest(render){
+    var p=trueP(), n=nPer();
+    var perDay=Math.max(1, Math.round(n/DAYS));
+    var cA=0,cB=0,seen=0,stoppedDay=0,sig=false,pv=1;
+    for(var d=1; d<=DAYS; d++){
+      var add = d<DAYS ? perDay : (n-seen); // last day tops up to n
+      cA+=rbinom(add,p); cB+=rbinom(add,p); seen+=add;
+      pv=pValue(cA,seen,cB,seen);
+      if(pv<ALPHA){ sig=true; stoppedDay=d; break; }
+    }
+    pTotal++; if(sig) pFalse++;
+    if(render){
+      var v=$('pVerdict');
+      if(sig){
+        var winner = (cB/seen)>=(cA/seen)?'B':'A';
+        v.className='verdict false';
+        v.innerHTML='<span class="flag">Stopped early</span> On day '+stoppedDay+' it crossed the line, so you stop and ship <b>'+winner+'</b> (p='+pv.toFixed(3)+'). Same identical pages. You peeked your way to a fake winner.';
+      } else {
+        v.className='verdict correct';
+        v.innerHTML='<span class="flag">Survived</span> Got through all 14 days without a false alarm this time (final p='+pv.toFixed(2)+'). Run it again, it will not always be so lucky.';
+      }
+    }
+    return sig;
+  }
+  function pRenderTally(){
+    $('pTotal').textContent=fmt(pTotal);
+    var r=pTotal? pFalse/pTotal : 0;
+    $('pRate').textContent=(r*100).toFixed(1)+'%';
+    $('pFalse').textContent=fmt(pFalse);
+    $('pBar').style.width=Math.min(100, r*100)+'%';
+  }
+  $('pRunOne').addEventListener('click',function(){ peekTest(true); pRenderTally(); });
+  $('pRun100').addEventListener('click',function(){
+    for(var i=0;i<99;i++) peekTest(false);
+    peekTest(true); pRenderTally();
+  });
+  $('pReset').addEventListener('click',function(){
+    pTotal=0; pFalse=0; pRenderTally();
+    var v=$('pVerdict'); v.className='verdict idle'; v.textContent='Run a peeking test. Same identical arms, but now you get to peek every day.';
+  });
+})();
+</script>
+</body>
+</html>
