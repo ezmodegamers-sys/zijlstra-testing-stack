@@ -54,12 +54,13 @@
     padding:0 40px;border-bottom:1px solid var(--bdr);
     position:sticky;top:0;z-index:100;background:var(--bg);
   }
-  .nav-brand{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--tx2);letter-spacing:1px}
+  .nav-brand{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--tx2);letter-spacing:1px;text-decoration:none}
   .nav-brand span{color:var(--ac)}
-  .nav-tag{font-size:11px;color:var(--tx3);font-family:var(--mono)}
-  .nav-right{display:flex;gap:18px;align-items:center}
-  .nav-link{font-family:var(--mono);font-size:11px;color:var(--tx3);text-decoration:none}
+  .nav-links{display:flex;gap:26px;align-items:center}
+  .nav-link{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--tx2);text-decoration:none;position:relative;padding:4px 0}
   .nav-link:hover{color:var(--tx)}
+  .nav-link.active{color:var(--ac)}
+  .nav-link.active::after{content:'';position:absolute;left:0;right:0;bottom:-2px;height:2px;background:var(--ac)}
 
   /* ── HERO ── */
   .hero{
@@ -172,7 +173,6 @@
     text-transform:uppercase;padding:4px 9px;border-radius:999px;flex-shrink:0}
   .hero-note .arr{color:var(--ac);font-weight:700;padding-right:6px;transition:transform .18s ease}
   .hero-note:hover .arr{transform:translateX(4px)}
-  .nav-link-blog{color:var(--ac);font-weight:700}
 
   /* ── MANIFESTO ── */
   .manifesto{
@@ -207,11 +207,11 @@
 <body>
 
 <nav class="nav">
-  <div class="nav-brand">// <span>zijlstra</span> testing stack</div>
-  <div class="nav-right">
+  <a class="nav-brand" href="/">// <span>zijlstra</span> testing stack</a>
+  <div class="nav-links">
+    <a class="nav-link active" href="/">tools</a>
     <a class="nav-link" href="/learn/">learn</a>
-    <a class="nav-link nav-link-blog" href="/blog/">blog</a>
-    <div class="nav-tag">v1.0 · ecommerce experimentation</div>
+    <a class="nav-link" href="/blog/">blog</a>
   </div>
 </nav>
 
