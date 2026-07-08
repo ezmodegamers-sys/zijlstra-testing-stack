@@ -64,7 +64,7 @@
 
   /* ── HERO ── */
   .hero{
-    max-width:900px;margin:0 auto;padding:56px 40px 8px;text-align:center;
+    max-width:900px;margin:0 auto;padding:56px 40px 40px;text-align:center;
   }
   .hero-eyebrow{
     font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:3px;
@@ -81,13 +81,6 @@
     margin:0 auto 48px;font-weight:400;
   }
   .hero-sub strong{color:var(--tx)}
-  .hero-badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:64px}
-  .badge{
-    font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.5px;
-    padding:5px 12px;border:1px solid var(--bdr);color:var(--tx3);
-    text-transform:uppercase;
-  }
-  .badge.live{border-color:var(--g);color:var(--g)}
 
   /* card sparkline */
   .card-spark{margin-bottom:16px;opacity:.7}
@@ -222,21 +215,11 @@
     <span class="name">experimental integrity.</span>
   </h1>
   <p class="hero-sub">
-    Check enough metrics and one wins by luck. Peek daily and stop on a good day.
-    Slice by segment until something shines. <strong>You can make almost any test look like a winner.</strong>
+    <strong>You can make almost any test look like a winner.</strong>
     These tools protect the internal validity of your experiments, so that when you call something
     a win, <strong>you can defend it in any room.</strong>
   </p>
   <a class="hero-note" href="/blog/how-much-traffic-do-you-need-to-ab-test"><span class="tag">New</span><span class="txt">On the blog: How much traffic do you need to A/B test?</span><span class="arr">→</span></a>
-  <div class="hero-badges">
-    <div class="badge">Two-proportion z-test</div>
-    <div class="badge">SRM detection</div>
-    <div class="badge">Bonferroni correction</div>
-    <div class="badge">Peeking detection</div>
-    <div class="badge">Survival analysis</div>
-    <div class="badge">Platform calibration</div>
-    <div class="badge">Bayesian shrinkage</div>
-  </div>
 </section>
 
 <section class="tools-section">
