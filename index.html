@@ -167,6 +167,22 @@
   .hero-note .arr{color:var(--ac);font-weight:700;padding-right:6px;transition:transform .18s ease}
   .hero-note:hover .arr{transform:translateX(4px)}
 
+  /* ── ANALYZE BAND ── */
+  .analyze-band{max-width:1100px;margin:0 auto 36px;padding:0 40px}
+  .ab-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+    border:1.5px dashed rgba(79,142,247,.5);background:rgba(79,142,247,.06);padding:26px 30px;
+    text-decoration:none;color:inherit;transition:border-color .18s ease,background .18s ease,transform .18s ease,box-shadow .18s ease}
+  .ab-inner:hover{border-color:var(--ac);background:rgba(79,142,247,.11);transform:translateY(-2px);box-shadow:0 14px 30px -18px rgba(0,0,0,.75)}
+  .ab-left{flex:1;min-width:280px}
+  .ab-eyebrow{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ac);margin-bottom:9px}
+  .ab-eyebrow .new{background:var(--ac);color:#fff;padding:2px 7px;margin-left:6px}
+  .ab-title{font-size:23px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px;line-height:1.15}
+  .ab-sub{font-size:13.5px;color:var(--tx2);line-height:1.6;max-width:580px}
+  .ab-btn{display:inline-block;font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.4px;
+    background:var(--ac);color:#fff;padding:14px 24px;white-space:nowrap;flex-shrink:0;transition:background .15s ease,transform .18s ease}
+  .ab-inner:hover .ab-btn{background:#5f9bff;transform:translateX(3px)}
+  @media(max-width:800px){.analyze-band{padding:0 24px 8px}.ab-inner{padding:22px}}
+
   /* ── MANIFESTO ── */
   .manifesto{
     max-width:700px;margin:0 auto;padding:0 40px 100px;
@@ -221,6 +237,17 @@
     a win, <strong>you can defend it in any room.</strong>
   </p>
   <a class="hero-note" href="/blog/how-much-traffic-do-you-need-to-ab-test"><span class="tag">New</span><span class="txt">On the blog: How much traffic do you need to A/B test?</span><span class="arr">→</span></a>
+</section>
+
+<section class="analyze-band">
+  <a class="ab-inner" href="/analyze">
+    <div class="ab-left">
+      <div class="ab-eyebrow">// Instant Analysis <span class="new">New</span></div>
+      <div class="ab-title">Just finished a test? Drop the CSV.</div>
+      <div class="ab-sub">Upload the results export and get the whole verdict in one shot: is the winner real, how big is the honest lift, was the split even fair, and what to do next. Runs in your browser.</div>
+    </div>
+    <span class="ab-btn">Analyze it →</span>
+  </a>
 </section>
 
 <section class="tools-section">
