@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Statistical Significance & the P-Value, Explained Simply | AB Integrity</title>
+<meta name="description" content="What a p-value actually means, with an interactive picture. See significance as the shaded tail of a bell curve, learn the 0.05 rule, and the three things a p-value is NOT. Beginner-friendly, no formulas to memorize.">
+<link rel="canonical" href="https://abintegrity.com/learn/significance-and-p-values">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="AB Integrity">
+<meta property="og:title" content="Statistical significance and the p-value, explained simply">
+<meta property="og:description" content="See a p-value as the shaded tail of a bell curve. What significance really means, the 0.05 rule, and the three things a p-value is NOT.">
+<meta property="og:url" content="https://abintegrity.com/learn/significance-and-p-values">
+<meta property="og:image" content="https://abintegrity.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://abintegrity.com/og-image.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"LearningResource",
+ "name":"Statistical significance and the p-value, explained simply",
+ "description":"Beginner lesson with an interactive picture of the p-value as the shaded tail of a null distribution, the 0.05 rule, and common misreadings.",
+ "url":"https://abintegrity.com/learn/significance-and-p-values",
+ "learningResourceType":"interactive lesson",
+ "educationalLevel":"beginner",
+ "isPartOf":{"@type":"Course","name":"A/B Testing From Zero","url":"https://abintegrity.com/learn/"},
+ "isAccessibleForFree":true,
+ "author":{"@type":"Person","name":"Sebastian Zijlstra","sameAs":"https://www.linkedin.com/in/sebastianzijlstra"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList",
+ "itemListElement":[
+   {"@type":"ListItem","position":1,"name":"Home","item":"https://abintegrity.com/"},
+   {"@type":"ListItem","position":2,"name":"Learn","item":"https://abintegrity.com/learn/"},
+   {"@type":"ListItem","position":3,"name":"Significance and the p-value","item":"https://abintegrity.com/learn/significance-and-p-values"}
+ ]}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0D1117;--bg2:#161B22;--bg3:#1C2128;--bdr:#30363D;
+    --tx:#E6EDF3;--tx2:#A0AAB6;--tx3:#7D8590;
+    --ac:#4F8EF7;--g:#3FB950;--r:#F85149;--y:#D29922;--o:#F0883E;--p:#BC8CFF;--t:#2DD4BF;
+    --mono:'JetBrains Mono',monospace;--sans:'Inter',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  html,body{min-height:100vh;background:var(--bg);color:var(--tx);font-family:var(--sans)}
+  body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+    background:radial-gradient(circle at 1px 1px,rgba(230,237,243,.022) 1px,transparent 0) 0 0/34px 34px,var(--bg)}
+  ::selection{background:rgba(79,142,247,.26);color:#fff}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--ac);outline-offset:3px}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+  .nav{height:56px;display:flex;align-items:center;justify-content:space-between;
+    padding:0 40px;border-bottom:1px solid var(--bdr);position:sticky;top:0;z-index:100;
+    background:rgba(13,17,23,.9);backdrop-filter:blur(8px)}
+  .nav-brand{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--tx2);letter-spacing:1px;text-decoration:none}
+  .nav-brand span{color:var(--ac)}
+  .nav-links{display:flex;gap:26px;align-items:center}
+  .nav-link{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--tx2);text-decoration:none;position:relative;padding:4px 0}
+  .nav-link:hover{color:var(--tx)}
+  .nav-link.active{color:var(--ac)}
+  .nav-link.active::after{content:'';position:absolute;left:0;right:0;bottom:-2px;height:2px;background:var(--ac)}
+
+  .article{max-width:760px;margin:0 auto;padding:52px 40px 40px}
+  .crumbs{font-family:var(--mono);font-size:11px;color:var(--tx3);margin-bottom:20px;display:flex;gap:8px;flex-wrap:wrap}
+  .crumbs a{color:var(--tx3);text-decoration:none}
+  .crumbs a:hover{color:var(--ac)}
+  .crumbs .sep{color:var(--bdr)}
+  .crumbs .here{color:var(--tx2)}
+  .a-meta{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:16px;display:flex;gap:14px;flex-wrap:wrap}
+  .a-meta .cat{color:var(--t)}
+  h1{font-size:clamp(28px,4.5vw,44px);font-weight:900;letter-spacing:-1px;line-height:1.12;margin-bottom:14px}
+  .standfirst{font-size:16px;color:var(--tx2);line-height:1.7;margin-bottom:34px;padding-bottom:28px;border-bottom:1px solid var(--bdr)}
+  .standfirst strong{color:var(--tx);font-weight:600}
+
+  .prose p{font-size:15px;color:var(--tx2);line-height:1.85;margin-bottom:18px}
+  .prose p strong{color:var(--tx);font-weight:600}
+  .prose h2{font-size:20px;font-weight:700;letter-spacing:-.3px;margin:36px 0 14px}
+  .prose a{color:var(--ac);text-decoration:none;border-bottom:1px solid rgba(79,142,247,.35)}
+  .prose a:hover{border-bottom-color:var(--ac)}
+
+  .def{background:var(--bg2);border:1px solid var(--bdr);border-left:2px solid var(--t);padding:14px 18px;margin:20px 0}
+  .def .term{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--t);margin-bottom:6px}
+  .def .body{font-size:14px;color:var(--tx2);line-height:1.7}
+  .def .body b{color:var(--tx)}
+
+  .myths{background:var(--bg2);border:1px solid var(--bdr);border-left:2px solid var(--r);padding:16px 20px;margin:22px 0}
+  .myths .m-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--r);display:block;margin-bottom:12px}
+  .myth{font-size:14px;color:var(--tx2);line-height:1.65;margin-bottom:12px;padding-left:20px;position:relative}
+  .myth:last-child{margin-bottom:0}
+  .myth::before{content:'✕';position:absolute;left:0;color:var(--r);font-family:var(--mono);font-size:12px}
+  .myth b{color:var(--tx)}
+
+  /* ── SIMULATOR ── */
+  .sim{background:var(--bg2);border:1px solid var(--bdr);margin:26px 0;overflow:hidden}
+  .sim-head{padding:14px 18px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .sim-title{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--tx2)}
+  .sim-note{font-family:var(--mono);font-size:10px;color:var(--tx3)}
+  .sim-body{padding:18px}
+  .controls{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:6px}
+  .ctl label{display:block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--tx3);margin-bottom:7px}
+  .ctl label b{color:var(--ac);font-family:var(--mono)}
+  .ctl input[type=range]{width:100%;accent-color:var(--ac)}
+  .ctl .hint{font-size:10px;color:var(--tx3);margin-top:5px}
+
+  .chart{margin:6px 0 4px}
+  .chart svg{width:100%;height:auto;display:block}
+  .curve-legend{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--mono);font-size:10px;color:var(--tx3);margin-top:6px}
+  .curve-legend span{display:flex;align-items:center;gap:6px}
+  .lg-dot{width:12px;height:3px;display:inline-block}
+
+  .readout{display:grid;grid-template-columns:1fr 1.6fr;gap:12px;margin-top:14px}
+  .ro-card{background:var(--bg);border:1px solid var(--bdr);padding:14px 16px}
+  .ro-num{font-family:var(--mono);font-size:26px;font-weight:700;line-height:1;margin-bottom:5px}
+  .ro-lbl{font-size:11px;color:var(--tx3);line-height:1.45}
+  .ro-card.verdict-sig{border-color:rgba(63,185,80,.4);background:rgba(63,185,80,.06)}
+  .ro-card.verdict-no{border-color:rgba(210,153,34,.35);background:rgba(210,153,34,.05)}
+  .ro-plain{font-size:13.5px;color:var(--tx2);line-height:1.6}
+  .ro-plain b{color:var(--tx)}
+
+  .callout{background:var(--bg2);border:1px solid var(--bdr);border-left:2px solid var(--ac);
+    padding:16px 20px;margin:24px 0;font-size:14px;color:var(--tx2);line-height:1.75}
+  .callout .c-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ac);display:block;margin-bottom:8px}
+  .callout b{color:var(--tx)}
+
+  .a-cta{background:var(--bg2);border:1px solid var(--bdr);padding:22px 26px;margin-top:36px}
+  .a-cta .c-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--g);display:block;margin-bottom:10px}
+  .a-cta p{font-size:13.5px;color:var(--tx2);line-height:1.7;margin-bottom:0}
+  .a-cta a{color:var(--ac);text-decoration:none}
+
+  .nextnav{display:flex;justify-content:space-between;gap:12px;margin-top:32px;padding-top:22px;border-top:1px solid var(--bdr);font-family:var(--mono);font-size:12px}
+  .nextnav a{color:var(--ac);text-decoration:none}
+  .nextnav span{color:var(--tx3)}
+
+  .footer{border-top:1px solid var(--bdr);padding:24px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  .footer-left{font-family:var(--mono);font-size:11px;color:var(--tx3)}
+  .footer-left span{color:var(--ac)}
+  .footer-left a{color:var(--ac);text-decoration:none}
+  .footer-right{font-size:11px;color:var(--tx3)}
+
+  @media(max-width:800px){.article{padding:40px 22px}.nav{padding:0 22px}.controls{grid-template-columns:1fr}.readout{grid-template-columns:1fr}.footer{padding:24px 22px}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="/">// ab <span>integrity</span></a>
+  <div class="nav-links">
+    <a class="nav-link" href="/">tools</a>
+    <a class="nav-link active" href="/learn/">learn</a>
+    <a class="nav-link" href="/blog/">blog</a>
+  </div>
+</nav>
+
+<article class="article">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span class="sep">/</span><a href="/learn/">Learn</a><span class="sep">/</span><span class="here">Significance and the p-value</span>
+  </nav>
+  <div class="a-meta"><span class="cat">Lesson 03</span><span>Interactive</span><span>6 min</span></div>
+  <h1>Significance and the p-value, without the fog</h1>
+  <p class="standfirst">The p-value is the most quoted number in testing and the most misunderstood. Here it is with a picture instead of a formula. Once you can see it, you will never misread it again, and you will spot the people who do.</p>
+
+  <div class="prose">
+    <p>In <a href="/learn/why-one-test-can-lie">Lesson 02</a> you watched luck open up gaps between two identical pages. Here is the useful part: those gaps are not random in a hopeless way. They have a shape. If A and B were truly the same, most tests would land near a 0% gap, a few would drift out to a small gap, and only rarely would luck produce a big one. Draw that as a curve and it looks like a bell.</p>
+    <p>That bell is the world where <strong>nothing is going on</strong>. Statisticians call it the null. Your real test gives you one number, the gap you actually measured. The whole question of significance is just: <strong>where does your gap land on that bell?</strong> Near the middle, and luck explains it easily. Way out in a thin tail, and luck almost never does that, so something real is probably happening. Play with it.</p>
+  </div>
+
+  <!-- ── SIMULATOR ── -->
+  <div class="sim">
+    <div class="sim-head">
+      <div class="sim-title">// the p-value, as a picture</div>
+      <div class="sim-note">base rate 2.5% · null curve = "if A and B were identical"</div>
+    </div>
+    <div class="sim-body">
+      <div class="controls">
+        <div class="ctl">
+          <label>Lift you measured (B over A): <b id="liftLabel">+15%</b></label>
+          <input type="range" id="lift" min="0" max="40" step="1" value="15">
+          <div class="hint">How much better B looked. Bigger gap slides your line into the tail.</div>
+        </div>
+        <div class="ctl">
+          <label>Visitors per version: <b id="nLabel">2,000</b></label>
+          <input type="range" id="n" min="500" max="20000" step="500" value="2000">
+          <div class="hint">More visitors narrows the bell, so the same lift reaches further out.</div>
+        </div>
+      </div>
+
+      <div class="chart">
+        <svg id="svg" viewBox="0 0 600 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bell curve of gaps luck would produce if A and B were identical, with the measured result marked and the p-value shaded as the tail area.">
+          <line x1="20" y1="196" x2="580" y2="196" stroke="#30363D" stroke-width="1"/>
+          <path id="tailL" d="" fill="#F0883E" fill-opacity="0.22"/>
+          <path id="tailR" d="" fill="#F0883E" fill-opacity="0.22"/>
+          <path id="curve" d="" fill="none" stroke="#7D8590" stroke-width="1.6"/>
+          <line id="sigL" x1="0" y1="40" x2="0" y2="196" stroke="#F85149" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>
+          <line id="sigR" x1="0" y1="40" x2="0" y2="196" stroke="#F85149" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>
+          <line id="obsR" x1="0" y1="30" x2="0" y2="196" stroke="#4F8EF7" stroke-width="2"/>
+          <line id="obsL" x1="0" y1="30" x2="0" y2="196" stroke="#4F8EF7" stroke-width="2" opacity="0.5"/>
+          <text id="obsLbl" x="0" y="24" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#4F8EF7">your result</text>
+          <text x="300" y="214" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#7D8590">no difference (0)</text>
+          <text x="20" y="214" text-anchor="start" font-family="JetBrains Mono" font-size="9" fill="#7D8590">−2.5pp</text>
+          <text x="580" y="214" text-anchor="end" font-family="JetBrains Mono" font-size="9" fill="#7D8590">+2.5pp</text>
+        </svg>
+        <div class="curve-legend">
+          <span><i class="lg-dot" style="background:#7D8590"></i> gaps luck makes (null)</span>
+          <span><i class="lg-dot" style="background:#4F8EF7"></i> your measured gap</span>
+          <span><i class="lg-dot" style="background:#F0883E"></i> the p-value (tail area)</span>
+          <span><i class="lg-dot" style="background:#F85149"></i> significance line (p=0.05)</span>
+        </div>
+      </div>
+
+      <div class="readout">
+        <div class="ro-card" id="pCard">
+          <div class="ro-num" id="pVal">·</div>
+          <div class="ro-lbl">p-value</div>
+        </div>
+        <div class="ro-card ro-plain" id="plain">Move the sliders. The orange area is the p-value: how often luck alone would beat your result.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prose">
+    <p>The orange tails are the p-value. Read it as one plain sentence: <strong>if A and B were really identical, luck would produce a gap this big or bigger this often.</strong> A p-value of 0.40 means "forty percent of the time, pure chance beats this," which is a shrug. A p-value of 0.02 means "only two percent of the time," which is a result worth trusting.</p>
+    <div class="def">
+      <div class="term">P-value</div>
+      <div class="body">The chance of seeing a gap at least this big <b>if there were no real difference at all</b>. Small p-value, luck rarely does this, so the effect is probably real. It is a measure of surprise, not of size.</div>
+    </div>
+    <p>The famous <strong>0.05</strong> cutoff (the red line) is just a convention: call it "significant" when luck would beat it less than 5% of the time. That 5% is the same 1-in-20 false alarm rate you watched pile up in Lesson 02. There is nothing magic about 0.05. It is a line someone drew in 1925 and the industry never moved.</p>
+    <p>Notice the second slider. Drag visitors up and the bell gets skinnier, because more data means less luck-wobble, exactly what you saw in Lesson 01. The same +15% lift that was a shrug at 2,000 visitors slides into the tail and becomes significant at 15,000. The lift did not change. Your ability to hear it over the noise did.</p>
+
+    <h2>What a p-value is NOT</h2>
+    <p>This is where almost everyone, including people who run tests for a living, goes wrong. Three things the p-value does not tell you:</p>
+    <div class="myths">
+      <span class="m-label">// p = 0.03 does not mean any of these</span>
+      <div class="myth"><b>Not "97% chance B is better."</b> The p-value assumes there is no difference and asks how surprising your data is. It is not the probability that B wins. That is a different question (and the one <a href="/reality-check">Reality Check</a> answers).</div>
+      <div class="myth"><b>Not "3% chance the result is a fluke."</b> Close but wrong, and the difference matters. It is the chance of data this extreme <em>given</em> no effect, not the chance that there is no effect.</div>
+      <div class="myth"><b>Not a measure of how big the win is.</b> A tiny, worthless lift can be wildly significant with enough traffic. Significant means "probably real," never "probably big." Size is a separate reading.</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <span class="c-label">// the one takeaway</span>
+    A p-value answers exactly one question: <b>if nothing were going on, how often would luck alone beat what I saw?</b> Low means rarely, so trust it. High means often, so do not. It is not the odds B wins, and it is not the size of the win. Keep those straight and you are already ahead of most rooms.
+  </div>
+
+  <div class="a-cta">
+    <span class="c-label">// keep going</span>
+    <p>You now know when a gap is real. Next is the flip side: how many visitors it takes to catch a real gap in the first place, which is <strong>power and sample size</strong> (soon). To pin your numbers down before a test, <a href="/lockbox">Lockbox</a> does the sample size math for you.</p>
+  </div>
+
+  <div class="nextnav">
+    <a href="/learn/why-one-test-can-lie">← Lesson 02: Why one test can lie</a>
+    <span>Next: Power &amp; sample size (soon)</span>
+  </div>
+</article>
+
+<footer class="footer">
+  <div class="footer-left">// ab <span>integrity</span> · <a href="https://www.linkedin.com/in/sebastianzijlstra" target="_blank" rel="me noopener">LinkedIn ↗</a></div>
+  <div class="footer-right">runs in your browser · nothing is uploaded</div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  function erf(x){var s=x<0?-1:1;x=Math.abs(x);var t=1/(1+0.3275911*x);
+    var y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);
+    return s*y;}
+  function normcdf(z){return 0.5*(1+erf(z/Math.SQRT2));}
+  var $=function(id){return document.getElementById(id);};
+
+  var P=0.025;              // base conversion rate
+  var XR=2.5;               // x-axis half-range, in percentage points
+  var X0=20, X1=580, YB=196, YT=34; // plot box in svg units
+  function px(pp){ return X0 + (pp+XR)/(2*XR)*(X1-X0); }
+  function densityY(rel){ return YB - rel*(YB-YT); } // rel 0..1
+
+  var liftEl=$('lift'), nEl=$('n');
+  function fmtN(n){return n.toLocaleString('en-US');}
+  $('liftLabel').textContent='+'+liftEl.value+'%';
+  $('nLabel').textContent=fmtN(+nEl.value);
+
+  function render(){
+    var lift=(+liftEl.value)/100, n=+nEl.value;
+    $('liftLabel').textContent='+'+liftEl.value+'%';
+    $('nLabel').textContent=fmtN(n);
+
+    var seFrac=Math.sqrt(2*P*(1-P)/n);   // SE of the A/B difference, fraction
+    var sePP=seFrac*100;                 // in percentage points
+    var dPP=P*lift*100;                  // measured gap, in percentage points
+    var z=sePP>0 ? dPP/sePP : 0;
+    var pv=2*(1-normcdf(Math.abs(z)));
+
+    // build the null curve (normal centered 0, sd = sePP), peak normalized to 1
+    var N=120, pts=[];
+    for(var i=0;i<=N;i++){
+      var x=-XR + i/N*(2*XR);
+      var d=Math.exp(-0.5*(x/sePP)*(x/sePP));
+      pts.push([x,d]);
+    }
+    var curve='M'+px(pts[0][0]).toFixed(1)+' '+densityY(pts[0][1]).toFixed(1);
+    for(var j=1;j<=N;j++){ curve+=' L'+px(pts[j][0]).toFixed(1)+' '+densityY(pts[j][1]).toFixed(1); }
+    $('curve').setAttribute('d',curve);
+
+    // shaded tails beyond +/- dPP (clamped to axis)
+    var dClamp=Math.min(dPP, XR);
+    function tail(sign){
+      // sign = +1 right, -1 left
+      var path='M'+px(sign*dClamp).toFixed(1)+' '+YB.toFixed(1);
+      for(var k=0;k<=N;k++){
+        var x=pts[k][0];
+        if(sign>0 ? x>=dClamp : x<=-dClamp){
+          path+=' L'+px(x).toFixed(1)+' '+densityY(pts[k][1]).toFixed(1);
+        }
+      }
+      path+=' L'+px(sign*XR).toFixed(1)+' '+YB.toFixed(1)+' Z';
+      return path;
+    }
+    $('tailR').setAttribute('d', tail(1));
+    $('tailL').setAttribute('d', tail(-1));
+
+    // significance boundary lines at +/- 1.96 SE
+    var xsig=Math.min(1.959964*sePP, XR);
+    $('sigR').setAttribute('x1',px(xsig)); $('sigR').setAttribute('x2',px(xsig));
+    $('sigL').setAttribute('x1',px(-xsig)); $('sigL').setAttribute('x2',px(-xsig));
+
+    // observed markers
+    $('obsR').setAttribute('x1',px(dClamp)); $('obsR').setAttribute('x2',px(dClamp));
+    $('obsL').setAttribute('x1',px(-dClamp)); $('obsL').setAttribute('x2',px(-dClamp));
+    $('obsLbl').setAttribute('x', px(dClamp));
+
+    // readout
+    $('pVal').textContent = pv<0.001 ? '<0.001' : pv.toFixed(3);
+    var sig = pv<0.05;
+    var card=$('pCard');
+    card.className='ro-card '+(sig?'verdict-sig':'verdict-no');
+    var oftenPct=(pv*100);
+    var oftenTxt = oftenPct>=1 ? oftenPct.toFixed(0)+'%' : oftenPct.toFixed(1)+'%';
+    $('plain').innerHTML = (sig
+      ? '<b>Significant.</b> '
+      : '<b>Not significant.</b> ')
+      + 'If A and B were identical, luck would beat a +'+liftEl.value+'% gap about <b>'+oftenTxt+'</b> of the time. '
+      + (sig ? 'That is rare enough to trust.' : 'That happens too easily to call a win.');
+  }
+  liftEl.addEventListener('input',render);
+  nEl.addEventListener('input',render);
+  render();
+})();
+</script>
+</body>
+</html>
