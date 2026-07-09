@@ -63,24 +63,40 @@
   .nav-link.active::after{content:'';position:absolute;left:0;right:0;bottom:-2px;height:2px;background:var(--ac)}
 
   /* ── HERO ── */
-  .hero{
-    max-width:900px;margin:0 auto;padding:56px 40px 40px;text-align:center;
-  }
-  .hero-eyebrow{
-    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:3px;
-    text-transform:uppercase;color:var(--ac);margin-bottom:20px;
-  }
+  .hero{max-width:920px;margin:0 auto;padding:72px 40px 20px}
   .hero-title{
-    font-size:clamp(36px,6vw,72px);font-weight:900;line-height:1.05;
-    letter-spacing:-2px;margin-bottom:24px;
+    font-size:clamp(40px,6.4vw,74px);font-weight:900;line-height:1.0;
+    letter-spacing:-3px;margin-bottom:22px;text-wrap:balance;
   }
   .hero-title .name{color:var(--ac)}
-  .hero-title .dim{color:var(--tx2)}
-  .hero-sub{
-    font-size:17px;color:var(--tx2);line-height:1.7;max-width:580px;
-    margin:0 auto 48px;font-weight:400;
-  }
+  .hero-sub{font-size:18px;color:var(--tx2);line-height:1.65;max-width:54ch;margin-bottom:28px}
   .hero-sub strong{color:var(--tx)}
+
+  /* live winner's-curse demo */
+  .hero-demo{border:1px solid var(--bdr);background:var(--bg2);margin-bottom:26px;overflow:hidden;max-width:600px}
+  .hd-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 16px;border-bottom:1px solid var(--bdr)}
+  .hd-label{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--tx3)}
+  .hd-run{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.5px;color:var(--tx2);
+    background:var(--bg3);border:1px solid var(--bdr);padding:5px 12px;cursor:pointer;transition:.15s}
+  .hd-run:hover{border-color:var(--ac);color:var(--tx)}
+  .hd-body{padding:18px 20px}
+  .hd-row{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+  .hd-name{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--tx3);width:62px;flex-shrink:0}
+  .hd-track{flex:1;height:26px;background:var(--bg);border:1px solid var(--bdr);position:relative;overflow:hidden}
+  .hd-fill{position:absolute;left:0;top:0;bottom:0;width:0;transition:width 1.05s cubic-bezier(.16,1,.3,1)}
+  .hd-a .hd-fill{background:rgba(79,142,247,.5)}
+  .hd-b .hd-fill{background:rgba(63,185,80,.5)}
+  .hd-val{font-family:var(--mono);font-size:15px;font-weight:700;width:58px;text-align:right;flex-shrink:0;font-variant-numeric:tabular-nums}
+  .hd-a .hd-val{color:var(--ac)}
+  .hd-b .hd-val{color:var(--g)}
+  .hd-verdict{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-height:22px;padding-top:8px;font-size:13px;color:var(--tx3);line-height:1.5}
+  .hd-verdict b{color:var(--tx2)}
+  .hd-pill{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+    padding:3px 8px;background:var(--g);color:var(--bg);opacity:0;transition:opacity .3s ease}
+  .hd-pill.show{opacity:1}
+  .hero-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  @media (prefers-reduced-motion:reduce){.hd-fill,.hd-pill{transition:none}}
+  @media(max-width:640px){.hero-demo{max-width:100%}.hd-label{font-size:9.5px}}
 
   /* card sparkline */
   .card-spark{margin-bottom:16px;opacity:.7}
@@ -226,7 +242,6 @@
 </nav>
 
 <section class="hero">
-  <div class="hero-eyebrow">Ecommerce Experimentation Infrastructure</div>
   <h1 class="hero-title">
     A/B testing with<br>
     <span class="name">experimental integrity.</span>
@@ -236,7 +251,30 @@
     These tools protect the internal validity of your experiments, so that when you call something
     a win, <strong>you can defend it in any room.</strong>
   </p>
-  <a class="hero-note" href="/blog/how-much-traffic-do-you-need-to-ab-test"><span class="tag">New</span><span class="txt">On the blog: How much traffic do you need to A/B test?</span><span class="arr">→</span></a>
+
+  <div class="hero-demo" id="heroDemo">
+    <div class="hd-top">
+      <span class="hd-label">Live · an A/A test — both pages are identical</span>
+      <button class="hd-run" id="hdRun" type="button">↻ run again</button>
+    </div>
+    <div class="hd-body">
+      <div class="hd-row hd-a">
+        <span class="hd-name">Control</span>
+        <div class="hd-track"><span class="hd-fill" id="hdFillA"></span></div>
+        <span class="hd-val" id="hdA">·</span>
+      </div>
+      <div class="hd-row hd-b">
+        <span class="hd-name">Variant</span>
+        <div class="hd-track"><span class="hd-fill" id="hdFillB"></span></div>
+        <span class="hd-val" id="hdB">·</span>
+      </div>
+      <div class="hd-verdict"><span class="hd-pill" id="hdPill">winner</span><span id="hdMsg">Watch a winner appear from nothing.</span></div>
+    </div>
+  </div>
+
+  <div class="hero-actions">
+    <a class="hero-note" href="/blog/how-much-traffic-do-you-need-to-ab-test"><span class="tag">New</span><span class="txt">On the blog: How much traffic do you need to A/B test?</span><span class="arr">→</span></a>
+  </div>
 </section>
 
 <section class="analyze-band">
@@ -504,6 +542,40 @@
   <div class="footer-left">// ab <span>integrity</span> · <a href="https://www.linkedin.com/in/sebastianzijlstra" target="_blank" rel="me noopener" style="color:var(--ac);text-decoration:none">LinkedIn ↗</a></div>
   <div class="footer-right">runs in your browser · nothing is uploaded</div>
 </footer>
+
+<script>
+(function(){
+  var A=document.getElementById('hdFillA'),B=document.getElementById('hdFillB'),
+      vA=document.getElementById('hdA'),vB=document.getElementById('hdB'),
+      pill=document.getElementById('hdPill'),msg=document.getElementById('hdMsg'),run=document.getElementById('hdRun');
+  if(!A) return;
+  function rbinom(n,p){var c=0;for(var i=0;i<n;i++){if(Math.random()<p)c++;}return c;}
+  var MAX=0.05, N=800, P=0.025;
+  function roll(){
+    var a=rbinom(N,P)/N, b=rbinom(N,P)/N;
+    pill.classList.remove('show');
+    A.style.width='0'; B.style.width='0';
+    requestAnimationFrame(function(){requestAnimationFrame(function(){
+      A.style.width=Math.min(100,a/MAX*100).toFixed(1)+'%';
+      B.style.width=Math.min(100,b/MAX*100).toFixed(1)+'%';
+    });});
+    vA.textContent=(a*100).toFixed(2)+'%';
+    vB.textContent=(b*100).toFixed(2)+'%';
+    var bWins=b>=a, lift=a>0?Math.abs((b-a)/a*100):0, who=bWins?'Variant':'Control';
+    setTimeout(function(){
+      if(lift>=3){
+        pill.textContent='▲ '+who+' +'+lift.toFixed(0)+'%'; pill.classList.add('show');
+        msg.innerHTML='…but the pages are <b>identical</b>. That lead is pure luck.';
+      } else {
+        pill.classList.remove('show');
+        msg.innerHTML='Basically tied this run. Hit run again.';
+      }
+    }, 980);
+  }
+  run.addEventListener('click', roll);
+  roll();
+})();
+</script>
 
 </body>
 </html>
