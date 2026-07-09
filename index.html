@@ -21,494 +21,324 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg:#0D1117;--bg2:#161B22;--bg3:#1C2128;
-    --bdr:#30363D;
-    --tx:#E6EDF3;--tx2:#A0AAB6;--tx3:#7D8590;
-    --ac:#4F8EF7;--ac2:#1F6FEB;
-    --g:#3FB950;--r:#F85149;--y:#D29922;--o:#F0883E;
-    --p:#BC8CFF;
-    --mono:'JetBrains Mono',monospace;
+  :root{
+    --bg:#0B0E13;--bg2:#131820;--bg3:#1a2029;--bdr:#242b35;--bdr2:#2e3641;
+    --tx:#EEF2F7;--tx2:#9AA5B3;--tx3:#616b78;
+    --ac:#5B9CFF;--g:#3FB950;--p:#BC8CFF;--o:#F0883E;--y:#D8A62B;--t:#2DD4BF;--r:#F85149;
+    --display:'Bricolage Grotesque',sans-serif;
     --sans:'Inter',sans-serif;
+    --mono:'JetBrains Mono',monospace;
+    --edge:1120px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  html,body{min-height:100vh;color:var(--tx);font-family:var(--sans)}
-  body{
-    -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;
-    background:
-      radial-gradient(circle at 1px 1px, rgba(230,237,243,.022) 1px, transparent 0) 0 0/34px 34px,
-      var(--bg);
-  }
-  /* craft details — selection, focus, tabular figures */
-  ::selection{background:rgba(79,142,247,.26);color:#fff}
-  .nav-brand,.nav-tag,.nav-link,.badge,.tool-num,.tool-icon,.section-label,.flow-label,.fs-num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1,"ss01" 1}
-  a:focus-visible{outline:2px solid var(--ac);outline-offset:3px}
+  body{background:var(--bg);color:var(--tx);font-family:var(--sans);line-height:1.5;
+    -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+  a{color:inherit}
+  ::selection{background:rgba(91,156,255,.28);color:#fff}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--ac);outline-offset:3px}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+  .edge{max-width:var(--edge);margin:0 auto;padding:0 48px}
 
   /* ── NAV ── */
-  .nav{
-    height:56px;display:flex;align-items:center;justify-content:space-between;
-    padding:0 40px;border-bottom:1px solid var(--bdr);
-    position:sticky;top:0;z-index:100;background:var(--bg);
-  }
-  .nav-brand{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--tx2);letter-spacing:1px;text-decoration:none}
-  .nav-brand span{color:var(--ac)}
-  .nav-links{display:flex;gap:26px;align-items:center}
-  .nav-link{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--tx2);text-decoration:none;position:relative;padding:4px 0}
-  .nav-link:hover{color:var(--tx)}
-  .nav-link.active{color:var(--ac)}
-  .nav-link.active::after{content:'';position:absolute;left:0;right:0;bottom:-2px;height:2px;background:var(--ac)}
+  .nav{position:sticky;top:0;z-index:100;background:rgba(11,14,19,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--bdr)}
+  .nav-inner{max-width:var(--edge);margin:0 auto;padding:0 48px;height:66px;display:flex;align-items:center;justify-content:space-between}
+  .brand{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:-.02em;color:var(--tx);text-decoration:none}
+  .brand span{color:var(--ac)}
+  .nav-links{display:flex;gap:30px;align-items:center}
+  .nav-links a{font-family:var(--sans);font-size:15px;font-weight:500;color:var(--tx2);text-decoration:none;transition:color .15s}
+  .nav-links a:hover{color:var(--tx)}
+  .nav-links a.active{color:var(--tx);font-weight:600}
 
   /* ── HERO ── */
-  .hero{max-width:920px;margin:0 auto;padding:72px 40px 20px}
-  .hero-title{
-    font-size:clamp(40px,6.4vw,74px);font-weight:900;line-height:1.0;
-    letter-spacing:-3px;margin-bottom:22px;text-wrap:balance;
-  }
-  .hero-title .name{color:var(--ac)}
-  .hero-sub{font-size:18px;color:var(--tx2);line-height:1.65;max-width:54ch;margin-bottom:28px}
-  .hero-sub strong{color:var(--tx)}
+  .hero{max-width:var(--edge);margin:0 auto;padding:96px 48px 60px}
+  .hero h1{font-family:var(--display);font-weight:800;font-size:clamp(46px,8.2vw,96px);line-height:.92;
+    letter-spacing:-.035em;color:var(--tx);max-width:15ch;text-wrap:balance}
+  .hero h1 em{font-style:normal;color:var(--ac)}
+  .hero-sub{margin-top:30px;font-size:clamp(18px,2.2vw,23px);line-height:1.5;color:var(--tx2);max-width:44ch}
+  .hero-sub strong{color:var(--tx);font-weight:600}
+  .hero-cta{margin-top:38px;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+  .btn{font-family:var(--sans);font-size:16px;font-weight:600;text-decoration:none;display:inline-flex;
+    align-items:center;gap:9px;padding:15px 26px;transition:background .16s,transform .16s,border-color .16s}
+  .btn-fill{background:var(--ac);color:#06101f}
+  .btn-fill:hover{background:#7cb0ff;transform:translateY(-1px)}
+  .hero-link{font-family:var(--sans);font-size:15.5px;font-weight:500;color:var(--tx2);text-decoration:none;
+    display:inline-flex;align-items:center;gap:9px;transition:color .15s}
+  .hero-link:hover{color:var(--tx)}
+  .hero-link .flag{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;
+    background:var(--ac);color:#06101f;padding:3px 8px}
+  .hero-link .arr{color:var(--ac);transition:transform .16s}
+  .hero-link:hover .arr{transform:translateX(3px)}
 
-  /* live winner's-curse demo */
-  .hero-demo{border:1px solid var(--bdr);background:var(--bg2);margin-bottom:26px;overflow:hidden;max-width:600px}
-  .hd-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 16px;border-bottom:1px solid var(--bdr)}
-  .hd-label{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--tx3)}
-  .hd-run{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.5px;color:var(--tx2);
-    background:var(--bg3);border:1px solid var(--bdr);padding:5px 12px;cursor:pointer;transition:.15s}
-  .hd-run:hover{border-color:var(--ac);color:var(--tx)}
-  .hd-body{padding:18px 20px}
-  .hd-row{display:flex;align-items:center;gap:14px;margin-bottom:12px}
-  .hd-name{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--tx3);width:62px;flex-shrink:0}
-  .hd-track{flex:1;height:26px;background:var(--bg);border:1px solid var(--bdr);position:relative;overflow:hidden}
-  .hd-fill{position:absolute;left:0;top:0;bottom:0;width:0;transition:width 1.05s cubic-bezier(.16,1,.3,1)}
-  .hd-a .hd-fill{background:rgba(79,142,247,.5)}
-  .hd-b .hd-fill{background:rgba(63,185,80,.5)}
-  .hd-val{font-family:var(--mono);font-size:15px;font-weight:700;width:58px;text-align:right;flex-shrink:0;font-variant-numeric:tabular-nums}
-  .hd-a .hd-val{color:var(--ac)}
-  .hd-b .hd-val{color:var(--g)}
-  .hd-verdict{display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-height:22px;padding-top:8px;font-size:13px;color:var(--tx3);line-height:1.5}
-  .hd-verdict b{color:var(--tx2)}
-  .hd-pill{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
-    padding:3px 8px;background:var(--g);color:var(--bg);opacity:0;transition:opacity .3s ease}
-  .hd-pill.show{opacity:1}
-  .hero-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-  @media (prefers-reduced-motion:reduce){.hd-fill,.hd-pill{transition:none}}
-  @media(max-width:640px){.hero-demo{max-width:100%}.hd-label{font-size:9.5px}}
+  /* ── SECTION HEADS ── */
+  .sec-head{padding:76px 0 4px;display:flex;align-items:baseline;justify-content:space-between;gap:24px;flex-wrap:wrap}
+  .sec-head h2{font-family:var(--display);font-weight:700;font-size:clamp(30px,4.4vw,48px);letter-spacing:-.035em;color:var(--tx);line-height:1}
+  .sec-head .cap{font-family:var(--mono);font-size:12.5px;color:var(--tx3);letter-spacing:.01em;white-space:nowrap}
 
-  /* card sparkline */
-  .card-spark{margin-bottom:16px;opacity:.7}
+  /* ── TOOLS INDEX (de-boxed) ── */
+  .tool-list{margin-top:28px}
+  .tool-row{display:grid;grid-template-columns:46px 1fr 200px 30px;gap:30px;align-items:center;
+    padding:28px 0;border-top:1px solid var(--bdr);text-decoration:none;color:inherit;
+    transition:background .2s ease}
+  .tool-row:last-child{border-bottom:1px solid var(--bdr)}
+  .tool-row:hover{background:linear-gradient(90deg,rgba(255,255,255,.028),rgba(255,255,255,0) 70%)}
+  .tr-num{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--tx3);letter-spacing:.5px}
+  .tool-row:hover .tr-num{color:var(--tc)}
+  .tr-name{font-family:var(--display);font-weight:700;font-size:clamp(23px,2.7vw,31px);letter-spacing:-.02em;
+    line-height:1.02;color:var(--tx);transition:color .18s}
+  .tool-row:hover .tr-name{color:var(--tc)}
+  .tr-desc{font-size:15px;line-height:1.55;color:var(--tx2);margin-top:8px;max-width:60ch}
+  .tr-spark{width:200px;height:48px;opacity:.85;transition:opacity .18s}
+  .tool-row:hover .tr-spark{opacity:1}
+  .tr-arrow{font-size:20px;color:var(--tx3);justify-self:end;transition:color .18s,transform .18s}
+  .tool-row:hover .tr-arrow{color:var(--tc);transform:translateX(5px)}
 
-  /* ── TOOLS GRID ── */
-  .tools-section{max-width:1100px;margin:0 auto;padding:0 40px 100px}
-  .section-label{
-    font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:3px;
-    text-transform:uppercase;color:var(--tx3);margin-bottom:28px;
-    padding-bottom:12px;border-bottom:1px solid var(--bdr);
-  }
-  .tools-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+  /* ── ANALYZE BAND (hairlines, no box) ── */
+  .analyze{max-width:var(--edge);margin:88px auto 0;padding:0 48px}
+  .an-inner{border-top:1px solid var(--bdr);border-bottom:1px solid var(--bdr);text-decoration:none;color:inherit;
+    padding:48px 0;display:flex;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap;
+    background:radial-gradient(120% 140% at 0% 50%,rgba(91,156,255,.05),transparent 60%)}
+  .an-inner:hover .an-title{color:var(--ac)}
+  .an-inner .btn{transition:background .16s,transform .16s}
+  .an-inner:hover .btn{background:#7cb0ff}
+  .an-kicker{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.5px;color:var(--ac);margin-bottom:14px;
+    display:flex;align-items:center;gap:10px}
+  .an-kicker .new{background:var(--ac);color:#06101f;padding:2px 8px;letter-spacing:.4px}
+  .an-title{font-family:var(--display);font-weight:700;font-size:clamp(28px,4.2vw,44px);letter-spacing:-.035em;
+    color:var(--tx);line-height:1;max-width:15ch}
+  .an-sub{font-size:15.5px;color:var(--tx2);line-height:1.55;margin-top:16px;max-width:52ch}
+  .an-cta{flex-shrink:0}
 
-  .tool-card{
-    background:var(--bg2);border:1px solid var(--bdr);
-    padding:28px;cursor:pointer;text-decoration:none;color:inherit;
-    display:flex;flex-direction:column;gap:0;
-    transition:border-color .18s ease,background .18s ease,transform .18s ease,box-shadow .18s ease;
-    position:relative;overflow:hidden;
-  }
-  .tool-card:hover{border-color:var(--ac);background:var(--bg3);transform:translateY(-3px);box-shadow:0 12px 28px -16px rgba(0,0,0,.75)}
-  .tool-card::before{
-    content:'';position:absolute;top:0;left:0;right:0;height:2px;
-    background:var(--card-accent,var(--ac));opacity:0;transition:opacity .15s;
-  }
-  .tool-card:hover::before{opacity:1}
-
-  .tool-num{
-    font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;
-    color:var(--tx3);text-transform:uppercase;margin-bottom:16px;
-  }
-  .tool-icon{
-    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.5px;
-    padding:4px 8px;border:1px solid;display:inline-block;margin-bottom:16px;
-    width:fit-content;
-  }
-  .tool-name{font-size:18px;font-weight:700;margin-bottom:8px;line-height:1.2}
-  .tool-desc{font-size:13px;color:var(--tx2);line-height:1.6;flex:1;margin-bottom:20px}
-  .tool-checks{display:flex;flex-direction:column;gap:5px;margin-bottom:20px}
-  .tool-check{font-size:11px;color:var(--tx3);display:flex;gap:6px;align-items:flex-start}
-  .tool-check::before{content:'→';color:var(--card-accent,var(--ac));font-family:var(--mono);flex-shrink:0}
-  .tool-footer{
-    display:flex;align-items:center;justify-content:space-between;
-    padding-top:16px;border-top:1px solid var(--bdr);margin-top:auto;justify-content:flex-end;
-  }
-  .tool-arrow{font-size:16px;color:var(--tx3);transition:color .15s,transform .15s}
-  .tool-card:hover .tool-arrow{color:var(--ac);transform:translateX(4px)}
-
-  /* ── FROM THE BLOG ── */
-  .from-blog{max-width:1100px;margin:0 auto;padding:0 40px 100px}
-  .blog-feature{display:grid;grid-template-columns:.9fr 1.1fr;background:var(--bg2);border:1px solid var(--bdr);
-    text-decoration:none;color:inherit;overflow:hidden;
-    transition:border-color .18s ease,transform .18s ease,box-shadow .18s ease}
-  .blog-feature:hover{border-color:var(--ac);transform:translateY(-3px);box-shadow:0 12px 28px -16px rgba(0,0,0,.75)}
-  .bf-img{background:linear-gradient(135deg,#12161d,#0d1117);border-right:1px solid var(--bdr);
-    padding:18px;display:flex;align-items:center;justify-content:center}
+  /* ── FROM THE BLOG (de-boxed) ── */
+  .blog-feature{display:grid;grid-template-columns:.8fr 1.2fr;gap:44px;align-items:center;
+    text-decoration:none;color:inherit;padding:34px 0 8px}
+  .bf-img{background:linear-gradient(135deg,#141a22,#0e131a);padding:20px;border:1px solid var(--bdr)}
   .bf-img img{width:100%;height:auto;display:block}
-  .bf-body{padding:28px 32px;display:flex;flex-direction:column;justify-content:center}
-  .bf-meta{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1.5px;
-    text-transform:uppercase;color:var(--tx3);margin-bottom:12px}
+  .bf-meta{font-family:var(--mono);font-size:12px;color:var(--tx3);margin-bottom:14px}
   .bf-meta .cat{color:var(--o)}
-  .bf-title{font-size:21px;font-weight:800;line-height:1.25;letter-spacing:-.4px;margin-bottom:12px}
+  .bf-title{font-family:var(--display);font-weight:700;font-size:clamp(24px,3.1vw,36px);letter-spacing:-.025em;
+    line-height:1.06;color:var(--tx);transition:color .18s}
   .blog-feature:hover .bf-title{color:var(--ac)}
-  .bf-excerpt{font-size:13px;color:var(--tx2);line-height:1.7;margin-bottom:16px}
-  .bf-more{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--ac)}
-  .bf-all{margin-top:14px;text-align:right}
-  .bf-all a{font-family:var(--mono);font-size:11px;color:var(--tx3);text-decoration:none}
-  .bf-all a:hover{color:var(--ac)}
-  @media(max-width:800px){
-    .blog-feature{grid-template-columns:1fr}
-    .bf-img{border-right:none;border-bottom:1px solid var(--bdr)}
-    .from-blog{padding:0 24px 60px}
-  }
-
-  /* hero blog pill */
-  .hero-note{display:inline-flex;gap:11px;align-items:center;font-family:var(--mono);font-size:12.5px;font-weight:500;
-    color:var(--tx);background:rgba(79,142,247,.10);border:1px solid rgba(79,142,247,.55);border-radius:999px;
-    padding:8px 8px;margin-bottom:40px;text-decoration:none;position:relative;
-    transition:transform .18s ease,box-shadow .18s ease,background .18s ease,border-color .18s ease}
-  .hero-note:hover{background:rgba(79,142,247,.20);border-color:var(--ac);transform:translateY(-2px);
-    box-shadow:0 10px 26px -10px rgba(79,142,247,.75)}
-  .hero-note .tag{background:var(--ac);color:#fff;font-weight:700;font-size:10px;letter-spacing:.6px;
-    text-transform:uppercase;padding:4px 9px;border-radius:999px;flex-shrink:0}
-  .hero-note .arr{color:var(--ac);font-weight:700;padding-right:6px;transition:transform .18s ease}
-  .hero-note:hover .arr{transform:translateX(4px)}
-
-  /* ── ANALYZE BAND ── */
-  .analyze-band{max-width:1100px;margin:0 auto 36px;padding:0 40px}
-  .ab-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
-    border:1.5px dashed rgba(79,142,247,.5);background:rgba(79,142,247,.06);padding:26px 30px;
-    text-decoration:none;color:inherit;transition:border-color .18s ease,background .18s ease,transform .18s ease,box-shadow .18s ease}
-  .ab-inner:hover{border-color:var(--ac);background:rgba(79,142,247,.11);transform:translateY(-2px);box-shadow:0 14px 30px -18px rgba(0,0,0,.75)}
-  .ab-left{flex:1;min-width:280px}
-  .ab-eyebrow{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ac);margin-bottom:9px}
-  .ab-eyebrow .new{background:var(--ac);color:#fff;padding:2px 7px;margin-left:6px}
-  .ab-title{font-size:23px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px;line-height:1.15}
-  .ab-sub{font-size:13.5px;color:var(--tx2);line-height:1.6;max-width:580px}
-  .ab-btn{display:inline-block;font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.4px;
-    background:var(--ac);color:#fff;padding:14px 24px;white-space:nowrap;flex-shrink:0;transition:background .15s ease,transform .18s ease}
-  .ab-inner:hover .ab-btn{background:#5f9bff;transform:translateX(3px)}
-  @media(max-width:800px){.analyze-band{padding:0 24px 8px}.ab-inner{padding:22px}}
+  .bf-excerpt{font-size:16px;color:var(--tx2);line-height:1.6;margin-top:16px;max-width:52ch}
+  .bf-more{font-family:var(--sans);font-weight:600;font-size:15px;color:var(--ac);margin-top:20px;display:inline-block}
+  .bf-all{padding-top:20px}
+  .bf-all a{font-family:var(--sans);font-size:15px;font-weight:500;color:var(--tx2);text-decoration:none}
+  .bf-all a:hover{color:var(--tx)}
 
   /* ── MANIFESTO ── */
-  .manifesto{
-    max-width:700px;margin:0 auto;padding:0 40px 100px;
-    border-top:1px solid var(--bdr);padding-top:80px;
-  }
-  .manifesto-title{
-    font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:3px;
-    text-transform:uppercase;color:var(--tx3);margin-bottom:24px;
-  }
-  .manifesto-body{font-size:14px;color:var(--tx2);line-height:1.9}
-  .manifesto-body p{margin-bottom:16px}
-  .manifesto-body strong{color:var(--tx)}
+  .manifesto{max-width:760px;margin:0 auto;padding:0 48px}
+  .manifesto h2{font-family:var(--display);font-weight:700;font-size:clamp(28px,3.6vw,40px);letter-spacing:-.035em;margin-bottom:26px;line-height:1.02}
+  .manifesto p{font-size:17.5px;line-height:1.72;color:var(--tx2);margin-bottom:22px;max-width:66ch}
+  .manifesto strong{color:var(--tx);font-weight:600}
 
   /* ── FOOTER ── */
-  .footer{
-    border-top:1px solid var(--bdr);padding:24px 40px;
-    display:flex;align-items:center;justify-content:space-between;
-  }
-  .footer-left{font-family:var(--mono);font-size:11px;color:var(--tx3)}
-  .footer-left span{color:var(--ac)}
-  .footer-right{font-size:11px;color:var(--tx3)}
+  .footer{max-width:var(--edge);margin:96px auto 0;padding:36px 48px;border-top:1px solid var(--bdr);
+    display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+  .footer .fl{font-family:var(--sans);font-size:14px;color:var(--tx3)}
+  .footer .fl a{color:var(--ac);text-decoration:none}
+  .footer .fr{font-family:var(--mono);font-size:12px;color:var(--tx3)}
 
-  @media(max-width:800px){
-    .tools-grid{grid-template-columns:1fr}
-    .hero{padding:60px 24px 48px}
-    .tools-section{padding:0 24px 60px}
-    .nav{padding:0 24px}
+  @media(max-width:860px){
+    .edge,.nav-inner,.hero,.analyze,.manifesto,.footer{padding-left:26px;padding-right:26px}
+    .an-inner{padding:36px 0}
+    .blog-feature{grid-template-columns:1fr;gap:22px}
+    .tool-row{grid-template-columns:34px 1fr;gap:16px}
+    .tr-spark,.tr-arrow{display:none}
+    .nav-links{gap:20px}
+    .nav-links a.hide-sm{display:none}
+  }
+  @media(max-width:600px){
+    .hero{padding-top:64px}
+    .sec-head{padding-top:56px}
+    .an-cta{width:100%}
+    .an-cta .btn{width:100%;justify-content:center}
   }
 </style>
 </head>
 <body>
 
 <nav class="nav">
-  <a class="nav-brand" href="/">// ab <span>integrity</span></a>
-  <div class="nav-links">
-    <a class="nav-link active" href="/">tools</a>
-    <a class="nav-link" href="/analyze">analyze</a>
-    <a class="nav-link" href="/learn/">learn</a>
-    <a class="nav-link" href="/blog/">blog</a>
+  <div class="nav-inner">
+    <a class="brand" href="/">AB <span>Integrity</span></a>
+    <div class="nav-links">
+      <a class="active" href="/">Tools</a>
+      <a href="/analyze">Analyze</a>
+      <a href="/learn/">Learn</a>
+      <a href="/blog/">Blog</a>
+    </div>
   </div>
 </nav>
 
 <section class="hero">
-  <h1 class="hero-title">
-    A/B testing with<br>
-    <span class="name">experimental integrity.</span>
-  </h1>
-  <p class="hero-sub">
-    <strong>You can make almost any test look like a winner.</strong>
-    These tools protect the internal validity of your experiments, so that when you call something
-    a win, <strong>you can defend it in any room.</strong>
-  </p>
-
-  <div class="hero-demo" id="heroDemo">
-    <div class="hd-top">
-      <span class="hd-label">Live · an A/A test — both pages are identical</span>
-      <button class="hd-run" id="hdRun" type="button">↻ run again</button>
-    </div>
-    <div class="hd-body">
-      <div class="hd-row hd-a">
-        <span class="hd-name">Control</span>
-        <div class="hd-track"><span class="hd-fill" id="hdFillA"></span></div>
-        <span class="hd-val" id="hdA">·</span>
-      </div>
-      <div class="hd-row hd-b">
-        <span class="hd-name">Variant</span>
-        <div class="hd-track"><span class="hd-fill" id="hdFillB"></span></div>
-        <span class="hd-val" id="hdB">·</span>
-      </div>
-      <div class="hd-verdict"><span class="hd-pill" id="hdPill">winner</span><span id="hdMsg">Watch a winner appear from nothing.</span></div>
-    </div>
-  </div>
-
-  <div class="hero-actions">
-    <a class="hero-note" href="/blog/how-much-traffic-do-you-need-to-ab-test"><span class="tag">New</span><span class="txt">On the blog: How much traffic do you need to A/B test?</span><span class="arr">→</span></a>
+  <h1>A/B testing with <em>experimental integrity.</em></h1>
+  <p class="hero-sub"><strong>You can make almost any test look like a winner.</strong> These tools protect the internal validity of your experiments, so that when you call something a win, <strong>you can defend it in any room.</strong></p>
+  <div class="hero-cta">
+    <a class="btn btn-fill" href="#tools">Explore the seven tools</a>
+    <a class="hero-link" href="/blog/how-much-traffic-do-you-need-to-ab-test"><span class="flag">New</span> How much traffic do you need to A/B test? <span class="arr">→</span></a>
   </div>
 </section>
 
-<section class="analyze-band">
-  <a class="ab-inner" href="/analyze">
-    <div class="ab-left">
-      <div class="ab-eyebrow">// Instant Analysis <span class="new">New</span></div>
-      <div class="ab-title">Just finished a test? Drop the CSV.</div>
-      <div class="ab-sub">Upload the results export and get the whole verdict in one shot: is the winner real, how big is the honest lift, was the split even fair, and what to do next. Runs in your browser.</div>
+<section class="analyze">
+  <a class="an-inner" href="/analyze">
+    <div class="an-left">
+      <div class="an-kicker">Instant Analysis <span class="new">New</span></div>
+      <div class="an-title">Just finished a test? Drop the CSV.</div>
+      <div class="an-sub">Upload the results export and get the whole verdict in one shot: is the winner real, how big is the honest lift, was the split even fair, and what to do next. Runs in your browser.</div>
     </div>
-    <span class="ab-btn">Analyze it →</span>
+    <div class="an-cta"><span class="btn btn-fill">Analyze a test →</span></div>
   </a>
 </section>
 
-<section class="tools-section">
-  <div class="section-label">// 07 tools · runs in your browser · nothing you enter is uploaded</div>
+<section class="edge" id="tools">
+  <div class="sec-head">
+    <h2>Seven instruments.</h2>
+    <span class="cap">runs in your browser · nothing you enter is uploaded</span>
+  </div>
 
-  <div class="tools-grid">
+  <div class="tool-list">
 
-    <!-- PLATFORM VALIDATOR -->
-    <a class="tool-card" href="aa-validator.html" style="--card-accent:var(--g)">
-      <div class="tool-num">01 · platform calibration</div>
-      <!-- sparkline: SRM bar chart -->
-      <svg class="card-spark" viewBox="0 0 200 48" xmlns="http://www.w3.org/2000/svg">
+    <a class="tool-row" href="aa-validator.html" style="--tc:var(--g)">
+      <div class="tr-num">01</div>
+      <div>
+        <div class="tr-name">Platform Validator</div>
+        <div class="tr-desc">Is your testing platform even telling the truth? Catches sample-ratio mismatch and asymmetric tracking loss before you trust a single result.</div>
+      </div>
+      <svg class="tr-spark" viewBox="0 0 200 48" xmlns="http://www.w3.org/2000/svg">
         <text x="0" y="8" font-family="JetBrains Mono" font-size="7" fill="#7D8590">assignment split</text>
-        <!-- expected bars -->
-        <rect x="10" y="14" width="70" height="14" fill="#1C2128" stroke="#30363D" stroke-width="1"/>
-        <rect x="110" y="14" width="70" height="14" fill="#1C2128" stroke="#30363D" stroke-width="1"/>
-        <!-- actual bars — control slightly over, variant under -->
+        <rect x="10" y="14" width="70" height="14" fill="#1a2029" stroke="#242b35" stroke-width="1"/>
+        <rect x="110" y="14" width="70" height="14" fill="#1a2029" stroke="#242b35" stroke-width="1"/>
         <rect x="10" y="14" width="76" height="14" fill="#3FB950" opacity=".7"/>
         <rect x="110" y="14" width="62" height="14" fill="#F85149" opacity=".7"/>
         <text x="10" y="38" font-family="JetBrains Mono" font-size="7" fill="#3FB950">control 53.1%</text>
         <text x="110" y="38" font-family="JetBrains Mono" font-size="7" fill="#F85149">variant 46.9%</text>
         <text x="88" y="24" font-family="JetBrains Mono" font-size="8" fill="#F85149" font-weight="700">!</text>
       </svg>
-      <div class="tool-icon" style="color:var(--g);border-color:var(--g)">PVL</div>
-      <div class="tool-name">Platform Validator</div>
-      <div class="tool-desc">Verify your A/B platform is assigning and tracking users correctly before you trust any results. Surfaces assignment SRM, asymmetric tracking loss, and consent-driven coverage gaps.</div>
-      <div class="tool-checks">
-        <div class="tool-check">Assignment SRM via chi-squared test</div>
-        <div class="tool-check">Asymmetric tracking loss detection</div>
-        <div class="tool-check">Suspicious coverage flag</div>
-        <div class="tool-check">Metric balance check (Bonferroni-adjusted)</div>
-        <div class="tool-check">Platform trust score 0-100</div>
-      </div>
-      <div class="tool-footer">
-        <div class="tool-arrow">→</div>
-      </div>
+      <div class="tr-arrow">→</div>
     </a>
 
-    <!-- LOCKBOX -->
-    <a class="tool-card" href="lockbox.html" style="--card-accent:var(--ac)">
-      <div class="tool-num">02 · experiment governance</div>
-      <!-- sparkline: normal distribution with significance shading -->
-      <svg class="card-spark" viewBox="0 0 200 48" xmlns="http://www.w3.org/2000/svg">
+    <a class="tool-row" href="lockbox.html" style="--tc:var(--ac)">
+      <div class="tr-num">02</div>
+      <div>
+        <div class="tr-name">Lockbox</div>
+        <div class="tr-desc">Pre-register the test before it runs: sample size, metric, stopping rule. Nothing left to fudge once the data lands.</div>
+      </div>
+      <svg class="tr-spark" viewBox="0 0 200 48" xmlns="http://www.w3.org/2000/svg">
         <text x="0" y="8" font-family="JetBrains Mono" font-size="7" fill="#7D8590">significance test</text>
-        <!-- distribution curve A (control) -->
-        <path d="M10,40 Q30,40 45,28 Q55,18 65,14 Q75,18 85,28 Q100,40 120,40" fill="none" stroke="#4F8EF7" stroke-width="1.5" opacity=".6"/>
-        <!-- distribution curve B (variant) — shifted right -->
+        <path d="M10,40 Q30,40 45,28 Q55,18 65,14 Q75,18 85,28 Q100,40 120,40" fill="none" stroke="#5B9CFF" stroke-width="1.5" opacity=".6"/>
         <path d="M70,40 Q90,40 105,28 Q115,18 125,14 Q135,18 145,28 Q160,40 190,40" fill="none" stroke="#3FB950" stroke-width="1.5" opacity=".6"/>
-        <!-- critical region shading -->
         <path d="M125,14 Q135,18 145,28 Q160,40 190,40 L190,40 L125,40 Z" fill="#3FB950" opacity=".15"/>
-        <!-- p < 0.05 label -->
         <text x="148" y="36" font-family="JetBrains Mono" font-size="7" fill="#3FB950">p=.031</text>
         <line x1="122" y1="12" x2="122" y2="42" stroke="#F85149" stroke-width="1" stroke-dasharray="2,2" opacity=".6"/>
         <text x="124" y="11" font-family="JetBrains Mono" font-size="6" fill="#F85149">α</text>
       </svg>
-      <div class="tool-icon" style="color:var(--ac);border-color:var(--ac)">LBX</div>
-      <div class="tool-name">Lockbox</div>
-      <div class="tool-desc">Pre-register your experiment before it runs. Lock in your hypothesis, sample size, and success metrics. Prevents p-hacking, segment fishing, and post-hoc goalpost moving.</div>
-      <div class="tool-checks">
-        <div class="tool-check">Sample size calculator with MDE & power</div>
-        <div class="tool-check">Two-proportion z-test results engine</div>
-        <div class="tool-check">Peeking & underpowered detection</div>
-        <div class="tool-check">Causal integrity sidebar</div>
-        <div class="tool-check">Experiment history in localStorage</div>
-      </div>
-      <div class="tool-footer">
-        <div class="tool-arrow">→</div>
-      </div>
+      <div class="tr-arrow">→</div>
     </a>
 
-    <!-- SURVIVAL CURVES -->
-    <a class="tool-card" href="survival.html" style="--card-accent:var(--p)">
-      <div class="tool-num">03 · time-to-conversion</div>
-      <!-- sparkline: KM step curves -->
-      <svg class="card-spark" viewBox="0 0 200 48" xmlns="http://www.w3.org/2000/svg">
+    <a class="tool-row" href="survival.html" style="--tc:var(--p)">
+      <div class="tr-num">03</div>
+      <div>
+        <div class="tr-name">Survival Curves</div>
+        <div class="tr-desc">Two variants can tie on conversion rate and still differ in money. This finds the one that converts faster, and whether the gap is real.</div>
+      </div>
+      <svg class="tr-spark" viewBox="0 0 200 48" xmlns="http://www.w3.org/2000/svg">
         <text x="0" y="8" font-family="JetBrains Mono" font-size="7" fill="#7D8590">time-to-conversion</text>
-        <!-- control curve — slower descent -->
-        <path d="M10,42 H35 V36 H60 V30 H85 V25 H110 V21 H140 V18 H170 V16 H190" fill="none" stroke="#4F8EF7" stroke-width="1.5" opacity=".7"/>
-        <!-- variant curve — faster descent (lower = more converted) -->
+        <path d="M10,42 H35 V36 H60 V30 H85 V25 H110 V21 H140 V18 H170 V16 H190" fill="none" stroke="#5B9CFF" stroke-width="1.5" opacity=".7"/>
         <path d="M10,42 H28 V34 H50 V26 H72 V20 H95 V16 H120 V13 H150 V11 H190" fill="none" stroke="#BC8CFF" stroke-width="1.5" stroke-dasharray="4,2" opacity=".7"/>
-        <!-- axis -->
-        <line x1="10" y1="43" x2="190" y2="43" stroke="#30363D" stroke-width="1"/>
+        <line x1="10" y1="43" x2="190" y2="43" stroke="#242b35" stroke-width="1"/>
         <text x="10" y="48" font-family="JetBrains Mono" font-size="6" fill="#7D8590">day 0</text>
         <text x="170" y="48" font-family="JetBrains Mono" font-size="6" fill="#7D8590">day 14</text>
       </svg>
-      <div class="tool-icon" style="color:var(--p);border-color:var(--p)">SRV</div>
-      <div class="tool-name">Survival Curves</div>
-      <div class="tool-desc">Conversion rate tells you who converts. This shows how fast, and whether the speed difference between variants is statistically real. A variant that converts faster is worth money even when the final rates look identical.</div>
-      <div class="tool-checks">
-        <div class="tool-check">Kaplan-Meier survival curves</div>
-        <div class="tool-check">Log-rank significance test</div>
-        <div class="tool-check">Median time-to-conversion per variant</div>
-        <div class="tool-check">Hazard ratio with confidence interval</div>
-        <div class="tool-check">CSV cohort data import</div>
-      </div>
-      <div class="tool-footer">
-        <div class="tool-arrow">→</div>
-      </div>
+      <div class="tr-arrow">→</div>
     </a>
 
-    <!-- REALITY CHECK -->
-    <a class="tool-card" href="reality-check.html" style="--card-accent:var(--o)">
-      <div class="tool-num">04 · winner's curse & bayesian analysis</div>
-      <!-- sparkline: observed vs shrunk estimate -->
-      <svg class="card-spark" viewBox="0 0 200 48" xmlns="http://www.w3.org/2000/svg">
+    <a class="tool-row" href="reality-check.html" style="--tc:var(--o)">
+      <div class="tr-num">04</div>
+      <div>
+        <div class="tr-name">Reality Check</div>
+        <div class="tr-desc">Your winner is probably smaller than it looks. Shrinks an inflated lift back to the honest number before you announce it.</div>
+      </div>
+      <svg class="tr-spark" viewBox="0 0 200 48" xmlns="http://www.w3.org/2000/svg">
         <text x="0" y="8" font-family="JetBrains Mono" font-size="7" fill="#7D8590">observed vs honest lift</text>
-        <line x1="10" y1="28" x2="190" y2="28" stroke="#30363D" stroke-width="1"/>
+        <line x1="10" y1="28" x2="190" y2="28" stroke="#242b35" stroke-width="1"/>
         <line x1="40" y1="18" x2="40" y2="38" stroke="#7D8590" stroke-width="1" stroke-dasharray="2,2"/>
         <text x="40" y="46" text-anchor="middle" font-family="JetBrains Mono" font-size="6" fill="#7D8590">0%</text>
         <rect x="60" y="24" width="70" height="8" fill="#F0883E" opacity=".15"/>
-        <circle cx="160" cy="28" r="5" fill="none" stroke="#A0AAB6" stroke-width="1.5" stroke-dasharray="2,2"/>
-        <text x="160" y="15" text-anchor="middle" font-family="JetBrains Mono" font-size="6" fill="#A0AAB6">+18%?</text>
+        <circle cx="160" cy="28" r="5" fill="none" stroke="#9AA5B3" stroke-width="1.5" stroke-dasharray="2,2"/>
+        <text x="160" y="15" text-anchor="middle" font-family="JetBrains Mono" font-size="6" fill="#9AA5B3">+18%?</text>
         <circle cx="90" cy="28" r="5" fill="#F0883E"/>
         <text x="90" y="46" text-anchor="middle" font-family="JetBrains Mono" font-size="6" fill="#F0883E">+6%</text>
-        <line x1="152" y1="28" x2="98" y2="28" stroke="#D29922" stroke-width="1.5"/>
+        <line x1="152" y1="28" x2="98" y2="28" stroke="#D8A62B" stroke-width="1.5"/>
       </svg>
-      <div class="tool-icon" style="color:var(--o);border-color:var(--o)">RCK</div>
-      <div class="tool-name">Reality Check</div>
-      <div class="tool-desc">Your test came back a winner, but by how much, really? Underpowered tests that reach significance systematically overstate the effect. Deflate your result before you announce it, and see the probability your variant is actually better.</div>
-      <div class="tool-checks">
-        <div class="tool-check">Winner's curse detection & shrinkage estimation</div>
-        <div class="tool-check">Bayesian P(B beats A) with sceptical priors</div>
-        <div class="tool-check">95% credible interval on true lift</div>
-        <div class="tool-check">Naive vs honest revenue projection</div>
-        <div class="tool-check">Frequentist vs Bayesian explainer for ecom</div>
-      </div>
-      <div class="tool-footer">
-        <div class="tool-arrow">→</div>
-      </div>
+      <div class="tr-arrow">→</div>
     </a>
 
-    <!-- TEST RECEIPT -->
-    <a class="tool-card" href="receipt.html" style="--card-accent:var(--tx2)">
-      <div class="tool-num">05 · experiment integrity report</div>
-      <!-- sparkline: receipt with grade stamp -->
-      <svg class="card-spark" viewBox="0 0 200 48" xmlns="http://www.w3.org/2000/svg">
+    <a class="tool-row" href="receipt.html" style="--tc:var(--tx2)">
+      <div class="tr-num">05</div>
+      <div>
+        <div class="tr-name">Test Receipt</div>
+        <div class="tr-desc">A stamped, printable proof that a win was earned, not screenshotted. Tamper-evident, attach it to any readout.</div>
+      </div>
+      <svg class="tr-spark" viewBox="0 0 200 48" xmlns="http://www.w3.org/2000/svg">
         <text x="0" y="8" font-family="JetBrains Mono" font-size="7" fill="#7D8590">stamped readout</text>
-        <rect x="10" y="12" width="110" height="34" fill="#1C2128" stroke="#30363D" stroke-width="1"/>
+        <rect x="10" y="12" width="110" height="34" fill="#1a2029" stroke="#242b35" stroke-width="1"/>
         <line x1="18" y1="20" x2="80" y2="20" stroke="#7D8590" stroke-width="2"/>
-        <line x1="18" y1="27" x2="100" y2="27" stroke="#30363D" stroke-width="2"/>
-        <line x1="18" y1="34" x2="90" y2="34" stroke="#30363D" stroke-width="2"/>
-        <line x1="18" y1="41" x2="70" y2="41" stroke="#30363D" stroke-width="2"/>
+        <line x1="18" y1="27" x2="100" y2="27" stroke="#242b35" stroke-width="2"/>
+        <line x1="18" y1="34" x2="90" y2="34" stroke="#242b35" stroke-width="2"/>
+        <line x1="18" y1="41" x2="70" y2="41" stroke="#242b35" stroke-width="2"/>
         <circle cx="150" cy="29" r="14" fill="none" stroke="#3FB950" stroke-width="2" transform="rotate(-8 150 29)"/>
         <text x="150" y="34" text-anchor="middle" font-family="JetBrains Mono" font-size="14" font-weight="700" fill="#3FB950">A</text>
         <text x="150" y="14" text-anchor="middle" font-family="JetBrains Mono" font-size="6" fill="#7D8590">integrity</text>
       </svg>
-      <div class="tool-icon" style="color:var(--tx2);border-color:var(--tx2)">RCP</div>
-      <div class="tool-name">Test Receipt</div>
-      <div class="tool-desc">Anyone can screenshot a dashboard and call it a win. A receipt proves the win was earned: a stamped, printable integrity report covering registration, calibration, attestations, and the honest effect estimate.</div>
-      <div class="tool-checks">
-        <div class="tool-check">Imports registered experiments from Lockbox</div>
-        <div class="tool-check">7 integrity attestations, weighted A-F grade</div>
-        <div class="tool-check">Honest (shrunk) estimate + P(B beats A)</div>
-        <div class="tool-check">SHA-256 fingerprint, tamper-evident</div>
-        <div class="tool-check">Print-ready, attach to any test readout</div>
-      </div>
-      <div class="tool-footer">
-        <div class="tool-arrow">→</div>
-      </div>
+      <div class="tr-arrow">→</div>
     </a>
 
-    <!-- PROGRAM LEDGER -->
-    <a class="tool-card" href="ledger.html" style="--card-accent:var(--y)">
-      <div class="tool-num">06 · claimed vs realized</div>
-      <!-- sparkline: diverging claimed vs actual lines -->
-      <svg class="card-spark" viewBox="0 0 200 48" xmlns="http://www.w3.org/2000/svg">
+    <a class="tool-row" href="ledger.html" style="--tc:var(--y)">
+      <div class="tr-num">06</div>
+      <div>
+        <div class="tr-name">Program Ledger</div>
+        <div class="tr-desc">You announced +40% all year and revenue is flat. Reconciles claimed lift against what actually reached the P&amp;L.</div>
+      </div>
+      <svg class="tr-spark" viewBox="0 0 200 48" xmlns="http://www.w3.org/2000/svg">
         <text x="0" y="8" font-family="JetBrains Mono" font-size="7" fill="#7D8590">claimed vs actual</text>
-        <line x1="10" y1="43" x2="190" y2="43" stroke="#30363D" stroke-width="1"/>
-        <path d="M10,38 L55,32 L100,24 L145,18 L190,12" fill="none" stroke="#A0AAB6" stroke-width="1.5" stroke-dasharray="4,3" opacity=".7"/>
+        <line x1="10" y1="43" x2="190" y2="43" stroke="#242b35" stroke-width="1"/>
+        <path d="M10,38 L55,32 L100,24 L145,18 L190,12" fill="none" stroke="#9AA5B3" stroke-width="1.5" stroke-dasharray="4,3" opacity=".7"/>
         <path d="M10,38 L55,36 L100,35 L145,33 L190,32" fill="none" stroke="#3FB950" stroke-width="1.5"/>
-        <text x="188" y="10" text-anchor="end" font-family="JetBrains Mono" font-size="6" fill="#A0AAB6">claimed +40%</text>
+        <text x="188" y="10" text-anchor="end" font-family="JetBrains Mono" font-size="6" fill="#9AA5B3">claimed +40%</text>
         <text x="188" y="29" text-anchor="end" font-family="JetBrains Mono" font-size="6" fill="#3FB950">actual +6%</text>
-        <line x1="60" y1="14" x2="60" y2="42" stroke="#D29922" stroke-width="1" stroke-dasharray="2,2" opacity=".5"/>
-        <line x1="120" y1="14" x2="120" y2="42" stroke="#D29922" stroke-width="1" stroke-dasharray="2,2" opacity=".5"/>
+        <line x1="60" y1="14" x2="60" y2="42" stroke="#D8A62B" stroke-width="1" stroke-dasharray="2,2" opacity=".5"/>
+        <line x1="120" y1="14" x2="120" y2="42" stroke="#D8A62B" stroke-width="1" stroke-dasharray="2,2" opacity=".5"/>
       </svg>
-      <div class="tool-icon" style="color:var(--y);border-color:var(--y)">LGR</div>
-      <div class="tool-name">Program Ledger</div>
-      <div class="tool-desc">"You announced +40% cumulative lift this year. Why is revenue flat?" Log every shipped winner, enter your actual monthly numbers, and see whether the wins are showing up in reality. No platform builds this view, because it audits them too.</div>
-      <div class="tool-checks">
-        <div class="tool-check">Ledger of shipped winners, claimed & honest lift</div>
-        <div class="tool-check">Monthly actuals from your analytics</div>
-        <div class="tool-check">Claimed vs honest vs actual CVR trajectory</div>
-        <div class="tool-check">Program realization rate</div>
-        <div class="tool-check">JSON export / import for backup</div>
-      </div>
-      <div class="tool-footer">
-        <div class="tool-arrow">→</div>
-      </div>
+      <div class="tr-arrow">→</div>
     </a>
 
-    <!-- SUBSCRIBER VALUE -->
-    <a class="tool-card" href="subscriber-value.html" style="--card-accent:#2DD4BF">
-      <div class="tool-num">07 · subscription ltv & test valuation</div>
-      <!-- sparkline: retention decay with LTV area -->
-      <svg class="card-spark" viewBox="0 0 200 48" xmlns="http://www.w3.org/2000/svg">
+    <a class="tool-row" href="subscriber-value.html" style="--tc:var(--t)">
+      <div class="tr-num">07</div>
+      <div>
+        <div class="tr-name">Subscriber Value</div>
+        <div class="tr-desc">When the goal is subscriptions, analytics buries your best variant. Values a subscriber against one-off orders, even with no churn data.</div>
+      </div>
+      <svg class="tr-spark" viewBox="0 0 200 48" xmlns="http://www.w3.org/2000/svg">
         <text x="0" y="8" font-family="JetBrains Mono" font-size="7" fill="#7D8590">subscriber retention → value</text>
-        <line x1="10" y1="43" x2="190" y2="43" stroke="#30363D" stroke-width="1"/>
+        <line x1="10" y1="43" x2="190" y2="43" stroke="#242b35" stroke-width="1"/>
         <path d="M10,14 C50,20 90,30 130,36 C150,39 170,41 190,42 L190,43 L10,43 Z" fill="#2DD4BF" opacity=".12"/>
         <path d="M10,14 C50,20 90,30 130,36 C150,39 170,41 190,42" fill="none" stroke="#2DD4BF" stroke-width="1.5"/>
-        <line x1="66" y1="14" x2="66" y2="42" stroke="#D29922" stroke-width="1" stroke-dasharray="2,2" opacity=".6"/>
-        <text x="69" y="18" font-family="JetBrains Mono" font-size="6" fill="#D29922">break-even 4.2 mo</text>
+        <line x1="66" y1="14" x2="66" y2="42" stroke="#D8A62B" stroke-width="1" stroke-dasharray="2,2" opacity=".6"/>
+        <text x="69" y="18" font-family="JetBrains Mono" font-size="6" fill="#D8A62B">break-even 4.2 mo</text>
         <text x="12" y="20" font-family="JetBrains Mono" font-size="6" fill="#2DD4BF">100% active</text>
       </svg>
-      <div class="tool-icon" style="color:#2DD4BF;border-color:#2DD4BF">SUB</div>
-      <div class="tool-name">Subscriber Value</div>
-      <div class="tool-desc">When the test goal is subscriptions, your analytics counts a signup as one order and quietly buries your best variant. Model subscriber LTV in scenarios, get the exchange rate against one-off orders, and value the trade-off, even with zero subscription data.</div>
-      <div class="tool-checks">
-        <div class="tool-check">LTV in three churn scenarios, not one guess</div>
-        <div class="tool-check">1 subscriber = X one-off orders exchange rate</div>
-        <div class="tool-check">Value-per-visitor comparison across arms</div>
-        <div class="tool-check">Break-even lifetime, no churn data needed</div>
-        <div class="tool-check">Industry churn benchmarks built in</div>
-      </div>
-      <div class="tool-footer">
-        <div class="tool-arrow">→</div>
-      </div>
+      <div class="tr-arrow">→</div>
     </a>
 
   </div>
 </section>
 
-<section class="from-blog">
-  <div class="section-label">// from the blog · new guide most weeks</div>
+<section class="edge">
+  <div class="sec-head">
+    <h2>From the blog.</h2>
+    <span class="cap"><a href="/blog/" style="color:var(--tx3);text-decoration:none">a new guide most weeks →</a></span>
+  </div>
   <a class="blog-feature" href="/blog/how-much-traffic-do-you-need-to-ab-test">
     <div class="bf-img">
       <img src="/blog/weeks-to-winner.png" width="1200" height="630" alt="Chart of how many weeks an A/B test takes to reach significance at 10,000 visitors a month" loading="lazy">
@@ -520,62 +350,21 @@
       <span class="bf-more">Read the guide →</span>
     </div>
   </a>
-  <div class="bf-all"><a href="/blog/">View all posts →</a></div>
 </section>
 
 <section class="manifesto">
-  <div class="manifesto-title">// why this exists</div>
-  <div class="manifesto-body">
-    <p>
-      Most ecommerce A/B testing is <strong>governance theatre</strong>. Teams pick their metric after seeing the results, peek at significance daily, and ship winners produced by platforms nobody ever bothered to calibrate. The math was never the problem.
-    </p>
-    <p>
-      Each tool here guards a different failure point. The <strong>Validator</strong> checks whether your testing platform is telling you the truth. <strong>Lockbox</strong> locks your hypothesis in before any data exists. <strong>Reality Check</strong> deflates inflated winners before you announce them, and the <strong>Ledger</strong> asks the uncomfortable year-end question: did any of it actually show up in revenue?
-    </p>
-    <p>
-      Everything runs in your browser. There are no accounts and nothing gets sent to a server, which also means you can use these on client data without asking anyone's permission.
-    </p>
+  <div class="sec-head" style="padding-bottom:0"><h2>Why this exists.</h2></div>
+  <div style="margin-top:26px">
+    <p>Most ecommerce A/B testing is <strong>governance theatre</strong>. Teams pick their metric after seeing the results, peek at significance daily, and ship winners produced by platforms nobody ever bothered to calibrate. The math was never the problem.</p>
+    <p>Each tool here guards a different failure point. The <strong>Validator</strong> checks whether your testing platform is telling you the truth. <strong>Lockbox</strong> locks your hypothesis in before any data exists. <strong>Reality Check</strong> deflates inflated winners before you announce them, and the <strong>Ledger</strong> asks the uncomfortable year-end question: did any of it actually show up in revenue?</p>
+    <p>Everything runs in your browser. There are no accounts and nothing gets sent to a server, which also means you can use these on client data without asking anyone's permission.</p>
   </div>
 </section>
 
 <footer class="footer">
-  <div class="footer-left">// ab <span>integrity</span> · <a href="https://www.linkedin.com/in/sebastianzijlstra" target="_blank" rel="me noopener" style="color:var(--ac);text-decoration:none">LinkedIn ↗</a></div>
-  <div class="footer-right">runs in your browser · nothing is uploaded</div>
+  <div class="fl">AB Integrity · <a href="https://www.linkedin.com/in/sebastianzijlstra" target="_blank" rel="me noopener">LinkedIn ↗</a></div>
+  <div class="fr">runs in your browser · nothing is uploaded</div>
 </footer>
-
-<script>
-(function(){
-  var A=document.getElementById('hdFillA'),B=document.getElementById('hdFillB'),
-      vA=document.getElementById('hdA'),vB=document.getElementById('hdB'),
-      pill=document.getElementById('hdPill'),msg=document.getElementById('hdMsg'),run=document.getElementById('hdRun');
-  if(!A) return;
-  function rbinom(n,p){var c=0;for(var i=0;i<n;i++){if(Math.random()<p)c++;}return c;}
-  var MAX=0.05, N=800, P=0.025;
-  function roll(){
-    var a=rbinom(N,P)/N, b=rbinom(N,P)/N;
-    pill.classList.remove('show');
-    A.style.width='0'; B.style.width='0';
-    requestAnimationFrame(function(){requestAnimationFrame(function(){
-      A.style.width=Math.min(100,a/MAX*100).toFixed(1)+'%';
-      B.style.width=Math.min(100,b/MAX*100).toFixed(1)+'%';
-    });});
-    vA.textContent=(a*100).toFixed(2)+'%';
-    vB.textContent=(b*100).toFixed(2)+'%';
-    var bWins=b>=a, lift=a>0?Math.abs((b-a)/a*100):0, who=bWins?'Variant':'Control';
-    setTimeout(function(){
-      if(lift>=3){
-        pill.textContent='▲ '+who+' +'+lift.toFixed(0)+'%'; pill.classList.add('show');
-        msg.innerHTML='…but the pages are <b>identical</b>. That lead is pure luck.';
-      } else {
-        pill.classList.remove('show');
-        msg.innerHTML='Basically tied this run. Hit run again.';
-      }
-    }, 980);
-  }
-  run.addEventListener('click', roll);
-  roll();
-})();
-</script>
 
 </body>
 </html>
