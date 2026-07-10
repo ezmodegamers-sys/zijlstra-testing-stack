@@ -58,8 +58,8 @@
   .nav-links a.active{color:var(--tx);font-weight:600}
 
   /* ── HERO ── */
-  .hero{position:relative;overflow:hidden;max-width:var(--edge);margin:0 auto;padding:90px 48px 44px;
-    display:grid;grid-template-columns:1.04fr .96fr;gap:58px;align-items:center}
+  .hero{position:relative;overflow:hidden;max-width:var(--edge);margin:0 auto;padding:76px 48px 40px;
+    display:grid;grid-template-columns:1.02fr .98fr;gap:40px;align-items:center}
   .hero::before{content:"";position:absolute;inset:-1px;z-index:0;pointer-events:none;
     background-image:linear-gradient(var(--bdr) 1px,transparent 1px),linear-gradient(90deg,var(--bdr) 1px,transparent 1px);
     background-size:32px 32px;opacity:.55;
@@ -77,30 +77,47 @@
   .hero-cta{margin-top:36px;display:flex;align-items:center;gap:22px;flex-wrap:wrap}
 
   /* ── HERO INSTRUMENT ── */
-  .hero-visual{position:relative;z-index:1;justify-self:end;width:100%;max-width:418px}
-  .verdict{background:linear-gradient(180deg,rgba(19,24,32,.92),rgba(11,14,19,.92));
-    border:1px solid var(--bdr2);box-shadow:0 26px 64px -30px rgba(0,0,0,.85);padding:21px 22px 19px}
-  .v-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px}
-  .v-tag{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.16em;color:var(--tx3)}
-  .v-live{font-family:var(--mono);font-size:10.5px;color:var(--g);display:flex;align-items:center;gap:6px}
-  .v-live::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--g);box-shadow:0 0 0 3px rgba(63,185,80,.16)}
-  .v-name{font-family:var(--display);font-weight:700;font-size:18.5px;letter-spacing:-.02em;color:var(--tx);
-    padding-bottom:15px;border-bottom:1px solid var(--bdr)}
-  .v-rows{padding:13px 0 2px}
-  .v-row{display:flex;align-items:center;justify-content:space-between;padding:6.5px 0;font-family:var(--mono);font-size:12.5px}
-  .v-row span{color:var(--tx2)}
-  .v-row b{font-weight:700}
-  .v-row .ok{color:var(--g)}
-  .v-row .strike{color:var(--tx3);text-decoration:line-through;text-decoration-color:var(--r)}
-  .v-row .hon{color:var(--o)}
-  .v-shrink{margin:11px 0 2px}
-  .v-shrink-track{position:relative;height:8px;background:rgba(240,136,62,.13);border:1px solid var(--bdr)}
-  .v-shrink-fill{position:absolute;top:0;bottom:0;left:0;width:28%;background:var(--o)}
-  .v-shrink-cap{display:flex;justify-content:space-between;margin-top:7px;font-family:var(--mono);font-size:10px;color:var(--tx3)}
-  .v-foot{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:15px;border-top:1px solid var(--bdr)}
-  .v-foot .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3)}
-  .v-stamp{font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:.07em;color:var(--g);
-    border:1.5px solid var(--g);padding:5px 12px;transform:rotate(-1.4deg)}
+  .hero-visual{position:relative;z-index:1;justify-self:end;width:100%;max-width:480px}
+  /* ── isometric "deconstructed A/B test" ── */
+  .iv-stage{position:relative;width:480px;max-width:100%;height:520px;margin-left:auto}
+  .iv-spine{position:absolute;left:236px;top:64px;width:1px;height:372px;
+    background:repeating-linear-gradient(var(--ac) 0 3px,transparent 3px 8px);opacity:.3;z-index:1}
+  .iv-slot{position:absolute;left:120px;width:240px;height:150px;z-index:2;
+    animation:ivbob 6.5s ease-in-out infinite;animation-delay:var(--d,0s)}
+  @keyframes ivbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+  .iv-tile{width:240px;height:150px;transform:rotateX(55deg) rotateZ(-45deg);transform-origin:center;
+    border:1px solid rgba(255,255,255,.17);border-radius:3px;
+    background:linear-gradient(180deg,rgba(26,33,44,.9),rgba(14,18,25,.74));
+    box-shadow:0 34px 40px -24px rgba(0,0,0,.9),inset 0 0 0 1px rgba(91,156,255,.04);
+    position:relative;opacity:0;animation:ivrise .7s cubic-bezier(.3,.7,.2,1) var(--fd,0s) forwards}
+  @keyframes ivrise{from{opacity:0;transform:rotateX(55deg) rotateZ(-45deg) translateZ(-24px)}to{opacity:1;transform:rotateX(55deg) rotateZ(-45deg) translateZ(0)}}
+  .iv-tile.hot{border-color:rgba(63,185,80,.4);box-shadow:0 34px 40px -24px rgba(0,0,0,.9),inset 0 0 22px rgba(63,185,80,.06)}
+  .iv-tile.real{border-color:rgba(91,156,255,.45);box-shadow:0 34px 44px -22px rgba(0,0,0,.9),inset 0 0 22px rgba(91,156,255,.08)}
+  .iv-corner{position:absolute;top:-1px;left:-1px;width:20px;height:20px;border-top:1.5px solid var(--ac);border-left:1.5px solid var(--ac);opacity:.65}
+  .iv-tag{position:absolute;top:11px;left:15px;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--tx3)}
+  .iv-body{position:absolute;left:15px;right:15px;top:36px;bottom:14px}
+  .iv-cap{font-family:var(--mono);font-size:10px;color:var(--tx2)}
+  .iv-big{font-family:var(--display);font-weight:800;font-size:34px;letter-spacing:-.02em;line-height:.9}
+  .iv-mid{font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:-.02em;line-height:1}
+  .iv-row{display:flex;align-items:center;gap:9px}
+  .iv-pill{font-family:var(--mono);font-size:9px;font-weight:700;padding:3px 7px;border:1px solid;letter-spacing:.06em;white-space:nowrap}
+  .iv-pill.win{color:var(--g);border-color:var(--g)}
+  .iv-pill.def{color:var(--ac);border-color:var(--ac)}
+  .iv-sub{font-family:var(--mono);font-size:9.5px;color:var(--tx3);margin-top:8px}
+  .iv-strike{color:var(--tx3);text-decoration:line-through;text-decoration-color:var(--r)}
+  .iv-split{display:flex;height:18px;border:1px solid var(--bdr);border-radius:2px;overflow:hidden;margin-top:2px}
+  .iv-split .a{width:50%;background:repeating-linear-gradient(90deg,var(--tx3) 0 2px,transparent 2px 6px);opacity:.55}
+  .iv-split .b{width:50%;background:var(--ac);opacity:.65}
+  .iv-splitlab{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9.5px;color:var(--tx3);margin-top:7px}
+  .iv-splitlab .g{color:var(--g)}
+  .iv-flabel{position:absolute;z-index:4;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.01em;color:var(--tx2);white-space:nowrap}
+  .iv-flabel::before{content:"";position:absolute;height:1px;background:var(--bdr2)}
+  .iv-flabel b{color:var(--ac);font-weight:700}
+  .iv-fl1{left:-2px;top:390px}  .iv-fl1::before{width:34px;right:-40px;top:7px}
+  .iv-fl2{left:-2px;top:298px}  .iv-fl2::before{width:34px;right:-40px;top:7px}
+  .iv-fl3{right:-2px;top:206px}  .iv-fl3::before{width:34px;left:-40px;top:7px}
+  .iv-fl4{right:-2px;top:114px}  .iv-fl4::before{width:34px;left:-40px;top:7px}
+  @media(prefers-reduced-motion:reduce){.iv-slot{animation:none}.iv-tile{animation:none;opacity:1}}
   .btn{font-family:var(--sans);font-size:16px;font-weight:600;text-decoration:none;display:inline-flex;
     align-items:center;gap:9px;padding:15px 26px;transition:background .16s,transform .16s,border-color .16s}
   .btn-fill{background:var(--ac);color:#06101f}
@@ -182,10 +199,14 @@
   .footer .fr{font-family:var(--mono);font-size:12px;color:var(--tx3)}
 
   @media(max-width:900px){
-    .hero{grid-template-columns:1fr;gap:36px;padding-top:66px}
-    .hero-visual{justify-self:start;max-width:404px}
-    .hero::before{-webkit-mask-image:radial-gradient(150% 58% at 50% 20%,#000,transparent 74%);
-            mask-image:radial-gradient(150% 58% at 50% 20%,#000,transparent 74%)}
+    .hero{grid-template-columns:1fr;gap:12px;padding-top:66px}
+    .hero-visual{justify-self:center;max-width:100%;overflow:hidden}
+    .iv-stage{transform:scale(.74);transform-origin:top center;height:392px;margin:0 auto}
+    .hero::before{-webkit-mask-image:radial-gradient(150% 58% at 50% 22%,#000,transparent 74%);
+            mask-image:radial-gradient(150% 58% at 50% 22%,#000,transparent 74%)}
+  }
+  @media(max-width:520px){
+    .iv-stage{transform:scale(.6);height:320px}
   }
   @media(max-width:860px){
     .edge,.nav-inner,.hero,.analyze,.manifesto,.footer{padding-left:26px;padding-right:26px}
@@ -240,25 +261,62 @@
   </div>
 
   <div class="hero-visual" aria-hidden="true">
-    <div class="verdict">
-      <div class="v-top">
-        <span class="v-tag">EXPERIMENT VERDICT</span>
-        <span class="v-live">live readout</span>
+    <div class="iv-stage">
+      <div class="iv-spine"></div>
+
+      <div class="iv-flabel iv-fl1">your test tool says…</div>
+      <div class="iv-flabel iv-fl2">was the split fair?</div>
+      <div class="iv-flabel iv-fl3">how much is just luck?</div>
+      <div class="iv-flabel iv-fl4"><b>the number</b> you can trust</div>
+
+      <!-- real, defensible result (top) -->
+      <div class="iv-slot" style="top:88px;--d:1.2s">
+        <div class="iv-tile real" style="--fd:.75s">
+          <span class="iv-corner"></span>
+          <span class="iv-tag">real, defensible result</span>
+          <div class="iv-body">
+            <div class="iv-cap">Checkout redesign · honest lift</div>
+            <div class="iv-row" style="margin-top:5px"><span class="iv-big" style="color:var(--ac)">+6.1%</span><span class="iv-pill def">DEFENSIBLE ✓</span></div>
+            <div class="iv-sub">what you can safely put in the deck</div>
+          </div>
+        </div>
       </div>
-      <div class="v-name">Checkout redesign · variant B</div>
-      <div class="v-rows">
-        <div class="v-row"><span>Sample ratio (SRM)</span><b class="ok">PASS</b></div>
-        <div class="v-row"><span>Pre-registered</span><b class="ok">YES</b></div>
-        <div class="v-row"><span>Observed lift</span><b class="strike">+18.4%</b></div>
-        <div class="v-row"><span>Honest lift</span><b class="hon">+5.1%</b></div>
+
+      <!-- winner's curse removed -->
+      <div class="iv-slot" style="top:180px;--d:.5s">
+        <div class="iv-tile" style="--fd:.55s">
+          <span class="iv-corner"></span>
+          <span class="iv-tag">winner's curse removed</span>
+          <div class="iv-body">
+            <div class="iv-cap">inflated lift, shrunk to what's real</div>
+            <div class="iv-row" style="margin-top:7px"><span class="iv-mid iv-strike">+23%</span><span style="color:var(--tx3)">→</span><span class="iv-mid" style="color:var(--o)">+6%</span></div>
+          </div>
+        </div>
       </div>
-      <div class="v-shrink">
-        <div class="v-shrink-track"><div class="v-shrink-fill"></div></div>
-        <div class="v-shrink-cap"><span>honest lift retained</span><span>−72% deflation</span></div>
+
+      <!-- split check -->
+      <div class="iv-slot" style="top:272px;--d:.9s">
+        <div class="iv-tile" style="--fd:.35s">
+          <span class="iv-corner"></span>
+          <span class="iv-tag">the split was fair</span>
+          <div class="iv-body">
+            <div class="iv-split"><span class="a"></span><span class="b"></span></div>
+            <div class="iv-splitlab"><span>A 50.1%</span><span class="g">no bias ✓</span><span>B 49.9%</span></div>
+          </div>
+        </div>
       </div>
-      <div class="v-foot">
-        <span class="lbl">verdict</span>
-        <span class="v-stamp">DEFENSIBLE</span>
+
+      <!-- the tool's "winner" (bottom) -->
+      <div class="iv-slot" style="top:364px;--d:0s">
+        <div class="iv-tile hot" style="--fd:.15s">
+          <span class="iv-corner"></span>
+          <span class="iv-tag">your a/b tool reports</span>
+          <div class="iv-body">
+            <div class="iv-cap">Checkout redesign · Variant B</div>
+            <div class="iv-row" style="margin-top:5px"><span class="iv-big" style="color:var(--g)">+23.4%</span><span class="iv-pill win">WINNER ▲</span></div>
+            <div class="iv-sub">conversion · &ldquo;98% confident&rdquo;</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
