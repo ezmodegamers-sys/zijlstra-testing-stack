@@ -50,6 +50,7 @@
   .nav-link{font-family:var(--sans);font-size:14px;font-weight:500;color:var(--tx2);text-decoration:none;position:relative;padding:4px 0}
   .nav-link:hover{color:var(--tx)}
   .nav-link.active{color:var(--tx);font-weight:600}
+  @media(max-width:560px){.nav{padding:0 20px}.brand-text{display:none}.nav-link.hide-sm{display:none}}
 
   .wrap{max-width:900px;margin:0 auto;padding:0 40px}
   .hero{padding:56px 0 26px}
@@ -153,8 +154,9 @@
   <div class="nav-links">
     <a class="nav-link" href="/">Tools</a>
     <a class="nav-link active" href="/analyze">Analyze</a>
-    <a class="nav-link" href="/learn/">Learn</a>
+    <a class="nav-link hide-sm" href="/learn/">Learn</a>
     <a class="nav-link" href="/blog/">Blog</a>
+    <a class="nav-link" href="/about">About</a>
   </div>
 </nav>
 
