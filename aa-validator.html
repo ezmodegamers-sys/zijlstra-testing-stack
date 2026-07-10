@@ -17,29 +17,35 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://abintegrity.com/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:#0D1117;--bg2:#161B22;--bg3:#21262D;
-  --bdr:#30363D;--bdr2:#444C56;
-  --tx:#E6EDF3;--tx2:#A0AAB6;--tx3:#7D8590;
-  --ac:#4F8EF7;--ac-dim:#1A2D5A;--ac-bright:#79B8FF;
+  --bg:#0B0E13;--bg2:#131820;--bg3:#1a2029;
+  --bdr:#242b35;--bdr2:#2e3641;
+  --tx:#EEF2F7;--tx2:#9AA5B3;--tx3:#616b78;
+  --ac:#5B9CFF;--ac-dim:#1A2D5A;--ac-bright:#79B8FF;
   --g:#3FB950;--g-dim:#0D2D1A;
   --r:#F85149;--r-dim:#3D0F0E;
-  --y:#E3B341;--y-dim:#2D2108;
-  --o:#F0883E;--o-dim:#2D1A0A;
+  --y:#D8A62B;--y-dim:#2D2108;
+  --o:#F0883E;--o-dim:#2D1A0A;--p:#BC8CFF;--t:#2DD4BF;
+  --display:'Bricolage Grotesque',sans-serif;
   --mono:'JetBrains Mono',monospace;
   --sans:'Inter',sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--tx);font-family:var(--sans);font-size:14px;line-height:1.5;min-height:100vh}
-.hdr{background:var(--bg2);border-bottom:1px solid var(--bdr);padding:0 24px;height:52px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100}
-.hdr-brand{font-family:var(--mono);font-weight:700;font-size:15px;letter-spacing:-.5px;color:var(--tx)}
-.hdr-sep{color:var(--bdr2);font-size:18px}
-.hdr-tool{font-family:var(--mono);font-size:13px;color:var(--ac-bright)}
-.hdr-right{margin-left:auto;display:flex;align-items:center;gap:10px}
-.back-link{font-size:12px;color:var(--tx3);text-decoration:none;border:1px solid var(--bdr);padding:4px 10px;transition:all .15s}
-.back-link:hover{color:var(--tx);border-color:var(--bdr2)}
+/* ── NAV (site-wide, matches homepage) ── */
+.nav{position:sticky;top:0;z-index:100;background:rgba(11,14,19,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--bdr)}
+.nav-inner{max-width:1260px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:-.02em;color:var(--tx);text-decoration:none}
+.brand span{color:var(--ac)}
+.nav-links{display:flex;gap:26px;align-items:center}
+.nav-links a{font-family:var(--sans);font-size:14px;font-weight:500;color:var(--tx2);text-decoration:none;transition:color .15s}
+.nav-links a:hover{color:var(--tx)}
+.nav-links a.active{color:var(--tx);font-weight:600}
+@media(max-width:560px){.nav-links{gap:16px}.nav-links a.hide-sm{display:none}}
+.tool-kicker{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ac);margin-bottom:12px}
+.tool-title{font-family:var(--display);font-weight:800;font-size:clamp(30px,4vw,44px);letter-spacing:-.03em;line-height:1;margin-bottom:16px}
 
 .wrap{max-width:1260px;margin:0 auto;padding:24px}
 .two-col{display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start}
@@ -173,16 +179,22 @@ details.math summary:hover{color:var(--tx)}
 </head>
 <body>
 
-<header class="hdr">
-  <a href="index.html" class="back-link" style="margin-right:12px">← Home</a>
-  <span class="hdr-tool" style="font-weight:700">Platform Validator</span>
-  <span style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.5px;padding:4px 8px;border:1px solid var(--g);color:var(--g)">PVL</span>
-  <div class="hdr-right" style="font-size:11px;color:var(--tx3)">01 — Platform Calibration</div>
-</header>
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/">AB <span>Integrity</span></a>
+    <div class="nav-links">
+      <a class="active" href="/">Tools</a>
+      <a href="/analyze">Analyze</a>
+      <a class="hide-sm" href="/learn/">Learn</a>
+      <a href="/blog/">Blog</a>
+    </div>
+  </div>
+</nav>
 
 <div class="wrap">
   <div style="margin-bottom:20px">
-    <h1 style="font-size:22px;font-weight:700;margin-bottom:14px">Platform Validator</h1>
+    <div class="tool-kicker">Tool 01 · Platform Calibration</div>
+    <h1 class="tool-title">Platform Validator</h1>
     <div style="background:var(--bg2);border:1px solid var(--bdr);padding:24px 28px;margin-bottom:4px">
       <div style="font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--g);margin-bottom:14px">// why validate the platform?</div>
       <p style="font-size:13px;color:var(--tx2);line-height:1.8;margin-bottom:14px">
