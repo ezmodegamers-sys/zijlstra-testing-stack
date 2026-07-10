@@ -16,6 +16,9 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://abintegrity.com/og-image.png">
+<script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "WebApplication", "name": "Lockbox", "url": "https://abintegrity.com/lockbox", "description": "Pre-register your A/B test before it runs: sample size calculator with MDE and power, two-proportion z-test results, and peeking detection. Stop p-hacking before it starts.", "applicationCategory": "BusinessApplication", "operatingSystem": "Any (runs in the browser)", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "publisher": {"@type": "Organization", "name": "AB Integrity", "url": "https://abintegrity.com/"}, "isPartOf": {"@type": "WebSite", "@id": "https://abintegrity.com/#website"}}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -305,7 +308,7 @@ details.math summary:hover{color:var(--tx)}
       <p>α = 0.05 means: if there is no real effect, a <em>single</em> look at the final data has a 5% chance of a false positive. Each additional look is another draw. Checking daily over a multi-week test pushes the real false positive rate toward 20–30% while your dashboard still says "95% confidence". That's why the tool flags any result entered before the pre-committed end date — the stated α no longer describes the actual risk taken.</p>
 
       <h4>Why underpowered wins are inflated</h4>
-      <p>If power is low, the noise is large relative to the true effect. The only samples that cross the significance threshold are the ones where noise pushed the measurement up. So conditional on winning, the estimate is biased upward — the winner's curse. This tool flags underpowered results; <a href="reality-check.html" style="color:var(--ac)">Reality Check</a> quantifies the correction.</p>
+      <p>If power is low, the noise is large relative to the true effect. The only samples that cross the significance threshold are the ones where noise pushed the measurement up. So conditional on winning, the estimate is biased upward — the winner's curse. This tool flags underpowered results; <a href="/reality-check" style="color:var(--ac)">Reality Check</a> quantifies the correction.</p>
     </div>
   </details>
 </div>
