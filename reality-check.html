@@ -36,8 +36,13 @@
   /* ── NAV (site-wide, matches homepage) ── */
   .nav{position:sticky;top:0;z-index:100;background:rgba(11,14,19,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--bdr)}
   .nav-inner{max-width:1200px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;gap:16px}
-  .brand{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:-.02em;color:var(--tx);text-decoration:none}
-  .brand span{color:var(--ac)}
+  .brand{display:flex;align-items:center;gap:11px;text-decoration:none}
+  .brand-mark{width:30px;height:30px;flex-shrink:0;display:block}
+  .brand-text{display:flex;flex-direction:column;line-height:1}
+  .brand-name{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:-.02em;color:var(--tx)}
+  .brand-name span{color:var(--ac)}
+  .brand-sub{font-family:var(--mono);font-size:8.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--tx3);margin-top:4px;white-space:nowrap}
+  @media(max-width:560px){.brand-sub{display:none}}
   .nav-links{display:flex;gap:26px;align-items:center}
   .nav-links a{font-family:var(--sans);font-size:14px;font-weight:500;color:var(--tx2);text-decoration:none;transition:color .15s}
   .nav-links a:hover{color:var(--tx)}
@@ -145,7 +150,17 @@
 
 <nav class="nav">
   <div class="nav-inner">
-    <a class="brand" href="/">AB <span>Integrity</span></a>
+    <a class="brand" href="/" aria-label="AB Integrity — ecommerce A/B testing">
+      <svg class="brand-mark" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="1.25" y="1.25" width="29.5" height="29.5" rx="7.5" fill="var(--bg2)" stroke="var(--bdr2)" stroke-width="1.3"/>
+        <rect x="8.5" y="16" width="5.5" height="8" rx="1.2" fill="var(--tx3)"/>
+        <rect x="18" y="8.5" width="5.5" height="15.5" rx="1.2" fill="var(--ac)"/>
+      </svg>
+      <span class="brand-text">
+        <span class="brand-name">AB <span>Integrity</span></span>
+        <span class="brand-sub">Ecommerce A/B testing</span>
+      </span>
+    </a>
     <div class="nav-links">
       <a class="active" href="/">Tools</a>
       <a href="/analyze">Analyze</a>
