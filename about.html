@@ -69,8 +69,8 @@
     background-size:24px 24px;opacity:.5}
   .portrait-corner{position:absolute;top:9px;left:9px;width:20px;height:20px;border-top:1.5px solid var(--ac);border-left:1.5px solid var(--ac);z-index:3;opacity:.7}
   /* real photo drops in: <img class="portrait-img" src="sebastian.jpg" alt="Sebastian Zijlstra"> */
-  .portrait-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 22%;z-index:2;filter:grayscale(1) contrast(1.06) brightness(1.03)}
-  .portrait::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(165deg,rgba(91,156,255,.24) 0%,rgba(20,30,48,.35) 45%,rgba(11,14,19,.72) 100%);mix-blend-mode:multiply}
+  .portrait-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%;z-index:2;filter:contrast(1.02) saturate(1.03)}
+  .portrait::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(180deg,transparent 55%,rgba(11,14,19,.4) 100%)}
   .ph-silhouette{position:absolute;inset:0;z-index:2;display:flex;align-items:flex-end;justify-content:center}
   .ph-silhouette svg{width:72%;height:86%;opacity:.5}
   .ph-note{position:absolute;left:11px;bottom:10px;z-index:4;font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--tx3);text-transform:uppercase}
