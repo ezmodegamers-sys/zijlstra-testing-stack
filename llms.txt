@@ -1,6 +1,6 @@
 # AB Integrity
 
-> Seven free, browser-based A/B testing tools for ecommerce that keep test results honest. Everything runs client-side: no accounts, no uploads — nothing entered ever leaves the visitor's machine. Built by Sebastian Zijlstra (experimentation & analytics, Sofia, Bulgaria).
+> Seven free, browser-based A/B testing tools for ecommerce that keep test results honest — useful both for teams running tests and for marketing leaders who receive test results from agencies and want a second opinion. Everything runs client-side: no accounts, no uploads — nothing entered ever leaves the visitor's machine. Built by Sebastian Zijlstra (experimentation & analytics, Sofia, Bulgaria).
 
 AB Integrity exists because most ecommerce A/B testing quietly fools its own team: metrics picked after seeing results, daily significance peeking, and testing platforms nobody calibrated. These tools apply standard research rigor (pre-registration, SRM checks, Bayesian shrinkage, lift reconciliation) in a form anyone can use.
 
