@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Calculate a P-Value by Hand — A/B Test Drills | AB Integrity</title>
+<meta name="description" content="The actual arithmetic of an A/B test: conversion rates, standard error, z-score, and the p-value from a z-table. One worked example, then endless practice drills with checked answers.">
+<link rel="canonical" href="https://abintegrity.com/learn/calculate-a-p-value-by-hand">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="AB Integrity">
+<meta property="og:title" content="Calculate a p-value by hand — A/B test drills">
+<meta property="og:description" content="Four numbers, three formulas, one verdict. A worked example, a z-table, and endless drills until the p-value stops being fog.">
+<meta property="og:url" content="https://abintegrity.com/learn/calculate-a-p-value-by-hand">
+<meta property="og:image" content="https://abintegrity.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://abintegrity.com/og-image.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"LearningResource",
+ "name":"Calculate a p-value by hand — A/B test drills",
+ "description":"The full arithmetic of a two-proportion A/B test: conversion rates, standard error, z-score, p-value from a z-table, plus endless generated practice problems with checked answers.",
+ "url":"https://abintegrity.com/learn/calculate-a-p-value-by-hand",
+ "learningResourceType":"practice drills",
+ "educationalLevel":"intermediate",
+ "isPartOf":{"@type":"Course","name":"A/B Testing From Zero","url":"https://abintegrity.com/learn/"},
+ "isAccessibleForFree":true,
+ "author":{"@type":"Person","name":"Sebastian Zijlstra","sameAs":"https://www.linkedin.com/in/sebastianzijlstra"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList",
+ "itemListElement":[
+   {"@type":"ListItem","position":1,"name":"Home","item":"https://abintegrity.com/"},
+   {"@type":"ListItem","position":2,"name":"Learn","item":"https://abintegrity.com/learn/"},
+   {"@type":"ListItem","position":3,"name":"Calculate a p-value by hand","item":"https://abintegrity.com/learn/calculate-a-p-value-by-hand"}
+ ]}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0D1117;--bg2:#161B22;--bg3:#1C2128;--bdr:#30363D;
+    --tx:#E6EDF3;--tx2:#A0AAB6;--tx3:#7D8590;
+    --ac:#4F8EF7;--g:#3FB950;--r:#F85149;--y:#D29922;--o:#F0883E;--p:#BC8CFF;--t:#2DD4BF;
+    --mono:'JetBrains Mono',monospace;--sans:'Inter',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  html,body{min-height:100vh;background:var(--bg);color:var(--tx);font-family:var(--sans)}
+  body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+    background:radial-gradient(circle at 1px 1px,rgba(230,237,243,.022) 1px,transparent 0) 0 0/34px 34px,var(--bg)}
+  ::selection{background:rgba(79,142,247,.26);color:#fff}
+  a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--ac);outline-offset:3px}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+  .nav{height:56px;display:flex;align-items:center;justify-content:space-between;
+    padding:0 40px;border-bottom:1px solid var(--bdr);position:sticky;top:0;z-index:100;
+    background:rgba(13,17,23,.9);backdrop-filter:blur(8px)}
+  .nav-brand{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--tx2);letter-spacing:1px;text-decoration:none}
+  .nav-brand span{color:var(--ac)}
+  .nav-links{display:flex;gap:26px;align-items:center}
+  .nav-link{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--tx2);text-decoration:none;position:relative;padding:4px 0}
+  .nav-link:hover{color:var(--tx)}
+  .nav-link.active{color:var(--ac)}
+  .nav-link.active::after{content:'';position:absolute;left:0;right:0;bottom:-2px;height:2px;background:var(--ac)}
+
+  .article{max-width:760px;margin:0 auto;padding:52px 40px 40px}
+  .crumbs{font-family:var(--mono);font-size:11px;color:var(--tx3);margin-bottom:20px;display:flex;gap:8px;flex-wrap:wrap}
+  .crumbs a{color:var(--tx3);text-decoration:none}
+  .crumbs a:hover{color:var(--ac)}
+  .crumbs .sep{color:var(--bdr)}
+  .crumbs .here{color:var(--tx2)}
+  .a-meta{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:16px;display:flex;gap:14px;flex-wrap:wrap}
+  .a-meta .cat{color:var(--o)}
+  h1{font-size:clamp(28px,4.5vw,44px);font-weight:900;letter-spacing:-1px;line-height:1.12;margin-bottom:14px}
+  .standfirst{font-size:16px;color:var(--tx2);line-height:1.7;margin-bottom:34px;padding-bottom:28px;border-bottom:1px solid var(--bdr)}
+  .standfirst strong{color:var(--tx);font-weight:600}
+
+  .prose p{font-size:15px;color:var(--tx2);line-height:1.85;margin-bottom:18px}
+  .prose p strong{color:var(--tx);font-weight:600}
+  .prose h2{font-size:20px;font-weight:700;letter-spacing:-.3px;margin:36px 0 14px}
+  .prose a{color:var(--ac);text-decoration:none;border-bottom:1px solid rgba(79,142,247,.35)}
+  .prose a:hover{border-bottom-color:var(--ac)}
+  .prose ol{margin:0 0 18px 20px}
+  .prose li{font-size:15px;color:var(--tx2);line-height:1.85;margin-bottom:6px}
+  .prose li b{color:var(--tx)}
+
+  .formula{font-family:var(--mono);font-size:13px;background:var(--bg2);border:1px solid var(--bdr);border-left:2px solid var(--ac);
+    padding:14px 18px;margin:16px 0;color:var(--tx);overflow-x:auto;line-height:1.9}
+  .formula .dim{color:var(--tx3)}
+  .formula .hi{color:var(--ac)}
+
+  .worked{background:var(--bg2);border:1px solid var(--bdr);margin:22px 0}
+  .worked-head{padding:12px 18px;border-bottom:1px solid var(--bdr);font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--g)}
+  .worked-body{padding:16px 18px}
+  .wstep{display:grid;grid-template-columns:26px 1fr;gap:12px;padding:9px 0;border-bottom:1px dashed var(--bg3);font-size:14px;color:var(--tx2);line-height:1.7}
+  .wstep:last-child{border-bottom:none}
+  .wstep .n{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--tx3);padding-top:3px}
+  .wstep code{font-family:var(--mono);font-size:12.5px;background:var(--bg);border:1px solid var(--bdr);padding:1px 6px;color:var(--tx);white-space:nowrap}
+  .wstep b{color:var(--tx)}
+  .wstep .res{color:var(--ac);font-weight:700}
+
+  /* z-table */
+  .ztable-wrap{background:var(--bg2);border:1px solid var(--bdr);margin:22px 0}
+  .ztable-head{padding:12px 18px;border-bottom:1px solid var(--bdr);font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--tx2)}
+  .ztable-scroll{overflow-x:auto;padding:12px 18px}
+  table.zt{border-collapse:collapse;font-family:var(--mono);font-size:11.5px;width:100%}
+  table.zt th{color:var(--tx3);font-weight:700;text-align:right;padding:5px 9px;border-bottom:1px solid var(--bdr);white-space:nowrap}
+  table.zt td{color:var(--tx2);text-align:right;padding:5px 9px;white-space:nowrap}
+  table.zt td.z{color:var(--tx);font-weight:700}
+  table.zt tr:nth-child(even) td{background:rgba(255,255,255,.015)}
+  .zt-note{font-size:11px;color:var(--tx3);padding:0 18px 14px;line-height:1.6}
+
+  /* drill machine */
+  .drill{background:var(--bg2);border:1px solid var(--bdr);margin:26px 0}
+  .drill-head{padding:14px 18px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .drill-title{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--o)}
+  .drill-score{font-family:var(--mono);font-size:11px;color:var(--tx3)}
+  .drill-score b{color:var(--g)}
+  .drill-body{padding:18px}
+  .prob{background:var(--bg);border:1px solid var(--bdr);padding:14px 16px;margin-bottom:16px}
+  .prob-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);margin-bottom:10px}
+  .prob-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+  .pg-cell{border:1px solid var(--bdr);padding:10px 12px}
+  .pg-k{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--tx3);margin-bottom:3px}
+  .pg-v{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--tx)}
+
+  .step{border:1px solid var(--bdr);margin-bottom:10px;background:var(--bg)}
+  .step-head{padding:10px 14px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .step-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--tx3)}
+  .step-q{font-size:13.5px;color:var(--tx2);line-height:1.6}
+  .step-q b{color:var(--tx)}
+  .step-q code{font-family:var(--mono);font-size:12px;background:var(--bg2);border:1px solid var(--bdr);padding:1px 5px;color:var(--tx2)}
+  .step-row{display:flex;gap:8px;align-items:center;padding:0 14px 12px;flex-wrap:wrap}
+  .step-row input[type=text]{width:110px;background:var(--bg2);border:1px solid var(--bdr);color:var(--tx);
+    padding:7px 10px;font-family:var(--mono);font-size:13px;outline:none;text-align:right}
+  .step-row input:focus{border-color:var(--ac)}
+  .step-row .unit{font-family:var(--mono);font-size:11px;color:var(--tx3)}
+  .step-row .second{margin-left:14px}
+  .btn{background:var(--bg3);border:1px solid var(--bdr);color:var(--tx);padding:7px 14px;cursor:pointer;
+    font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+  .btn:hover{border-color:var(--tx3)}
+  .btn-ac{background:rgba(79,142,247,.12);border-color:var(--ac);color:var(--ac)}
+  .btn-ac:hover{background:rgba(79,142,247,.22)}
+  .vbtn{background:var(--bg2);border:1px solid var(--bdr);color:var(--tx2);padding:7px 14px;cursor:pointer;font-family:var(--mono);font-size:11px;font-weight:700}
+  .vbtn.sel-sig{border-color:var(--g);color:var(--g)}
+  .vbtn.sel-no{border-color:var(--y);color:var(--y)}
+  .mark{font-family:var(--mono);font-size:12px;font-weight:700;min-width:130px}
+  .mark.ok{color:var(--g)}
+  .mark.bad{color:var(--r)}
+  .drill-foot{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}
+  .solution{display:none;margin-top:14px;border:1px solid var(--bdr);background:var(--bg)}
+  .solution.show{display:block}
+  .solution .worked-head{color:var(--ac)}
+
+  .callout{background:var(--bg2);border:1px solid var(--bdr);border-left:2px solid var(--ac);
+    padding:16px 20px;margin:24px 0;font-size:14px;color:var(--tx2);line-height:1.75}
+  .callout .c-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ac);display:block;margin-bottom:8px}
+  .callout b{color:var(--tx)}
+
+  .a-cta{background:var(--bg2);border:1px solid var(--bdr);padding:22px 26px;margin-top:36px}
+  .a-cta .c-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--g);display:block;margin-bottom:10px}
+  .a-cta p{font-size:13.5px;color:var(--tx2);line-height:1.7;margin-bottom:0}
+  .a-cta a{color:var(--ac);text-decoration:none}
+
+  .nextnav{display:flex;justify-content:space-between;gap:12px;margin-top:32px;padding-top:22px;border-top:1px solid var(--bdr);font-family:var(--mono);font-size:12px}
+  .nextnav a{color:var(--ac);text-decoration:none}
+  .nextnav span{color:var(--tx3)}
+
+  .footer{border-top:1px solid var(--bdr);padding:24px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+  .footer-left{font-family:var(--mono);font-size:11px;color:var(--tx3)}
+  .footer-left span{color:var(--ac)}
+  .footer-left a{color:var(--ac);text-decoration:none}
+  .footer-right{font-size:11px;color:var(--tx3)}
+
+  @media(max-width:800px){.article{padding:40px 22px}.nav{padding:0 22px}.footer{padding:24px 22px}.step-row .second{margin-left:0}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="/">// ab <span>integrity</span></a>
+  <div class="nav-links">
+    <a class="nav-link" href="/">tools</a>
+    <a class="nav-link" href="/analyze">analyze</a>
+    <a class="nav-link active" href="/learn/">learn</a>
+    <a class="nav-link" href="/blog/">blog</a>
+  </div>
+</nav>
+
+<article class="article">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span class="sep">/</span><a href="/learn/">Learn</a><span class="sep">/</span><span class="here">Calculate a p-value by hand</span>
+  </nav>
+  <div class="a-meta"><span class="cat">Lesson 04</span><span>Drills</span><span>Bring a calculator</span></div>
+  <h1>Calculate a p-value by hand</h1>
+  <p class="standfirst">You've seen the picture in <a href="/learn/significance-and-p-values" style="color:var(--ac)">Lesson 03</a>. Pictures fade. What sticks is doing the arithmetic until it's boring — the same way you learned long division. An A/B test is <strong>four numbers, three formulas, one table lookup</strong>. This page gives you one worked example and then generates fresh problems forever. Do at least five.</p>
+
+  <div class="prose">
+    <h2>The entire calculation</h2>
+    <p>Every A/B test result you'll ever read reduces to this. Work in <strong>percentage points</strong> (so 4.20% is the number 4.20) and it stays clean:</p>
+  </div>
+
+  <div class="formula">
+<span class="dim">// step 1 — conversion rates (%)</span><br>
+rate = 100 × conversions ÷ visitors<br><br>
+<span class="dim">// step 2 — the gap (percentage points)</span><br>
+gap = rateB − rateA<br><br>
+<span class="dim">// step 3 — the standard error of the gap (pp)</span><br>
+SE = √( rateA×(100−rateA)/nA  +  rateB×(100−rateB)/nB )<br><br>
+<span class="dim">// step 4 — the z-score: how many SEs of gap you have</span><br>
+z = gap ÷ SE<br><br>
+<span class="dim">// step 5 — the p-value: look |z| up in the table below</span><br>
+<span class="hi">p &lt; 0.05  (|z| &gt; 1.96)  →  significant</span>
+  </div>
+
+  <div class="prose">
+    <p>That's it. The SE is the only formula with any meat, and it's just "how much luck-wobble should a gap between these two rates have?" — the same wobble you watched in <a href="/learn/why-one-test-can-lie">Lesson 02</a>, now as a number you can compute. The z-score asks: <strong>is my gap big compared to the wobble?</strong> The p-value converts that to "how often luck alone beats this."</p>
+
+    <h2>Worked example — follow along with a calculator</h2>
+  </div>
+
+  <div class="worked">
+    <div class="worked-head">// checkout test · 5,000 visitors per arm</div>
+    <div class="worked-body">
+      <div class="wstep"><span class="n">01</span><span>A: 200 conversions of 5,000 → <code>100 × 200 ÷ 5000</code> = <b>4.00%</b>. &nbsp;B: 245 of 5,000 → <code>100 × 245 ÷ 5000</code> = <b>4.90%</b>.</span></div>
+      <div class="wstep"><span class="n">02</span><span>gap = <code>4.90 − 4.00</code> = <span class="res">0.90 pp</span></span></div>
+      <div class="wstep"><span class="n">03</span><span>SE = <code>√( 4.00×96.00/5000 + 4.90×95.10/5000 )</code> = <code>√( 0.0768 + 0.0932 )</code> = <code>√0.1700</code> = <span class="res">0.412 pp</span></span></div>
+      <div class="wstep"><span class="n">04</span><span>z = <code>0.90 ÷ 0.412</code> = <span class="res">2.18</span></span></div>
+      <div class="wstep"><span class="n">05</span><span>Table: z = 2.2 → p ≈ <span class="res">0.028</span>. Below 0.05 → <b style="color:var(--g)">significant</b>. Luck beats a 0.90pp gap only ~3% of the time here.</span></div>
+      <div class="wstep"><span class="n">★</span><span>Now the part that makes this worth doing by hand: <b>same rates, but 1,250 visitors per arm.</b> SE doubles to <code>0.825</code> (quarter the traffic → double the wobble), so z = <code>0.90 ÷ 0.825</code> = <b>1.09</b> → p ≈ <b>0.28</b>. <b style="color:var(--y)">Not significant.</b> The gap didn't change — your ability to hear it over the noise did. You just <em>computed</em> the thing Lesson 03 could only show you.</span></div>
+    </div>
+  </div>
+
+  <!-- z table -->
+  <div class="ztable-wrap" id="ztable">
+    <div class="ztable-head">// z → two-sided p-value (this is the whole lookup table)</div>
+    <div class="ztable-scroll">
+      <table class="zt" id="ztbl"></table>
+    </div>
+    <div class="zt-note">Between rows, take the closer one — drill answers accept small rounding differences. Landmarks worth memorising: <b style="color:var(--tx)">1.96 → 0.05</b> · 2.58 → 0.01 · 3.29 → 0.001.</div>
+  </div>
+
+  <div class="prose">
+    <h2>Now you. Repeatedly.</h2>
+    <p>Fresh numbers every time. Round rates and the gap to <strong>2 decimals</strong>, SE to <strong>3</strong>, z to <strong>2</strong>, and read p from the table. Small rounding differences are accepted. No calculator shame — the point is the <em>procedure</em>, not mental arithmetic.</p>
+  </div>
+
+  <div class="drill">
+    <div class="drill-head">
+      <div class="drill-title">// drill machine — new numbers every round</div>
+      <div class="drill-score" id="score">solved <b>0</b> · streak <b>0</b></div>
+    </div>
+    <div class="drill-body">
+      <div class="prob">
+        <div class="prob-label">Your test result</div>
+        <div class="prob-grid">
+          <div class="pg-cell"><div class="pg-k">Visitors per arm</div><div class="pg-v" id="pN">—</div></div>
+          <div class="pg-cell"><div class="pg-k">A conversions</div><div class="pg-v" id="pCA">—</div></div>
+          <div class="pg-cell"><div class="pg-k">B conversions</div><div class="pg-v" id="pCB">—</div></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-head"><span class="step-num">STEP 1</span><span class="step-q">Conversion rates. <code>100 × conversions ÷ visitors</code></span></div>
+        <div class="step-row">
+          <span class="unit">A =</span><input type="text" id="inRA" inputmode="decimal" placeholder="0.00"><span class="unit">%</span>
+          <span class="unit second">B =</span><input type="text" id="inRB" inputmode="decimal" placeholder="0.00"><span class="unit">%</span>
+          <button class="btn" onclick="check(1)">Check</button><span class="mark" id="m1"></span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-head"><span class="step-num">STEP 2</span><span class="step-q">The gap. <code>rateB − rateA</code> (negative is allowed — B can lose)</span></div>
+        <div class="step-row">
+          <span class="unit">gap =</span><input type="text" id="inGap" inputmode="decimal" placeholder="0.00"><span class="unit">pp</span>
+          <button class="btn" onclick="check(2)">Check</button><span class="mark" id="m2"></span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-head"><span class="step-num">STEP 3</span><span class="step-q">Standard error. <code>√( rA(100−rA)/n + rB(100−rB)/n )</code></span></div>
+        <div class="step-row">
+          <span class="unit">SE =</span><input type="text" id="inSE" inputmode="decimal" placeholder="0.000"><span class="unit">pp</span>
+          <button class="btn" onclick="check(3)">Check</button><span class="mark" id="m3"></span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-head"><span class="step-num">STEP 4</span><span class="step-q">z-score. <code>gap ÷ SE</code></span></div>
+        <div class="step-row">
+          <span class="unit">z =</span><input type="text" id="inZ" inputmode="decimal" placeholder="0.00">
+          <button class="btn" onclick="check(4)">Check</button><span class="mark" id="m4"></span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-head"><span class="step-num">STEP 5</span><span class="step-q">p-value from the table (use |z|), then the call.</span></div>
+        <div class="step-row">
+          <span class="unit">p ≈</span><input type="text" id="inP" inputmode="decimal" placeholder="0.00">
+          <button class="vbtn" id="vSig" onclick="setVerdict(1)">significant</button>
+          <button class="vbtn" id="vNo" onclick="setVerdict(0)">not significant</button>
+          <button class="btn" onclick="check(5)">Check</button><span class="mark" id="m5"></span>
+        </div>
+      </div>
+
+      <div class="drill-foot">
+        <button class="btn btn-ac" onclick="newProblem()">New problem →</button>
+        <button class="btn" onclick="toggleSolution()">Show the full solution</button>
+        <span class="drill-score" id="doneMsg"></span>
+      </div>
+
+      <div class="solution" id="sol">
+        <div class="worked-head">// solution, step by step</div>
+        <div class="worked-body" id="solBody"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h2>One more formula, since you're warm: the Bayesian read</h2>
+    <p>Lesson 07 will argue about philosophy; the arithmetic is almost embarrassing. With no strong prior opinion, the probability that <strong>B is genuinely better than A</strong> is the one-sided version of the same lookup:</p>
+  </div>
+
+  <div class="formula">
+<span class="dim">// same z you already computed</span><br>
+P(B beats A) ≈ Φ(z) <span class="dim">= the "cumulative" column a fuller z-table gives you</span><br><br>
+z = 2.18 → Φ(z) ≈ 0.985 → <span class="hi">~98.5% chance B really is better</span><br>
+z = 1.09 → Φ(z) ≈ 0.86&nbsp; → 86% — promising, far from proof
+  </div>
+
+  <div class="prose">
+    <p>Same four numbers, same z. The frequentist p asks "how often would luck fake this?"; the Bayesian number asks "given what I saw, how likely is B better?". <strong>Both are one division and one table away from your raw counts.</strong> Anyone who makes either sound like wizardry is selling something.</p>
+    <p>Honesty note: the drill uses the unpooled SE, the version <a href="/reality-check">Reality Check</a> uses. Textbooks often pool the rates under the null first — the answers differ in the third decimal and never in the verdict. And the Φ(z) shortcut assumes a flat prior; a sceptical prior (the honest choice for ecommerce, see the tool) pulls that 98.5% down.</p>
+  </div>
+
+  <div class="callout">
+    <span class="c-label">// the one takeaway</span>
+    A p-value is not an oracle's pronouncement. It is <b>rate, gap, wobble, ratio, lookup</b> — five lines of arithmetic you have now done yourself. When a dashboard flashes "significant!", you know exactly what tiny calculation produced that word, and exactly how little it promises: <b>rarely luck</b>. Not big. Not guaranteed. Just rarely luck.
+  </div>
+
+  <div class="a-cta">
+    <span class="c-label">// keep going</span>
+    <p>Drill until the procedure is boring, then let the machines take over: <a href="/analyze">Instant Analysis</a> runs these exact steps (plus the honesty checks) on a real CSV, and <a href="/reality-check">Reality Check</a> adds the sceptical-prior version of Φ(z) you just met.</p>
+  </div>
+
+  <div class="nextnav">
+    <a href="/learn/significance-and-p-values">← Lesson 03: Significance and the p-value</a>
+    <span>Next: Power &amp; sample size (soon)</span>
+  </div>
+</article>
+
+<footer class="footer">
+  <div class="footer-left">// ab <span>integrity</span> · <a href="https://www.linkedin.com/in/sebastianzijlstra" target="_blank" rel="me noopener">LinkedIn ↗</a></div>
+  <div class="footer-right">runs in your browser · nothing is uploaded</div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+function erf(x){var s=x<0?-1:1;x=Math.abs(x);var t=1/(1+0.3275911*x);
+  var y=1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x);
+  return s*y;}
+function ncdf(z){return 0.5*(1+erf(z/Math.SQRT2));}
+function p2(z){return 2*(1-ncdf(Math.abs(z)));}
+var $=function(id){return document.getElementById(id);};
+
+/* ---- z table ---- */
+(function buildTable(){
+  var rows='<tr><th>z</th><th>p</th><th style="width:24px"></th><th>z</th><th>p</th><th style="width:24px"></th><th>z</th><th>p</th></tr>';
+  var zs=[];for(var z=0;z<=3.41;z+=0.1)zs.push(z);
+  var per=Math.ceil(zs.length/3);
+  for(var r=0;r<per;r++){
+    rows+='<tr>';
+    for(var c=0;c<3;c++){
+      var i=c*per+r;
+      if(i<zs.length){
+        var zz=zs[i], pv=p2(zz);
+        var ptxt=pv<0.001?'&lt;0.001':pv.toFixed(3);
+        var hot=Math.abs(zz-2.0)<0.05;
+        rows+='<td class="z"'+(hot?' style="color:#4F8EF7"':'')+'>'+zz.toFixed(1)+'</td><td'+(hot?' style="color:#4F8EF7"':'')+'>'+ptxt+'</td>';
+      } else rows+='<td></td><td></td>';
+      if(c<2)rows+='<td></td>';
+    }
+    rows+='</tr>';
+  }
+  $('ztbl').innerHTML=rows;
+})();
+
+/* ---- drill state ---- */
+var cur=null, solved=0, streak=0, verdictPick=null, stepDone=[false,false,false,false,false];
+
+function rnd(a,b){return a+Math.random()*(b-a);}
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
+
+function newProblem(){
+  var n=pick([1000,2000,2500,5000,10000]);
+  var baseRate=rnd(1.5,6);                       // %
+  var cA=Math.max(5,Math.round(n*baseRate/100));
+  var lift=rnd(-0.12,0.38);                      // relative
+  var cB=Math.max(5,Math.min(n,Math.round(cA*(1+lift))));
+  var rA=100*cA/n, rB=100*cB/n;
+  var gap=rB-rA;
+  var se=Math.sqrt(rA*(100-rA)/n + rB*(100-rB)/n);
+  var z=gap/se;
+  var p=p2(z);
+  cur={n:n,cA:cA,cB:cB,rA:rA,rB:rB,gap:gap,se:se,z:z,p:p,sig:p<0.05};
+  $('pN').textContent=n.toLocaleString('en-US');
+  $('pCA').textContent=cA.toLocaleString('en-US');
+  $('pCB').textContent=cB.toLocaleString('en-US');
+  ['inRA','inRB','inGap','inSE','inZ','inP'].forEach(function(id){$(id).value='';});
+  for(var i=1;i<=5;i++){var m=$('m'+i);m.textContent='';m.className='mark';}
+  stepDone=[false,false,false,false,false];
+  verdictPick=null;
+  $('vSig').className='vbtn';$('vNo').className='vbtn';
+  $('sol').className='solution';
+  $('doneMsg').textContent='';
+}
+
+function near(val,target,tol){return isFinite(val)&&Math.abs(val-target)<=tol;}
+function num(id){return parseFloat(($(id).value||'').replace(',','.'));}
+function mark(i,ok,msgOk,msgBad){
+  var m=$('m'+i);
+  m.textContent=ok?(msgOk||'✓ correct'):(msgBad||'✕ not quite — try again');
+  m.className='mark '+(ok?'ok':'bad');
+  stepDone[i-1]=ok;
+  if(ok&&stepDone.every(Boolean)){
+    solved++;streak++;
+    $('score').innerHTML='solved <b>'+solved+'</b> · streak <b>'+streak+'</b>';
+    $('doneMsg').textContent=solved>=5?'✓ that’s '+solved+' — the fog should be lifting. Keep going or move on.':'✓ full problem solved — hit "New problem"';
+  }
+}
+window.setVerdict=function(v){
+  verdictPick=v;
+  $('vSig').className='vbtn'+(v===1?' sel-sig':'');
+  $('vNo').className='vbtn'+(v===0?' sel-no':'');
+};
+window.check=function(step){
+  if(!cur)return;
+  if(step===1){
+    var okA=near(num('inRA'),cur.rA,0.011), okB=near(num('inRB'),cur.rB,0.011);
+    mark(1,okA&&okB, null, okA? '✕ B is off':'✕ A is off — rate = 100×conv÷visitors');
+  }
+  if(step===2){ mark(2, near(num('inGap'),cur.gap,0.021)); }
+  if(step===3){ mark(3, near(num('inSE'),cur.se,0.02), null, '✕ check: rA(100−rA)/n + rB(100−rB)/n, then √'); }
+  if(step===4){ mark(4, near(num('inZ'),cur.z,0.12)); }
+  if(step===5){
+    var okP=near(num('inP'),cur.p, Math.max(0.025, cur.p*0.2));
+    if(cur.p<0.001) okP = num('inP')<=0.002;   // "<0.001" answers
+    var okV=(verdictPick===(cur.sig?1:0));
+    mark(5, okP&&okV, cur.sig?'✓ significant':'✓ not significant',
+      okP?'✕ right p, wrong call — the line is 0.05':'✕ p is off — round |z| to one decimal, read the table');
+  }
+  if(streak>0&&!stepDone.every(Boolean)){/* streak only breaks on reveal */}
+};
+window.toggleSolution=function(){
+  if(!cur)return;
+  var el=$('sol');
+  if(el.className.indexOf('show')<0){
+    streak=0;
+    $('score').innerHTML='solved <b>'+solved+'</b> · streak <b>0</b>';
+    var c=cur;
+    function f(x,d){return x.toFixed(d);}
+    $('solBody').innerHTML=
+      '<div class="wstep"><span class="n">01</span><span>A: <code>100 × '+c.cA+' ÷ '+c.n+'</code> = <b>'+f(c.rA,2)+'%</b> &nbsp;·&nbsp; B: <code>100 × '+c.cB+' ÷ '+c.n+'</code> = <b>'+f(c.rB,2)+'%</b></span></div>'+
+      '<div class="wstep"><span class="n">02</span><span>gap = <code>'+f(c.rB,2)+' − '+f(c.rA,2)+'</code> = <span class="res">'+f(c.gap,2)+' pp</span></span></div>'+
+      '<div class="wstep"><span class="n">03</span><span>SE = <code>√( '+f(c.rA,2)+'×'+f(100-c.rA,2)+'/'+c.n+' + '+f(c.rB,2)+'×'+f(100-c.rB,2)+'/'+c.n+' )</code> = <code>√( '+f(c.rA*(100-c.rA)/c.n,4)+' + '+f(c.rB*(100-c.rB)/c.n,4)+' )</code> = <span class="res">'+f(c.se,3)+' pp</span></span></div>'+
+      '<div class="wstep"><span class="n">04</span><span>z = <code>'+f(c.gap,2)+' ÷ '+f(c.se,3)+'</code> = <span class="res">'+f(c.z,2)+'</span></span></div>'+
+      '<div class="wstep"><span class="n">05</span><span>|z| = '+f(Math.abs(c.z),2)+' → p ≈ <span class="res">'+(c.p<0.001?'<0.001':f(c.p,3))+'</span> → <b style="color:'+(c.sig?'var(--g)':'var(--y)')+'">'+(c.sig?'significant':'not significant')+'</b>'+(c.sig?' (luck rarely does this)':' (luck does this too easily)')+'</span></div>'+
+      '<div class="wstep"><span class="n">★</span><span>Bayesian read: Φ('+f(c.z,2)+') ≈ <b>'+(100*ncdf(c.z)).toFixed(1)+'%</b> chance B is genuinely better (flat prior).</span></div>';
+    el.className='solution show';
+  } else {
+    el.className='solution';
+  }
+};
+newProblem();
+window.newProblem=newProblem;
+})();
+</script>
+</body>
+</html>
