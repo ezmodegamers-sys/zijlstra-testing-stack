@@ -5,8 +5,15 @@
   <link>https://abintegrity.com/blog/</link>
   <description>Essays on honest ecommerce experimentation.</description>
   <language>en</language>
-  <lastBuildDate>Sun, 05 Jul 2026 18:00:00 GMT</lastBuildDate>
+  <lastBuildDate>Sat, 11 Jul 2026 18:00:00 GMT</lastBuildDate>
   <atom:link href="https://abintegrity.com/blog/feed.xml" rel="self" type="application/rss+xml"/>
+  <item>
+    <title>7 questions to ask before you believe an A/B test</title>
+    <link>https://abintegrity.com/blog/questions-to-ask-before-you-believe-an-ab-test</link>
+    <guid>https://abintegrity.com/blog/questions-to-ask-before-you-believe-an-ab-test</guid>
+    <pubDate>Sat, 11 Jul 2026 18:00:00 GMT</pubDate>
+    <description>The deck says +23%. Seven questions that separate real wins from lucky ones, with what good and bad answers sound like.</description>
+  </item>
   <item>
     <title>How much traffic do you need to A/B test an online store?</title>
     <link>https://abintegrity.com/blog/how-much-traffic-do-you-need-to-ab-test</link>

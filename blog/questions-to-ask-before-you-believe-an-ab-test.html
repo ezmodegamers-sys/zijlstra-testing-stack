@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>7 Questions to Ask Before You Believe an A/B Test — AB Integrity</title>
+<meta name="description" content="The deck says +23%. Before you believe it: seven questions that separate real A/B test wins from lucky ones, and what good and bad answers sound like.">
+<link rel="canonical" href="https://abintegrity.com/blog/questions-to-ask-before-you-believe-an-ab-test">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="AB Integrity">
+<meta property="og:title" content="7 questions to ask before you believe an A/B test">
+<meta property="og:description" content="The deck says +23%. Seven questions that separate real wins from lucky ones, and what good and bad answers sound like.">
+<meta property="og:url" content="https://abintegrity.com/blog/questions-to-ask-before-you-believe-an-ab-test">
+<meta property="og:image" content="https://abintegrity.com/blog/seven-questions.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://abintegrity.com/blog/seven-questions.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting",
+ "headline":"7 questions to ask before you believe an A/B test",
+ "datePublished":"2026-07-11","dateModified":"2026-07-11",
+ "author":{"@type":"Person","name":"Sebastian Zijlstra","url":"https://abintegrity.com/","sameAs":"https://www.linkedin.com/in/sebastianzijlstra"},
+ "publisher":{"@type":"Organization","name":"AB Integrity","url":"https://abintegrity.com/"},
+ "mainEntityOfPage":"https://abintegrity.com/blog/questions-to-ask-before-you-believe-an-ab-test",
+ "image":"https://abintegrity.com/blog/seven-questions.png"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList",
+ "itemListElement":[
+   {"@type":"ListItem","position":1,"name":"Home","item":"https://abintegrity.com/"},
+   {"@type":"ListItem","position":2,"name":"Blog","item":"https://abintegrity.com/blog/"},
+   {"@type":"ListItem","position":3,"name":"7 questions to ask before you believe an A/B test","item":"https://abintegrity.com/blog/questions-to-ask-before-you-believe-an-ab-test"}
+ ]}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0D1117;--bg2:#161B22;--bg3:#1C2128;
+    --bdr:#30363D;
+    --tx:#E6EDF3;--tx2:#A0AAB6;--tx3:#7D8590;
+    --ac:#4F8EF7;--g:#3FB950;--r:#F85149;--y:#D29922;--o:#F0883E;--p:#BC8CFF;
+    --mono:'JetBrains Mono',monospace;--sans:'Inter',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{min-height:100vh;background:var(--bg);color:var(--tx);font-family:var(--sans)}
+
+  .nav{height:56px;display:flex;align-items:center;justify-content:space-between;
+    padding:0 40px;border-bottom:1px solid var(--bdr);
+    position:sticky;top:0;z-index:100;background:var(--bg)}
+  .nav-brand{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--tx2);letter-spacing:1px;text-decoration:none}
+  .nav-brand span{color:var(--ac)}
+  .nav-links{display:flex;gap:18px;align-items:center}
+  .nav-link{font-family:var(--mono);font-size:11px;color:var(--tx3);text-decoration:none}
+  .nav-link:hover{color:var(--tx)}
+  .nav-link.active{color:var(--ac)}
+
+  .article{max-width:720px;margin:0 auto;padding:56px 40px 80px}
+  .a-meta{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1.5px;
+    text-transform:uppercase;color:var(--tx3);margin-bottom:18px;display:flex;gap:14px;flex-wrap:wrap}
+  .a-meta .cat{color:var(--o)}
+  h1{font-size:clamp(28px,4.5vw,44px);font-weight:900;letter-spacing:-1px;line-height:1.12;margin-bottom:14px}
+  .a-standfirst{font-size:16px;color:var(--tx2);line-height:1.7;margin-bottom:36px}
+  .a-byline{font-family:var(--mono);font-size:11px;color:var(--tx3);padding-bottom:28px;border-bottom:1px solid var(--bdr);margin-bottom:36px}
+  .a-byline a{color:var(--ac);text-decoration:none}
+
+  .crumbs{font-family:var(--mono);font-size:11px;color:var(--tx3);margin-bottom:20px;display:flex;gap:8px;flex-wrap:wrap}
+  .crumbs a{color:var(--tx3);text-decoration:none}
+  .crumbs a:hover{color:var(--ac)}
+  .crumbs .sep{color:var(--bdr)}
+  .crumbs .here{color:var(--tx2)}
+
+  .author{display:flex;gap:16px;align-items:flex-start;margin-top:44px;padding:24px 26px;
+    background:var(--bg2);border:1px solid var(--bdr)}
+  .author-badge{flex-shrink:0;width:44px;height:44px;border:1px solid var(--ac);color:var(--ac);
+    font-family:var(--mono);font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center}
+  .author-body h3{font-size:14px;font-weight:700;margin-bottom:6px}
+  .author-body p{font-size:13px;color:var(--tx2);line-height:1.7;margin-bottom:0}
+  .author-body a{color:var(--ac);text-decoration:none}
+
+  .article h2{font-size:21px;font-weight:700;letter-spacing:-.3px;margin:40px 0 14px}
+  .article h2 .num{font-family:var(--mono);font-size:13px;color:var(--ac);margin-right:8px}
+  .article p{font-size:15px;color:var(--tx2);line-height:1.85;margin-bottom:18px}
+  .article p strong{color:var(--tx);font-weight:600}
+  .article a{color:var(--ac);text-decoration:none;border-bottom:1px solid rgba(79,142,247,.35)}
+  .article a:hover{border-bottom-color:var(--ac)}
+  .article ul{margin:0 0 18px 18px}
+  .article li{font-size:15px;color:var(--tx2);line-height:1.85;margin-bottom:10px}
+  .article li strong{color:var(--tx);font-weight:600}
+
+  .a-fig{margin:28px 0}
+  .a-fig img{width:100%;height:auto;display:block;border:1px solid var(--bdr)}
+  .a-fig figcaption{font-family:var(--mono);font-size:11px;color:var(--tx3);margin-top:10px;line-height:1.6}
+
+  .qa{font-family:var(--mono);font-size:12.5px;line-height:1.7;margin:14px 0 18px;border:1px solid var(--bdr)}
+  .qa .row{display:flex;gap:10px;padding:10px 14px}
+  .qa .row+.row{border-top:1px solid var(--bg3)}
+  .qa .tag{flex-shrink:0;font-weight:700;width:44px}
+  .qa .good .tag{color:var(--g)}
+  .qa .bad .tag{color:var(--r)}
+  .qa .row span:last-child{color:var(--tx2)}
+
+  .callout{background:var(--bg2);border:1px solid var(--bdr);border-left:2px solid var(--ac);
+    padding:16px 20px;margin:24px 0;font-size:13.5px;color:var(--tx2);line-height:1.75}
+  .callout .c-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;
+    text-transform:uppercase;color:var(--ac);display:block;margin-bottom:8px}
+  .callout b{color:var(--tx)}
+
+  .a-cta{background:var(--bg2);border:1px solid var(--bdr);padding:24px 28px;margin-top:48px}
+  .a-cta .c-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;
+    text-transform:uppercase;color:var(--g);display:block;margin-bottom:10px}
+  .a-cta p{font-size:13.5px;margin-bottom:0}
+
+  .footer{border-top:1px solid var(--bdr);padding:24px 40px;
+    display:flex;align-items:center;justify-content:space-between}
+  .footer-left{font-family:var(--mono);font-size:11px;color:var(--tx3)}
+  .footer-left span{color:var(--ac)}
+  .footer-right{font-size:11px;color:var(--tx3)}
+
+  @media(max-width:800px){.article{padding:40px 24px 60px}.nav{padding:0 24px}}
+
+  /* ── craft pass (site-wide) ── */
+  html{scroll-behavior:smooth}
+  body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+  @media screen{body{background:radial-gradient(circle at 1px 1px,rgba(230,237,243,.022) 1px,transparent 0) 0 0/34px 34px,var(--bg)}}
+  ::selection{background:rgba(79,142,247,.26);color:#fff}
+  a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--ac);outline-offset:3px}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="/">// ab <span>integrity</span></a>
+  <div class="nav-links">
+    <a class="nav-link" href="/">tools</a>
+    <a class="nav-link" href="/analyze">analyze</a>
+    <a class="nav-link active" href="/blog/">blog</a>
+  </div>
+</nav>
+
+<article class="article">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span class="sep">/</span><a href="/blog/">Blog</a><span class="sep">/</span><span class="here">Test validity</span>
+  </nav>
+  <div class="a-meta"><time datetime="2026-07-11">Jul 11, 2026</time><span class="cat">test validity</span><span>5 min read</span></div>
+  <h1>7 questions to ask before you believe an A/B test</h1>
+  <p class="a-standfirst">The deck says +23%, "98% confident", ship it. You didn't run the test and you can't re-derive the math in the meeting. You don't have to. A test that was run honestly survives seven short questions, and a test that wasn't starts wobbling on the second one. Here they are, with what good and bad answers sound like.</p>
+  <div class="a-byline">by Sebastian Zijlstra · <a href="/blog/">more essays</a></div>
+
+  <figure class="a-fig">
+    <img src="/blog/seven-questions.png" width="1200" height="630" alt="Checklist graphic of seven questions to ask before believing an A/B test result: metric chosen in advance, even traffic split, sample size set up front, fixed stopping date, lift after deflation, number of metrics examined, and whether past wins reached revenue." loading="lazy">
+    <figcaption>The seven questions. Two or three of them, asked calmly, are usually enough.</figcaption>
+  </figure>
+
+  <p>None of this requires statistics. Every question below is about process, and process is exactly what a presenter controls. The pattern to watch for is simple: honest testers answer instantly, because they decided these things before the test started. Evasive answers mean the decisions were made after the data came in, and that is where fake winners come from.</p>
+
+  <h2><span class="num">01</span>Was this metric chosen before the test started?</h2>
+  <p>A test is only valid for the question it was designed to answer. If the plan said "conversion rate" and the slide celebrates "revenue per visitor", someone went shopping after the results arrived. Measure enough numbers and one of them will clear the bar by luck alone. <strong>If the headline metric was picked after the data came in, the significance on the slide means nothing.</strong></p>
+  <div class="qa">
+    <div class="row good"><span class="tag">GOOD</span><span>"Yes, it's in the test plan. Here's the doc from before launch."</span></div>
+    <div class="row bad"><span class="tag">BAD</span><span>"We tracked several metrics and this one showed the clearest signal."</span></div>
+  </div>
+  <p>A written plan from before launch is called pre-registration. <a href="/lockbox">Lockbox</a> exists so a team can produce one in five minutes.</p>
+
+  <h2><span class="num">02</span>What were the raw visitor counts per arm?</h2>
+  <p>The platform promised a 50/50 split. Ask for the actual numbers. On tens of thousands of visitors, even 51/49 can be statistically impossible by chance, and it means the assignment itself was broken: bots counted on one side, a redirect dropping people on the other. Every number downstream inherits the break. <strong>A test with a broken split is not a weaker result. It is no result.</strong></p>
+  <div class="qa">
+    <div class="row good"><span class="tag">GOOD</span><span>"24,912 vs 25,090. We ran the SRM check, it passed."</span></div>
+    <div class="row bad"><span class="tag">BAD</span><span>"We'd have to dig that export up."</span></div>
+  </div>
+  <p>SRM stands for sample ratio mismatch. Paste the two counts into the <a href="/aa-validator">Platform Validator</a> and it does the check in seconds.</p>
+
+  <h2><span class="num">03</span>How many visitors did the test need, and who decided that before launch?</h2>
+  <p>Every test needs a minimum amount of traffic to detect the effect it's hunting, decided up front. A test sized by the calendar is almost always undersized, and undersized tests have a nasty property: the only way they reach significance is by getting lucky, so their winners are inflated. <strong>"Two weeks, like always" is a schedule. A schedule is not a sample size.</strong></p>
+  <div class="qa">
+    <div class="row good"><span class="tag">GOOD</span><span>"We needed 18,000 per arm to detect a 10% lift. Here's the calculation."</span></div>
+    <div class="row bad"><span class="tag">BAD</span><span>"We ran it for two sprints."</span></div>
+  </div>
+
+  <h2><span class="num">04</span>Was the stopping date fixed, or did the test end when it looked good?</h2>
+  <p>Results wobble day to day. Check the dashboard every morning and stop the moment it flashes green, and you will catch a lucky peak. Done routinely, this quietly turns a 5% false-alarm rate into roughly one fake winner in four. <strong>Ending a test on its best day manufactures winners out of noise.</strong></p>
+  <div class="qa">
+    <div class="row good"><span class="tag">GOOD</span><span>"Stop rule was written down up front: 4 weeks or 18,000 per arm, whichever came second."</span></div>
+    <div class="row bad"><span class="tag">BAD</span><span>"It hit significance on day 9, so we called it early."</span></div>
+  </div>
+
+  <h2><span class="num">05</span>What does the lift look like after deflation?</h2>
+  <p>Tests that barely clear the significance bar overstate their effect, often by double. This is the winner's curse: when a modest true effect passes a noisy test, it passed because noise flattered it. The +23% on the slide is the flattered version. <strong>The smaller the test, the more the announced number exaggerates reality.</strong></p>
+  <div class="qa">
+    <div class="row good"><span class="tag">GOOD</span><span>"Observed +23%, shrunk estimate +9%. We'd plan revenue on the +9%."</span></div>
+    <div class="row bad"><span class="tag">BAD</span><span>"The tool said 23, we report 23."</span></div>
+  </div>
+  <p>You can run this one yourself in two minutes: put the deck's four numbers into <a href="/reality-check">Reality Check</a> and read the honest estimate.</p>
+
+  <h2><span class="num">06</span>How many metrics and segments were examined?</h2>
+  <p>Twenty metrics at 95% confidence means one false winner is the expected outcome, not the unlucky one. The same goes for segments. A win that only exists for "mobile users, returning, DE market" was usually found by slicing until something turned green. <strong>A win discovered in the eleventh segment is a coincidence with a slide deck.</strong></p>
+  <div class="qa">
+    <div class="row good"><span class="tag">GOOD</span><span>"One primary metric, two guardrails, no segment mining. Segments are exploratory only."</span></div>
+    <div class="row bad"><span class="tag">BAD</span><span>"The overall result was flat, but look at this segment."</span></div>
+  </div>
+
+  <h2><span class="num">07</span>Did last year's wins show up in revenue?</h2>
+  <p>The program-level question, and the one that ends careers of fake winners. Add up every lift announced over the past year and compare it with what the revenue line actually did. If the claims total +40% and revenue moved +4%, the testing program produces announcements. <strong>Wins that never reach the P&amp;L were never wins.</strong></p>
+  <div class="qa">
+    <div class="row good"><span class="tag">GOOD</span><span>"We reconcile claimed lift against actuals quarterly. Here's the ledger."</span></div>
+    <div class="row bad"><span class="tag">BAD</span><span>"Attribution makes that impossible to measure."</span></div>
+  </div>
+  <p>The <a href="/ledger">Program Ledger</a> does this reconciliation from numbers you already have.</p>
+
+  <div class="callout">
+    <span class="c-label">// how to use these</span>
+    Don't read all seven off a list. Pick two or three and ask them calmly. Teams that test honestly answer in one sentence, because the answers existed before the test did. And you can check privately first: paste the deck's numbers into <a href="/analyze">Instant Analysis</a> before the meeting. <b>It runs in your browser and nobody sees you checking.</b>
+  </div>
+
+  <div class="a-cta">
+    <span class="c-label">// the stack</span>
+    <p>Seven free tools for honest ecommerce experimentation: <a href="/aa-validator">platform validation</a>, <a href="/lockbox">pre-registration &amp; sample size</a>, <a href="/survival">survival analysis</a>, <a href="/reality-check">winner deflation</a>, <a href="/receipt">integrity receipts</a>, <a href="/ledger">the program ledger</a>, and <a href="/subscriber-value">subscription valuation</a>. All of it runs in your browser. <a href="/">Explore the stack →</a></p>
+  </div>
+
+  <div class="author">
+    <div class="author-badge">SZ</div>
+    <div class="author-body">
+      <h3>Sebastian Zijlstra</h3>
+      <p>I build tools for ecommerce experimentation that hold up under scrutiny, and write about where A/B testing quietly goes wrong. Everything on this site runs in your browser, free. <a href="/">See the stack</a>, or <a href="https://www.linkedin.com/in/sebastianzijlstra" target="_blank" rel="me noopener">connect on LinkedIn</a>.</p>
+    </div>
+  </div>
+</article>
+
+<footer class="footer">
+  <div class="footer-left">// ab <span>integrity</span> · built for valid ecom research</div>
+  <div class="footer-right">runs in your browser · nothing is uploaded</div>
+</footer>
+
+</body>
+</html>
