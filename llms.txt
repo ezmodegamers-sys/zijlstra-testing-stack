@@ -1,23 +1,23 @@
 # AB Integrity
 
-> Seven free, browser-based A/B testing tools for ecommerce that keep test results honest — useful both for teams running tests and for marketing leaders who receive test results from agencies and want a second opinion. Everything runs client-side: no accounts, no uploads — nothing entered ever leaves the visitor's machine. Built by Sebastian Zijlstra (experimentation & analytics, Sofia, Bulgaria).
+> Seven free, browser-based A/B testing tools for ecommerce that keep test results honest. Useful both for teams running tests and for marketing leaders who receive test results from agencies and want a second opinion. Everything runs client-side: no accounts, no uploads, and nothing entered ever leaves the visitor's machine. Built by Sebastian Zijlstra (experimentation & analytics, Sofia, Bulgaria).
 
 AB Integrity exists because most ecommerce A/B testing quietly fools its own team: metrics picked after seeing results, daily significance peeking, and testing platforms nobody calibrated. These tools apply standard research rigor (pre-registration, SRM checks, Bayesian shrinkage, lift reconciliation) in a form anyone can use.
 
 ## Tools
 
-- [Platform Validator](https://abintegrity.com/aa-validator): Check whether your A/B testing platform tells the truth — sample ratio mismatch (SRM) via chi-squared, asymmetric tracking loss, temporal stability.
-- [Lockbox](https://abintegrity.com/lockbox): Pre-register a test before it runs — sample size calculator (MDE, power), locked hypothesis and stopping rule, peeking detection.
-- [Survival Curves](https://abintegrity.com/survival): Kaplan-Meier time-to-conversion curves with a log-rank test — see how fast each variant converts, not just how many.
-- [Reality Check](https://abintegrity.com/reality-check): Winner's-curse deflation — Bayesian shrinkage of inflated lifts, P(B beats A) under a sceptical prior, honest revenue projection.
-- [Test Receipt](https://abintegrity.com/receipt): A printable, tamper-evident integrity report for a finished test — 7 attestations, weighted A–F grade, SHA-256 fingerprint.
-- [Program Ledger](https://abintegrity.com/ledger): Reconcile claimed cumulative lift against realized revenue — the year-end "did any of it reach the P&L?" question.
+- [Platform Validator](https://abintegrity.com/aa-validator): Check whether your A/B testing platform tells the truth: sample ratio mismatch (SRM) via chi-squared, asymmetric tracking loss, temporal stability.
+- [Lockbox](https://abintegrity.com/lockbox): Pre-register a test before it runs: sample size calculator (MDE, power), locked hypothesis and stopping rule, peeking detection.
+- [Survival Curves](https://abintegrity.com/survival): Kaplan-Meier time-to-conversion curves with a log-rank test. See how fast each variant converts, not just how many.
+- [Reality Check](https://abintegrity.com/reality-check): Winner's-curse deflation: Bayesian shrinkage of inflated lifts, P(B beats A) under a sceptical prior, honest revenue projection.
+- [Test Receipt](https://abintegrity.com/receipt): A printable, tamper-evident integrity report for a finished test: 7 attestations, weighted A–F grade, SHA-256 fingerprint.
+- [Program Ledger](https://abintegrity.com/ledger): Reconcile claimed cumulative lift against realized revenue: the year-end "did any of it reach the P&L?" question.
 - [Subscriber Value](https://abintegrity.com/subscriber-value): Subscription LTV modelling across churn scenarios and value-per-visitor comparison when the test goal is subscriptions.
 - [Instant Analysis](https://abintegrity.com/analyze): Upload a finished test's CSV (Adobe Target, GA, Optimizely, any platform) and get the full verdict in one shot: split fairness, honest lift, what to do next.
 
 ## Learn & Blog
 
-- [Learn A/B testing from zero](https://abintegrity.com/learn/): Interactive lessons — basics, why one test can lie, significance and p-values.
+- [Learn A/B testing from zero](https://abintegrity.com/learn/): Interactive lessons: basics, why one test can lie, significance and p-values.
 - [Calculate a p-value by hand](https://abintegrity.com/learn/calculate-a-p-value-by-hand): The full arithmetic (rates, standard error, z-score, z-table) with a worked example and endless generated practice drills.
 - [Blog](https://abintegrity.com/blog/): Honest, math-backed guides on ecommerce experimentation (e.g. how much traffic you need to A/B test).
 

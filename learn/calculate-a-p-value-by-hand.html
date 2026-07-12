@@ -195,7 +195,7 @@
   </nav>
   <div class="a-meta"><span class="cat">Lesson 04</span><span>Drills</span><span>Bring a calculator</span></div>
   <h1>Calculate a p-value by hand</h1>
-  <p class="standfirst">You've seen the picture in <a href="/learn/significance-and-p-values" style="color:var(--ac)">Lesson 03</a>. Pictures fade. What sticks is doing the arithmetic until it's boring — the same way you learned long division. An A/B test is <strong>four numbers, three formulas, one table lookup</strong>. This page gives you one worked example and then generates fresh problems forever. Do at least five.</p>
+  <p class="standfirst">You've seen the picture in <a href="/learn/significance-and-p-values" style="color:var(--ac)">Lesson 03</a>. Pictures fade. What sticks is doing the arithmetic until it's boring, the same way you learned long division. An A/B test is <strong>four numbers, three formulas, one table lookup</strong>. This page gives you one worked example and then generates fresh problems forever. Do at least five.</p>
 
   <div class="prose">
     <h2>The entire calculation</h2>
@@ -203,22 +203,22 @@
   </div>
 
   <div class="formula">
-<span class="dim">// step 1 — conversion rates (%)</span><br>
+<span class="dim">// step 1 · conversion rates (%)</span><br>
 rate = 100 × conversions ÷ visitors<br><br>
-<span class="dim">// step 2 — the gap (percentage points)</span><br>
+<span class="dim">// step 2 · the gap (percentage points)</span><br>
 gap = rateB − rateA<br><br>
-<span class="dim">// step 3 — the standard error of the gap (pp)</span><br>
+<span class="dim">// step 3 · the standard error of the gap (pp)</span><br>
 SE = √( rateA×(100−rateA)/nA  +  rateB×(100−rateB)/nB )<br><br>
-<span class="dim">// step 4 — the z-score: how many SEs of gap you have</span><br>
+<span class="dim">// step 4 · the z-score: how many SEs of gap you have</span><br>
 z = gap ÷ SE<br><br>
-<span class="dim">// step 5 — the p-value: look |z| up in the table below</span><br>
+<span class="dim">// step 5 · the p-value: look |z| up in the table below</span><br>
 <span class="hi">p &lt; 0.05  (|z| &gt; 1.96)  →  significant</span>
   </div>
 
   <div class="prose">
-    <p>That's it. The SE is the only formula with any meat, and it's just "how much luck-wobble should a gap between these two rates have?" — the same wobble you watched in <a href="/learn/why-one-test-can-lie">Lesson 02</a>, now as a number you can compute. The z-score asks: <strong>is my gap big compared to the wobble?</strong> The p-value converts that to "how often luck alone beats this."</p>
+    <p>That's it. The SE is the only formula with any meat, and it's just "how much luck-wobble should a gap between these two rates have?". That is the same wobble you watched in <a href="/learn/why-one-test-can-lie">Lesson 02</a>, now as a number you can compute. The z-score asks: <strong>is my gap big compared to the wobble?</strong> The p-value converts that to "how often luck alone beats this."</p>
 
-    <h2>Worked example — follow along with a calculator</h2>
+    <h2>Worked example: follow along with a calculator</h2>
   </div>
 
   <div class="worked">
@@ -229,7 +229,7 @@ z = gap ÷ SE<br><br>
       <div class="wstep"><span class="n">03</span><span>SE = <code>√( 4.00×96.00/5000 + 4.90×95.10/5000 )</code> = <code>√( 0.0768 + 0.0932 )</code> = <code>√0.1700</code> = <span class="res">0.412 pp</span></span></div>
       <div class="wstep"><span class="n">04</span><span>z = <code>0.90 ÷ 0.412</code> = <span class="res">2.18</span></span></div>
       <div class="wstep"><span class="n">05</span><span>Table: z = 2.2 → p ≈ <span class="res">0.028</span>. Below 0.05 → <b style="color:var(--g)">significant</b>. Luck beats a 0.90pp gap only ~3% of the time here.</span></div>
-      <div class="wstep"><span class="n">★</span><span>Now the part that makes this worth doing by hand: <b>same rates, but 1,250 visitors per arm.</b> SE doubles to <code>0.825</code> (quarter the traffic → double the wobble), so z = <code>0.90 ÷ 0.825</code> = <b>1.09</b> → p ≈ <b>0.28</b>. <b style="color:var(--y)">Not significant.</b> The gap didn't change — your ability to hear it over the noise did. You just <em>computed</em> the thing Lesson 03 could only show you.</span></div>
+      <div class="wstep"><span class="n">★</span><span>Now the part that makes this worth doing by hand: <b>same rates, but 1,250 visitors per arm.</b> SE doubles to <code>0.825</code> (quarter the traffic → double the wobble), so z = <code>0.90 ÷ 0.825</code> = <b>1.09</b> → p ≈ <b>0.28</b>. <b style="color:var(--y)">Not significant.</b> The gap didn't change. Your ability to hear it over the noise did. You just <em>computed</em> the thing Lesson 03 could only show you.</span></div>
     </div>
   </div>
 
@@ -239,17 +239,17 @@ z = gap ÷ SE<br><br>
     <div class="ztable-scroll">
       <table class="zt" id="ztbl"></table>
     </div>
-    <div class="zt-note">Between rows, take the closer one — drill answers accept small rounding differences. Landmarks worth memorising: <b style="color:var(--tx)">1.96 → 0.05</b> · 2.58 → 0.01 · 3.29 → 0.001.</div>
+    <div class="zt-note">Between rows, take the closer one; drill answers accept small rounding differences. Landmarks worth memorising: <b style="color:var(--tx)">1.96 → 0.05</b> · 2.58 → 0.01 · 3.29 → 0.001.</div>
   </div>
 
   <div class="prose">
     <h2>Now you. Repeatedly.</h2>
-    <p>Fresh numbers every time. Round rates and the gap to <strong>2 decimals</strong>, SE to <strong>3</strong>, z to <strong>2</strong>, and read p from the table. Small rounding differences are accepted. No calculator shame — the point is the <em>procedure</em>, not mental arithmetic.</p>
+    <p>Fresh numbers every time. Round rates and the gap to <strong>2 decimals</strong>, SE to <strong>3</strong>, z to <strong>2</strong>, and read p from the table. Small rounding differences are accepted. No calculator shame. The point is the <em>procedure</em>, not mental arithmetic.</p>
   </div>
 
   <div class="drill">
     <div class="drill-head">
-      <div class="drill-title">// drill machine — new numbers every round</div>
+      <div class="drill-title">// drill machine · new numbers every round</div>
       <div class="drill-score" id="score">solved <b>0</b> · streak <b>0</b></div>
     </div>
     <div class="drill-body">
@@ -272,7 +272,7 @@ z = gap ÷ SE<br><br>
       </div>
 
       <div class="step">
-        <div class="step-head"><span class="step-num">STEP 2</span><span class="step-q">The gap. <code>rateB − rateA</code> (negative is allowed — B can lose)</span></div>
+        <div class="step-head"><span class="step-num">STEP 2</span><span class="step-q">The gap. <code>rateB − rateA</code> (negative is allowed; B can lose)</span></div>
         <div class="step-row">
           <span class="unit">gap =</span><input type="text" id="inGap" inputmode="decimal" placeholder="0.00"><span class="unit">pp</span>
           <button class="btn" onclick="check(2)">Check</button><span class="mark" id="m2"></span>
@@ -327,17 +327,17 @@ z = gap ÷ SE<br><br>
 <span class="dim">// same z you already computed</span><br>
 P(B beats A) ≈ Φ(z) <span class="dim">= the "cumulative" column a fuller z-table gives you</span><br><br>
 z = 2.18 → Φ(z) ≈ 0.985 → <span class="hi">~98.5% chance B really is better</span><br>
-z = 1.09 → Φ(z) ≈ 0.86&nbsp; → 86% — promising, far from proof
+z = 1.09 → Φ(z) ≈ 0.86&nbsp; → 86%, promising but far from proof
   </div>
 
   <div class="prose">
     <p>Same four numbers, same z. The frequentist p asks "how often would luck fake this?"; the Bayesian number asks "given what I saw, how likely is B better?". <strong>Both are one division and one table away from your raw counts.</strong> Anyone who makes either sound like wizardry is selling something.</p>
-    <p>Honesty note: the drill uses the unpooled SE, the version <a href="/reality-check">Reality Check</a> uses. Textbooks often pool the rates under the null first — the answers differ in the third decimal and never in the verdict. And the Φ(z) shortcut assumes a flat prior; a sceptical prior (the honest choice for ecommerce, see the tool) pulls that 98.5% down.</p>
+    <p>Honesty note: the drill uses the unpooled SE, the version <a href="/reality-check">Reality Check</a> uses. Textbooks often pool the rates under the null first; the answers differ in the third decimal and never in the verdict. And the Φ(z) shortcut assumes a flat prior; a sceptical prior (the honest choice for ecommerce, see the tool) pulls that 98.5% down.</p>
   </div>
 
   <div class="callout">
     <span class="c-label">// the one takeaway</span>
-    A p-value is not an oracle's pronouncement. It is <b>rate, gap, wobble, ratio, lookup</b> — five lines of arithmetic you have now done yourself. When a dashboard flashes "significant!", you know exactly what tiny calculation produced that word, and exactly how little it promises: <b>rarely luck</b>. Not big. Not guaranteed. Just rarely luck.
+    A p-value is not an oracle's pronouncement. It is <b>rate, gap, wobble, ratio, lookup</b>: five lines of arithmetic you have now done yourself. When a dashboard flashes "significant!", you know exactly what tiny calculation produced that word, and exactly how little it promises: <b>rarely luck</b>. Not big. Not guaranteed. Just rarely luck.
   </div>
 
   <div class="a-cta">
@@ -422,13 +422,13 @@ function near(val,target,tol){return isFinite(val)&&Math.abs(val-target)<=tol;}
 function num(id){return parseFloat(($(id).value||'').replace(',','.'));}
 function mark(i,ok,msgOk,msgBad){
   var m=$('m'+i);
-  m.textContent=ok?(msgOk||'✓ correct'):(msgBad||'✕ not quite — try again');
+  m.textContent=ok?(msgOk||'✓ correct'):(msgBad||'✕ not quite, try again');
   m.className='mark '+(ok?'ok':'bad');
   stepDone[i-1]=ok;
   if(ok&&stepDone.every(Boolean)){
     solved++;streak++;
     $('score').innerHTML='solved <b>'+solved+'</b> · streak <b>'+streak+'</b>';
-    $('doneMsg').textContent=solved>=5?'✓ that’s '+solved+' — the fog should be lifting. Keep going or move on.':'✓ full problem solved — hit "New problem"';
+    $('doneMsg').textContent=solved>=5?'✓ that’s '+solved+'. The fog should be lifting. Keep going or move on.':'✓ full problem solved. Hit "New problem"';
   }
 }
 window.setVerdict=function(v){
@@ -440,7 +440,7 @@ window.check=function(step){
   if(!cur)return;
   if(step===1){
     var okA=near(num('inRA'),cur.rA,0.011), okB=near(num('inRB'),cur.rB,0.011);
-    mark(1,okA&&okB, null, okA? '✕ B is off':'✕ A is off — rate = 100×conv÷visitors');
+    mark(1,okA&&okB, null, okA? '✕ B is off':'✕ A is off. rate = 100×conv÷visitors');
   }
   if(step===2){ mark(2, near(num('inGap'),cur.gap,0.021)); }
   if(step===3){ mark(3, near(num('inSE'),cur.se,0.02), null, '✕ check: rA(100−rA)/n + rB(100−rB)/n, then √'); }
@@ -450,7 +450,7 @@ window.check=function(step){
     if(cur.p<0.001) okP = num('inP')<=0.002;   // "<0.001" answers
     var okV=(verdictPick===(cur.sig?1:0));
     mark(5, okP&&okV, cur.sig?'✓ significant':'✓ not significant',
-      okP?'✕ right p, wrong call — the line is 0.05':'✕ p is off — round |z| to one decimal, read the table');
+      okP?'✕ right p, wrong call. The line is 0.05':'✕ p is off. Round |z| to one decimal, read the table');
   }
   if(streak>0&&!stepDone.every(Boolean)){/* streak only breaks on reveal */}
 };
