@@ -178,7 +178,7 @@
       <div class="drop-sub">Needs a row per variant with visitors and conversions. Revenue optional. We read the columns for you.</div>
       <div class="drop-actions">
         <label class="btn btn-p">Choose file<input type="file" id="file" accept=".csv,.tsv,.txt" style="display:none"></label>
-        <button class="btn btn-ghost" id="example">Load example data</button>
+        <button class="btn btn-ghost" id="example">Try it with sample data</button>
       </div>
       <div class="or">or paste it below</div>
       <textarea class="paste" id="paste" placeholder="Experience, Visitors, Orders, Revenue&#10;Control (A), 24817, 612, 45900&#10;Variant (B), 24693, 689, 52130"></textarea>
@@ -219,7 +219,7 @@
 </section>
 
 <footer style="max-width:900px;margin:56px auto 0;padding:26px 40px;border-top:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
-  <div style="font-family:var(--sans);font-size:13px;color:var(--tx3)">AB Integrity · <a href="https://www.linkedin.com/in/sebastianzijlstra" target="_blank" rel="me noopener" style="color:var(--ac);text-decoration:none">LinkedIn ↗</a></div>
+  <div style="font-family:var(--sans);font-size:13px;color:var(--tx3)">AB Integrity · <a href="https://www.linkedin.com/in/sebastianzijlstra" target="_blank" rel="me noopener" style="color:var(--ac);text-decoration:none">LinkedIn ↗</a> · <a href="/privacy" style="color:var(--tx3);text-decoration:none">Privacy</a></div>
   <div style="font-family:var(--mono);font-size:11px;color:var(--tx3)">runs in your browser · nothing is uploaded</div>
 </footer>
 
@@ -472,7 +472,8 @@
   $('analyzePaste').addEventListener('click',function(){ ingest($('paste').value); });
   $('example').addEventListener('click',function(){
     var demo='Experience,Visitors,Orders,Revenue\nControl (A),24817,612,45900.00\nVariant (B),24693,689,52130.25';
-    $('paste').value=demo; ingest(demo);
+    $('paste').value=demo; ingest(demo); analyze();
+    $('report').scrollIntoView({block:'start'});
   });
   $('run').addEventListener('click',analyze);
   $('reset').addEventListener('click',resetAll);

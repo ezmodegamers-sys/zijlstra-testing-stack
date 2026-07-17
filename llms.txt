@@ -19,6 +19,7 @@ AB Integrity exists because most ecommerce A/B testing quietly fools its own tea
 
 - [Learn A/B testing from zero](https://abintegrity.com/learn/): Interactive lessons: basics, why one test can lie, significance and p-values.
 - [Calculate a p-value by hand](https://abintegrity.com/learn/calculate-a-p-value-by-hand): The full arithmetic (rates, standard error, z-score, z-table) with a worked example and endless generated practice drills.
+- [7-questions checklist (PDF)](https://abintegrity.com/ab-test-checklist.pdf): One-page printable checklist for judging any A/B test result.
 - [Blog](https://abintegrity.com/blog/): Honest, math-backed guides on ecommerce experimentation (e.g. how much traffic you need to A/B test).
 
 ## About

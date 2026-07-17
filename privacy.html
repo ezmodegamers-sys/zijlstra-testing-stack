@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Privacy — AB Integrity</title>
+<meta name="description" content="What AB Integrity knows about you, which is almost nothing. No accounts, no cookies from us, nothing you enter ever leaves your browser. The full privacy note fits on one screen.">
+<link rel="canonical" href="https://abintegrity.com/privacy">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AB Integrity">
+<meta property="og:title" content="Privacy — AB Integrity">
+<meta property="og:description" content="No accounts, no cookies from us, nothing you enter ever leaves your browser. The full privacy note fits on one screen.">
+<meta property="og:url" content="https://abintegrity.com/privacy">
+<meta property="og:image" content="https://abintegrity.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://abintegrity.com/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0E13;--bg2:#131820;--bg3:#1a2029;--bdr:#242b35;--bdr2:#2e3641;
+    --tx:#EEF2F7;--tx2:#9AA5B3;--tx3:#616b78;
+    --ac:#5B9CFF;--g:#3FB950;
+    --display:'Bricolage Grotesque',sans-serif;--sans:'Inter',sans-serif;--mono:'JetBrains Mono',monospace;
+    --edge:1120px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--tx);font-family:var(--sans);line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+
+  .nav{position:sticky;top:0;z-index:100;background:rgba(11,14,19,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--bdr)}
+  .nav-inner{max-width:var(--edge);margin:0 auto;padding:0 48px;height:66px;display:flex;align-items:center;justify-content:space-between}
+  .brand{display:flex;align-items:center;gap:11px;text-decoration:none}
+  .brand-mark{width:31px;height:31px;flex-shrink:0;display:block}
+  .brand-text{display:flex;flex-direction:column;line-height:1}
+  .brand-name{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:-.02em;color:var(--tx)}
+  .brand-name span{color:var(--ac)}
+  .brand-sub{font-family:var(--mono);font-size:8.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--tx3);margin-top:4px}
+  .nav-links{display:flex;gap:30px;align-items:center}
+  .nav-links a{font-family:var(--sans);font-size:15px;font-weight:500;color:var(--tx2);text-decoration:none;transition:color .15s}
+  .nav-links a:hover{color:var(--tx)}
+  @media(max-width:560px){.brand-text{display:none}.nav-links{gap:16px}.nav-links a.hide-sm{display:none}}
+
+  .page{max-width:720px;margin:0 auto;padding:64px 48px 0}
+  .kicker{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ac);margin-bottom:18px;display:flex;align-items:center;gap:11px}
+  .kicker::before{content:"";width:24px;height:1px;background:var(--ac);opacity:.7}
+  h1{font-family:var(--display);font-weight:800;font-size:clamp(38px,5vw,56px);letter-spacing:-.035em;line-height:.98;color:var(--tx);margin-bottom:26px}
+  .page p{font-size:16.5px;line-height:1.7;color:var(--tx2);margin-bottom:20px;max-width:62ch}
+  .page strong{color:var(--tx);font-weight:600}
+  .page a{color:var(--ac);text-decoration:none}
+  .fact{border-left:2px solid var(--g);background:var(--bg2);border-top:1px solid var(--bdr);border-right:1px solid var(--bdr);border-bottom:1px solid var(--bdr);padding:14px 18px;margin:22px 0;font-size:15px;color:var(--tx2);line-height:1.7}
+  .fact b{color:var(--tx)}
+
+  .footer{max-width:var(--edge);margin:72px auto 0;padding:26px 48px;border-top:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .footer .fl{font-family:var(--sans);font-size:13px;color:var(--tx3)}
+  .footer .fl a{color:var(--ac);text-decoration:none}
+  .footer .fr{font-family:var(--mono);font-size:11px;color:var(--tx3)}
+  @media(max-width:860px){.nav-inner,.page,.footer{padding-left:26px;padding-right:26px}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/" aria-label="AB Integrity — ecommerce A/B testing">
+      <svg class="brand-mark" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="1.25" y="1.25" width="29.5" height="29.5" rx="7.5" fill="var(--bg2)" stroke="var(--bdr2)" stroke-width="1.3"/>
+        <rect x="8.5" y="16" width="5.5" height="8" rx="1.2" fill="var(--tx3)"/>
+        <rect x="18" y="8.5" width="5.5" height="15.5" rx="1.2" fill="var(--ac)"/>
+      </svg>
+      <span class="brand-text">
+        <span class="brand-name">AB <span>Integrity</span></span>
+        <span class="brand-sub">Ecommerce A/B testing</span>
+      </span>
+    </a>
+    <div class="nav-links">
+      <a href="/">Tools</a>
+      <a href="/analyze">Analyze</a>
+      <a class="hide-sm" href="/learn/">Learn</a>
+      <a href="/blog/">Blog</a>
+      <a href="/about">About</a>
+    </div>
+  </div>
+</nav>
+
+<section class="page">
+  <div class="kicker">// privacy</div>
+  <h1>What we know about you</h1>
+  <p><strong>Almost nothing, by design.</strong> The tools on this site run entirely in your browser. The numbers you type or the files you drop are processed on your machine and never sent to a server. There are no accounts, no signup walls, and we set no cookies.</p>
+  <div class="fact"><b>The practical consequence:</b> you can paste real client data, real revenue numbers, or an agency's raw export into any tool here without asking anyone's permission. We couldn't read it if we wanted to.</div>
+  <p>For traffic counts we use <strong>Cloudflare Web Analytics</strong>, which is cookieless and doesn't profile visitors. It tells us aggregate things like how many people visited a page and from which country, and nothing about who you are.</p>
+  <p>Two standard exceptions, in the interest of honesty: the site is hosted on <strong>Cloudflare Pages</strong>, which like every host keeps routine server logs, and fonts load from <strong>Google Fonts</strong>, so your browser makes a request to Google's servers when a page loads. Neither involves anything you type into the tools.</p>
+  <p>Questions? Ask directly: <a href="https://www.linkedin.com/in/sebastianzijlstra" target="_blank" rel="me noopener">Sebastian on LinkedIn ↗</a>.</p>
+</section>
+
+<footer class="footer">
+  <div class="fl">AB Integrity · <a href="https://www.linkedin.com/in/sebastianzijlstra" target="_blank" rel="me noopener">LinkedIn ↗</a> · <a href="/privacy" style="color:var(--tx3)">Privacy</a></div>
+  <div class="fr">runs in your browser · nothing is uploaded</div>
+</footer>
+
+</body>
+</html>
