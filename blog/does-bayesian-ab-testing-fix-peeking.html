@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Does Bayesian A/B testing fix peeking? — AB Integrity</title>
+<meta name="description" content="Your agency says peeking is fine because the tool is Bayesian. An A/A simulation of 20,000 tests shows a default prior peeks about as badly as a p-value does.">
+<link rel="canonical" href="https://abintegrity.com/blog/does-bayesian-ab-testing-fix-peeking">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="AB Integrity">
+<meta property="og:title" content="Does Bayesian A/B testing fix peeking?">
+<meta property="og:description" content="An A/A simulation of 20,000 tests: with a default flat prior, a Bayesian tool declares a fake winner 31.7% of the time after 50 peeks. The prior does the protecting, not the label.">
+<meta property="og:url" content="https://abintegrity.com/blog/does-bayesian-ab-testing-fix-peeking">
+<meta property="og:image" content="https://abintegrity.com/blog/peeking-false-alarms.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://abintegrity.com/blog/peeking-false-alarms.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting",
+ "headline":"Does Bayesian A/B testing fix peeking?",
+ "datePublished":"2026-07-19","dateModified":"2026-07-19",
+ "author":{"@type":"Person","name":"Sebastian Zijlstra","url":"https://abintegrity.com/","sameAs":"https://www.linkedin.com/in/sebastianzijlstra"},
+ "publisher":{"@type":"Organization","name":"AB Integrity","url":"https://abintegrity.com/"},
+ "mainEntityOfPage":"https://abintegrity.com/blog/does-bayesian-ab-testing-fix-peeking",
+ "image":"https://abintegrity.com/blog/peeking-false-alarms.png"}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList",
+ "itemListElement":[
+   {"@type":"ListItem","position":1,"name":"Home","item":"https://abintegrity.com/"},
+   {"@type":"ListItem","position":2,"name":"Blog","item":"https://abintegrity.com/blog/"},
+   {"@type":"ListItem","position":3,"name":"Does Bayesian A/B testing fix peeking?","item":"https://abintegrity.com/blog/does-bayesian-ab-testing-fix-peeking"}
+ ]}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0B0E13;--bg2:#131820;--bg3:#1a2029;
+    --bdr:#242b35;
+    --tx:#EEF2F7;--tx2:#9AA5B3;--tx3:#616b78;
+    --ac:#5B9CFF;--g:#3FB950;--r:#F85149;--y:#D8A62B;--o:#F0883E;--p:#BC8CFF;
+    --bdr2:#2e3641;--display:'Bricolage Grotesque',sans-serif;--mono:'JetBrains Mono',monospace;--sans:'Inter',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{min-height:100vh;background:var(--bg);color:var(--tx);font-family:var(--sans)}
+
+  .nav{position:sticky;top:0;z-index:100;background:rgba(11,14,19,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--bdr)}
+  .nav-inner{max-width:1120px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .brand{display:flex;align-items:center;gap:11px;text-decoration:none}
+  .brand-mark{width:30px;height:30px;flex-shrink:0;display:block}
+  .brand-text{display:flex;flex-direction:column;line-height:1}
+  .brand-name{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:-.02em;color:var(--tx)}
+  .brand-name span{color:var(--ac)}
+  .brand-sub{font-family:var(--mono);font-size:8.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--tx3);margin-top:4px;white-space:nowrap}
+  .nav-links{display:flex;gap:26px;align-items:center}
+  .nav-links a{font-family:var(--sans);font-size:14px;font-weight:500;color:var(--tx2);text-decoration:none;transition:color .15s}
+  .nav-links a:hover{color:var(--tx)}
+  .nav-links a.active{color:var(--tx);font-weight:600}
+  @media(max-width:560px){.brand-text{display:none}.nav-links{gap:16px}.nav-links a.hide-sm{display:none}}
+
+  .article{max-width:720px;margin:0 auto;padding:56px 40px 80px}
+  .a-meta{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1.5px;
+    text-transform:uppercase;color:var(--tx3);margin-bottom:18px;display:flex;gap:14px;flex-wrap:wrap}
+  .a-meta .cat{color:var(--o)}
+  h1{font-size:clamp(28px,4.5vw,44px);font-weight:900;letter-spacing:-1px;line-height:1.12;margin-bottom:14px}
+  .a-standfirst{font-size:16px;color:var(--tx2);line-height:1.7;margin-bottom:36px}
+  .a-byline{font-family:var(--mono);font-size:11px;color:var(--tx3);padding-bottom:28px;border-bottom:1px solid var(--bdr);margin-bottom:36px}
+  .a-byline a{color:var(--ac);text-decoration:none}
+
+  .crumbs{font-family:var(--mono);font-size:11px;color:var(--tx3);margin-bottom:20px;display:flex;gap:8px;flex-wrap:wrap}
+  .crumbs a{color:var(--tx3);text-decoration:none}
+  .crumbs a:hover{color:var(--ac)}
+  .crumbs .sep{color:var(--bdr)}
+  .crumbs .here{color:var(--tx2)}
+
+  .author{display:flex;gap:16px;align-items:flex-start;margin-top:44px;padding:24px 26px;
+    background:var(--bg2);border:1px solid var(--bdr)}
+  .author-badge{flex-shrink:0;width:44px;height:44px;border:1px solid var(--ac);color:var(--ac);
+    font-family:var(--mono);font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center}
+  .author-body h3{font-size:14px;font-weight:700;margin-bottom:6px}
+  .author-body p{font-size:13px;color:var(--tx2);line-height:1.7;margin-bottom:0}
+  .author-body a{color:var(--ac);text-decoration:none}
+
+  .article h2{font-size:21px;font-weight:700;letter-spacing:-.3px;margin:40px 0 14px}
+  .article h2 .num{font-family:var(--mono);font-size:13px;color:var(--ac);margin-right:8px}
+  .article p{font-size:15px;color:var(--tx2);line-height:1.85;margin-bottom:18px}
+  .article p strong{color:var(--tx);font-weight:600}
+  .article a{color:var(--ac);text-decoration:none;border-bottom:1px solid rgba(91,156,255,.35)}
+  .article a:hover{border-bottom-color:var(--ac)}
+  .article ul{margin:0 0 18px 18px}
+  .article li{font-size:15px;color:var(--tx2);line-height:1.85;margin-bottom:10px}
+  .article li strong{color:var(--tx);font-weight:600}
+
+  .a-fig{margin:28px 0}
+  .a-fig img{width:100%;height:auto;display:block;border:1px solid var(--bdr)}
+  .a-fig figcaption{font-family:var(--mono);font-size:11px;color:var(--tx3);margin-top:10px;line-height:1.6}
+
+  .callout{background:var(--bg2);border:1px solid var(--bdr);border-left:2px solid var(--ac);
+    padding:16px 20px;margin:24px 0;font-size:13.5px;color:var(--tx2);line-height:1.75}
+  .callout .c-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;
+    text-transform:uppercase;color:var(--ac);display:block;margin-bottom:8px}
+
+  .a-cta{background:var(--bg2);border:1px solid var(--bdr);padding:24px 28px;margin-top:48px}
+  .a-cta .c-label{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:2px;
+    text-transform:uppercase;color:var(--g);display:block;margin-bottom:10px}
+  .a-cta p{font-size:13.5px;margin-bottom:0}
+
+  .footer{border-top:1px solid var(--bdr);padding:24px 40px;
+    display:flex;align-items:center;justify-content:space-between}
+  .footer-left{font-family:var(--mono);font-size:11px;color:var(--tx3)}
+  .footer-left span{color:var(--ac)}
+  .footer-right{font-size:11px;color:var(--tx3)}
+
+  @media(max-width:800px){.article{padding:40px 24px 60px}.nav{padding:0 24px}}
+
+  /* ── craft pass (site-wide) ── */
+  html{scroll-behavior:smooth}
+  body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+  @media screen{body{background:radial-gradient(circle at 1px 1px,rgba(238,242,247,.022) 1px,transparent 0) 0 0/34px 34px,var(--bg)}}
+  ::selection{background:rgba(91,156,255,.26);color:#fff}
+  a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--ac);outline-offset:3px}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+  h1{font-family:var(--display);font-weight:800;letter-spacing:-.03em}
+  .hero-title,.feature-title{font-family:var(--display);font-weight:800;letter-spacing:-.02em}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/" aria-label="AB Integrity — ecommerce A/B testing">
+      <svg class="brand-mark" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="1.25" y="1.25" width="29.5" height="29.5" rx="7.5" fill="var(--bg2)" stroke="var(--bdr2)" stroke-width="1.3"/>
+        <rect x="8.5" y="16" width="5.5" height="8" rx="1.2" fill="var(--tx3)"/>
+        <rect x="18" y="8.5" width="5.5" height="15.5" rx="1.2" fill="var(--ac)"/>
+      </svg>
+      <span class="brand-text">
+        <span class="brand-name">AB <span>Integrity</span></span>
+        <span class="brand-sub">Ecommerce A/B testing</span>
+      </span>
+    </a>
+    <div class="nav-links">
+      <a href="/">Tools</a>
+      <a href="/analyze">Analyze</a>
+      <a class="hide-sm" href="/learn/">Learn</a>
+      <a class="active" href="/blog/">Blog</a>
+      <a href="/about">About</a>
+    </div>
+  </div>
+</nav>
+
+<article class="article">
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/">Home</a><span class="sep">/</span><a href="/blog/">Blog</a><span class="sep">/</span><span class="here">Stopping rules</span>
+  </nav>
+  <div class="a-meta"><time datetime="2026-07-19">Jul 19, 2026</time><span class="cat">stopping rules</span><span>5 min read</span></div>
+  <h1>Does Bayesian A/B testing fix peeking?</h1>
+  <p class="a-standfirst">You question a result that landed suspiciously fast, and the answer comes back in one line: our platform is Bayesian, so checking early is fine. That answer is half right. The missing half is the half that decides whether your winner is real.</p>
+  <div class="a-byline">by Sebastian Zijlstra · <a href="/blog/">more essays</a></div>
+
+  <p>The Bayesian defence of peeking is not marketing nonsense. There is a genuine mathematical result underneath it, and the people repeating it are usually repeating something true. The trouble starts when that result gets stretched to cover a decision it was never about. Since almost nobody checks which version their tool actually implements, I ran the simulation instead of arguing about it.</p>
+
+  <h2><span class="num">01</span>What peeking costs you</h2>
+  <p><strong>Peeking means looking at a running test and stopping it the moment the numbers look good.</strong> Every look is a fresh opportunity for random noise to wander across your threshold. Do it once and you get the false alarm rate you signed up for. Do it thirty times and you have given luck thirty chances to fool you, while still reporting the number you would have earned from a single honest look.</p>
+  <p>To measure it, I ran an A/A test: two identical versions, 2.5% conversion, 20,000 visitors per arm, so any winner is fake by construction. Then I varied how often the tester peeked, across 20,000 simulated experiments per setting.</p>
+
+  <figure class="a-fig">
+    <img src="/blog/peeking-false-alarms.png" width="1200" height="630" alt="Line chart from an A/A simulation of 20,000 identical-page tests showing false alarm rate rising with the number of peeks. A frequentist rule stopping at p below 0.05 climbs from 4.8 percent at one look to 31.9 percent at fifty looks. A Bayesian rule with a default flat prior tracks it almost exactly, reaching 31.7 percent. A Bayesian rule with an informative prior stays flat, rising only from 1.6 percent to 4.1 percent." loading="lazy">
+    <figcaption>A/A simulation, both arms at 2.5% conversion, 20,000 visitors per arm, 20,000 runs per setting. Bayesian probabilities computed with a normal approximation to the Beta posterior. The frequentist column reproduces the classic Armitage repeated-significance figures (14.2% at five looks, 19.4% at ten, 24.6% at twenty), which is the check that the rest of the chart is trustworthy.</figcaption>
+  </figure>
+
+  <p>One look gives you the 4.8% you expected. Ten looks gives you 19.4%. Fifty looks gives you 31.9%. <strong>A third of tests between two identical pages will hand you a winner if you check often enough and stop when you like what you see.</strong></p>
+
+  <h2><span class="num">02</span>The part the vendors get right</h2>
+  <p>A frequentist p-value carries an assumption about when you were going to stop. Fix a sample size, then break that promise by stopping early, and the number stops meaning what the textbook says it means. A Bayesian posterior works differently. A <strong>prior</strong> is what you believed about the conversion rate before the data arrived, and a <strong>posterior</strong> is that belief after the data updates it. The posterior describes the evidence you are holding right now, at whatever sample size you happen to be at, with no promise about a finish line baked in. Under the likelihood principle it does not depend on why you stopped collecting.</p>
+  <p>So the vendor claim that a Bayesian number stays meaningful when you look at it early is correct. <strong>The posterior really is interpretable at any moment.</strong> That is a real property and a real advantage.</p>
+
+  <h2><span class="num">03</span>The part they leave out</h2>
+  <p>Interpretable at any moment is a weaker claim than safe to stop at any moment, and the gap between those two is where the money goes missing. A posterior that is valid at every look says nothing about what happens when your <em>decision rule</em> is "keep looking until one of these numbers crosses 95%, then stop." That rule is optional stopping, and optional stopping is exactly what inflates false alarms.</p>
+  <p>The purple line in the chart is a Bayesian test with the default flat prior that most tools ship with, stopped the moment the probability of being better crossed the threshold. It reaches 31.7% at fifty peeks. The frequentist rule reaches 31.9%. <strong>They are the same line, because with a flat prior the posterior is doing nearly the same arithmetic as the p-value it replaced.</strong> Swapping the label on the number changes nothing about the discipline of when you stop looking.</p>
+  <p>There is a sharper version of this. With a flat or uninformative prior and no fixed horizon, you can be guaranteed to eventually cross any threshold you pick, even when there is no effect at all. Statisticians call it sampling to a foregone conclusion. Keep peeking long enough and the tool will always find you a winner.</p>
+
+  <h2><span class="num">04</span>What actually protects you</h2>
+  <p>The green line is also Bayesian, with the same threshold and the same peeking. It barely moves: 1.6% at one look, 4.1% after fifty. The only change is the prior, which now carries real information about where the conversion rate sits rather than treating every rate from 0% to 100% as equally plausible. A prior that knows something pulls wild early swings back toward reality, so noise struggles to reach the threshold at all.</p>
+  <p>That protection is bought, not free. Notice the green line starts at 1.6% rather than 4.8%, which means it is a more conservative test that will also be slower to confirm real wins. That is the trade, and it is a reasonable one to make deliberately.</p>
+  <p>So the frequentist and Bayesian labels are not what separates the safe line from the dangerous ones. <a href="/learn/significance-and-p-values">What your significance number means</a> matters less here than what your tool does about continuous monitoring. What genuinely helps: a prior that carries information, a sequential method built for repeated looks, or a stopping point written down before the test starts.</p>
+
+  <div class="callout">
+    <span class="c-label">// what to ask</span>
+    When someone tells you peeking is fine because the tool is Bayesian, there is one follow-up: which prior, and what is the stopping rule? A default flat prior with "stop when it hits 95%" is the purple line. If nobody can answer, treat the win rate with the suspicion you would apply to a p-value from a test that was checked every morning.
+  </div>
+
+  <h2><span class="num">05</span>Before the next test</h2>
+  <p>All of this is decided before the test runs, which is the inconvenient part. <a href="/lockbox">Lockbox</a> pins your metric, sample size, and stopping rule up front, so peeking has nowhere to go regardless of which statistical engine sits underneath. If you are holding a marginal winner right now that was called early, <a href="/reality-check">Reality Check</a> will deflate it to an honest estimate before you present it. And if you want to know whether your platform behaves the way it claims, <a href="/aa-validator">the A/A validator</a> runs the experiment I ran above against your own tool.</p>
+  <p>The question worth carrying into the next readout is short. When did everyone agree to stop looking, and was that written down before the test started?</p>
+
+  <div class="a-cta">
+    <span class="c-label">// the stack</span>
+    <p>Seven free tools for honest ecommerce experimentation: <a href="/aa-validator">platform validation</a>, <a href="/lockbox">pre-registration &amp; sample size</a>, <a href="/survival">survival analysis</a>, <a href="/reality-check">winner deflation</a>, <a href="/receipt">integrity receipts</a>, <a href="/ledger">the program ledger</a>, and <a href="/subscriber-value">subscription valuation</a>. All of it runs in your browser. <a href="/">Explore the stack →</a></p>
+  </div>
+
+  <div class="author">
+    <div class="author-badge">SZ</div>
+    <div class="author-body">
+      <h3>Sebastian Zijlstra</h3>
+      <p>I build tools for ecommerce experimentation that hold up under scrutiny, and write about where A/B testing quietly goes wrong. Everything on this site runs in your browser, free. <a href="/">See the stack</a>, or <a href="https://www.linkedin.com/in/sebastianzijlstra" target="_blank" rel="me noopener">connect on LinkedIn</a>.</p>
+    </div>
+  </div>
+</article>
+
+<footer style="max-width:1120px;margin:56px auto 0;padding:26px 24px;border-top:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+  <div style="font-family:var(--sans);font-size:13px;color:var(--tx3)">AB Integrity · <a href="https://www.linkedin.com/in/sebastianzijlstra" target="_blank" rel="me noopener" style="color:var(--ac);text-decoration:none">LinkedIn ↗</a> · <a href="/privacy" style="color:var(--tx3);text-decoration:none">Privacy</a></div>
+  <div style="font-family:var(--mono);font-size:11px;color:var(--tx3)">runs in your browser · nothing is uploaded</div>
+</footer>
+
+</body>
+</html>
