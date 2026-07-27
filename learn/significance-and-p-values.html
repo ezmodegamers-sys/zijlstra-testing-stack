@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="theme-color" content="#F6F7FB">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Statistical Significance & the P-Value, Explained Simply | AB Integrity</title>
 <meta name="description" content="What a p-value actually means, with an interactive picture. See significance as the shaded tail of a bell curve, learn the 0.05 rule, and the three things a p-value is NOT. Beginner-friendly, no formulas to memorize.">
@@ -40,21 +41,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0B0E13;--bg2:#131820;--bg3:#1a2029;--bdr:#242b35;
-    --tx:#EEF2F7;--tx2:#9AA5B3;--tx3:#616b78;
-    --ac:#5B9CFF;--g:#3FB950;--r:#F85149;--y:#D8A62B;--o:#F0883E;--p:#BC8CFF;--t:#2DD4BF;
-    --bdr2:#2e3641;--display:'Bricolage Grotesque',sans-serif;--mono:'JetBrains Mono',monospace;--sans:'Inter',sans-serif;
+    --bg:#F6F7FB;--bg2:#FFFFFF;--bg3:#EEF1F8;--bdr:#E2E7F0;
+    --tx:#0A0D13;--tx2:#4A5361;--tx3:#646D7B;
+    --ac:#0B5BFF;--g:#0F9A57;--r:#DC2626;--y:#A8760A;--o:#E0640B;--p:#7B3FE4;--t:#0D9488;
+    --bdr2:#CFD7E4;--display:'Bricolage Grotesque',sans-serif;--mono:'JetBrains Mono',monospace;--sans:'Inter',sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   html,body{min-height:100vh;background:var(--bg);color:var(--tx);font-family:var(--sans)}
   body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
-    background:radial-gradient(circle at 1px 1px,rgba(238,242,247,.022) 1px,transparent 0) 0 0/34px 34px,var(--bg)}
-  ::selection{background:rgba(91,156,255,.26);color:#fff}
+    background:radial-gradient(circle at 1px 1px,rgba(10,13,19,.03) 1px,transparent 0) 0 0/34px 34px,var(--bg)}
+  ::selection{background:rgba(11,91,255,.26);color:#fff}
   a:focus-visible,button:focus-visible{outline:2px solid var(--ac);outline-offset:3px}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
-  .nav{position:sticky;top:0;z-index:100;background:rgba(11,14,19,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--bdr)}
+  .nav{position:sticky;top:0;z-index:100;background:rgba(246,247,251,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--bdr)}
   .nav-inner{max-width:1120px;margin:0 auto;padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;gap:16px}
   .brand{display:flex;align-items:center;gap:11px;text-decoration:none}
   .brand-mark{width:30px;height:30px;flex-shrink:0;display:block}
@@ -83,7 +84,7 @@
   .prose p{font-size:15px;color:var(--tx2);line-height:1.85;margin-bottom:18px}
   .prose p strong{color:var(--tx);font-weight:600}
   .prose h2{font-size:20px;font-weight:700;letter-spacing:-.3px;margin:36px 0 14px}
-  .prose a{color:var(--ac);text-decoration:none;border-bottom:1px solid rgba(91,156,255,.35)}
+  .prose a{color:var(--ac);text-decoration:none;border-bottom:1px solid rgba(11,91,255,.35)}
   .prose a:hover{border-bottom-color:var(--ac)}
 
   .def{background:var(--bg2);border:1px solid var(--bdr);border-left:2px solid var(--t);padding:14px 18px;margin:20px 0}
@@ -120,8 +121,8 @@
   .ro-card{background:var(--bg);border:1px solid var(--bdr);padding:14px 16px}
   .ro-num{font-family:var(--mono);font-size:26px;font-weight:700;line-height:1;margin-bottom:5px}
   .ro-lbl{font-size:11px;color:var(--tx3);line-height:1.45}
-  .ro-card.verdict-sig{border-color:rgba(63,185,80,.4);background:rgba(63,185,80,.06)}
-  .ro-card.verdict-no{border-color:rgba(210,153,34,.35);background:rgba(210,153,34,.05)}
+  .ro-card.verdict-sig{border-color:rgba(15,154,87,.4);background:rgba(15,154,87,.06)}
+  .ro-card.verdict-no{border-color:rgba(168,118,10,.35);background:rgba(168,118,10,.05)}
   .ro-plain{font-size:13.5px;color:var(--tx2);line-height:1.6}
   .ro-plain b{color:var(--tx)}
 
@@ -148,6 +149,28 @@
   @media(max-width:800px){.article{padding:40px 22px}.nav{padding:0 22px}.controls{grid-template-columns:1fr}.readout{grid-template-columns:1fr}.footer{padding:24px 22px}}
   h1{font-family:var(--display);font-weight:800;letter-spacing:-.03em}
   .hero-title,.feature-title{font-family:var(--display);font-weight:800;letter-spacing:-.02em}
+
+  /* ── light theme chrome, shared with the homepage ── */
+  body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+  ::selection{background:#C9D2FF;color:#0A0D13}
+  a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+    outline:2.5px solid #0B5BFF;outline-offset:3px}
+  .nav{backdrop-filter:saturate(180%) blur(14px);-webkit-backdrop-filter:saturate(180%) blur(14px)}
+  .nav-inner{gap:24px}
+  .brand-mark{width:33px;height:33px;border-radius:9px;
+    box-shadow:0 4px 12px -4px rgba(11,91,255,.55);
+    transition:transform .22s cubic-bezier(.16,1,.3,1),box-shadow .22s cubic-bezier(.16,1,.3,1)}
+  .brand:hover .brand-mark{transform:rotate(-5deg) scale(1.05);box-shadow:0 7px 16px -5px rgba(11,91,255,.6)}
+  .brand-name{letter-spacing:-.03em}
+  .nav-right{display:flex;align-items:center;gap:28px}
+  .nav-cta{font-family:'Inter',sans-serif;font-size:14.5px;font-weight:600;text-decoration:none;
+    background:#0A0D13;color:#fff;padding:10px 18px;border-radius:999px;white-space:nowrap;
+    transition:background .18s cubic-bezier(.16,1,.3,1),transform .18s cubic-bezier(.16,1,.3,1)}
+  .nav-cta:hover{background:#0B5BFF;transform:translateY(-1px)}
+  .nav-cta.active{background:#0B5BFF}
+  @media(max-width:900px){.nav-right{gap:18px}}
+  @media(max-width:660px){.nav-cta{padding:9px 15px;font-size:13.5px}}
+  @media(max-width:430px){.nav-cta{display:none}}
 </style>
 </head>
 <body>
@@ -155,22 +178,25 @@
 <nav class="nav">
   <div class="nav-inner">
     <a class="brand" href="/" aria-label="AB Integrity — ecommerce A/B testing">
-      <svg class="brand-mark" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <rect x="1.25" y="1.25" width="29.5" height="29.5" rx="7.5" fill="var(--bg2)" stroke="var(--bdr2)" stroke-width="1.3"/>
-        <rect x="8.5" y="16" width="5.5" height="8" rx="1.2" fill="var(--tx3)"/>
-        <rect x="18" y="8.5" width="5.5" height="15.5" rx="1.2" fill="var(--ac)"/>
+      <svg class="brand-mark" viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect width="34" height="34" rx="9.5" fill="#0B5BFF"/>
+        <rect x="8" y="14.6" width="6" height="9.4" rx="2" fill="#fff" opacity=".48"/>
+        <rect x="17.6" y="7.8" width="6" height="16.2" rx="2" fill="#fff"/>
+        <rect x="8" y="26.2" width="17.8" height="2.3" rx="1.15" fill="#FF4A21"/>
       </svg>
       <span class="brand-text">
         <span class="brand-name">AB <span>Integrity</span></span>
         <span class="brand-sub">Ecommerce A/B testing</span>
       </span>
     </a>
-    <div class="nav-links">
+    <div class="nav-right">
+      <div class="nav-links">
       <a href="/">Tools</a>
-      <a href="/analyze">Analyze</a>
       <a class="active" href="/learn/">Learn</a>
       <a class="hide-sm" href="/blog/">Blog</a>
       <a href="/about">About</a>
+    </div>
+      <a class="nav-cta" href="/analyze">Analyze a test</a>
     </div>
   </div>
 </nav>
@@ -210,24 +236,24 @@
 
       <div class="chart">
         <svg id="svg" viewBox="0 0 600 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bell curve of gaps luck would produce if A and B were identical, with the measured result marked and the p-value shaded as the tail area.">
-          <line x1="20" y1="196" x2="580" y2="196" stroke="#242b35" stroke-width="1"/>
-          <path id="tailL" d="" fill="#F0883E" fill-opacity="0.22"/>
-          <path id="tailR" d="" fill="#F0883E" fill-opacity="0.22"/>
-          <path id="curve" d="" fill="none" stroke="#616b78" stroke-width="1.6"/>
-          <line id="sigL" x1="0" y1="40" x2="0" y2="196" stroke="#F85149" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>
-          <line id="sigR" x1="0" y1="40" x2="0" y2="196" stroke="#F85149" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>
-          <line id="obsR" x1="0" y1="30" x2="0" y2="196" stroke="#5B9CFF" stroke-width="2"/>
-          <line id="obsL" x1="0" y1="30" x2="0" y2="196" stroke="#5B9CFF" stroke-width="2" opacity="0.5"/>
-          <text id="obsLbl" x="0" y="24" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#5B9CFF">your result</text>
-          <text x="300" y="214" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#616b78">no difference (0)</text>
-          <text x="20" y="214" text-anchor="start" font-family="JetBrains Mono" font-size="9" fill="#616b78">−2.5pp</text>
-          <text x="580" y="214" text-anchor="end" font-family="JetBrains Mono" font-size="9" fill="#616b78">+2.5pp</text>
+          <line x1="20" y1="196" x2="580" y2="196" stroke="#E2E7F0" stroke-width="1"/>
+          <path id="tailL" d="" fill="#E0640B" fill-opacity="0.22"/>
+          <path id="tailR" d="" fill="#E0640B" fill-opacity="0.22"/>
+          <path id="curve" d="" fill="none" stroke="#646D7B" stroke-width="1.6"/>
+          <line id="sigL" x1="0" y1="40" x2="0" y2="196" stroke="#DC2626" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>
+          <line id="sigR" x1="0" y1="40" x2="0" y2="196" stroke="#DC2626" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>
+          <line id="obsR" x1="0" y1="30" x2="0" y2="196" stroke="#0B5BFF" stroke-width="2"/>
+          <line id="obsL" x1="0" y1="30" x2="0" y2="196" stroke="#0B5BFF" stroke-width="2" opacity="0.5"/>
+          <text id="obsLbl" x="0" y="24" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#0B5BFF">your result</text>
+          <text x="300" y="214" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#646D7B">no difference (0)</text>
+          <text x="20" y="214" text-anchor="start" font-family="JetBrains Mono" font-size="9" fill="#646D7B">−2.5pp</text>
+          <text x="580" y="214" text-anchor="end" font-family="JetBrains Mono" font-size="9" fill="#646D7B">+2.5pp</text>
         </svg>
         <div class="curve-legend">
-          <span><i class="lg-dot" style="background:#616b78"></i> gaps luck makes (null)</span>
-          <span><i class="lg-dot" style="background:#5B9CFF"></i> your measured gap</span>
-          <span><i class="lg-dot" style="background:#F0883E"></i> the p-value (tail area)</span>
-          <span><i class="lg-dot" style="background:#F85149"></i> significance line (p=0.05)</span>
+          <span><i class="lg-dot" style="background:#646D7B"></i> gaps luck makes (null)</span>
+          <span><i class="lg-dot" style="background:#0B5BFF"></i> your measured gap</span>
+          <span><i class="lg-dot" style="background:#E0640B"></i> the p-value (tail area)</span>
+          <span><i class="lg-dot" style="background:#DC2626"></i> significance line (p=0.05)</span>
         </div>
       </div>
 

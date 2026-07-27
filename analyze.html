@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="theme-color" content="#F6F7FB">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Instant Analysis — Upload a Finished A/B Test, Get the Verdict | AB Integrity</title>
 <meta name="description" content="Upload a completed A/B test CSV (from Adobe Target, GA, Optimizely, anything) and get the full statistical readout in one shot: sample ratio check, significance, the honest winner's-curse-corrected lift, revenue impact, and a plain recommendation. Runs in your browser.">
@@ -24,9 +25,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0B0E13;--bg2:#131820;--bg3:#1a2029;--bdr:#242b35;--bdr2:#2e3641;
-    --tx:#EEF2F7;--tx2:#9AA5B3;--tx3:#616b78;
-    --ac:#5B9CFF;--g:#3FB950;--r:#F85149;--y:#D8A62B;--o:#F0883E;--p:#BC8CFF;--t:#2DD4BF;
+    --bg:#F6F7FB;--bg2:#FFFFFF;--bg3:#EEF1F8;--bdr:#E2E7F0;--bdr2:#CFD7E4;
+    --tx:#0A0D13;--tx2:#4A5361;--tx3:#646D7B;
+    --ac:#0B5BFF;--g:#0F9A57;--r:#DC2626;--y:#A8760A;--o:#E0640B;--p:#7B3FE4;--t:#0D9488;
     --display:'Bricolage Grotesque',sans-serif;
     --mono:'JetBrains Mono',monospace;--sans:'Inter',sans-serif;
   }
@@ -34,14 +35,14 @@
   html{scroll-behavior:smooth}
   html,body{min-height:100vh;background:var(--bg);color:var(--tx);font-family:var(--sans)}
   body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
-    background:radial-gradient(circle at 1px 1px,rgba(230,237,243,.022) 1px,transparent 0) 0 0/34px 34px,var(--bg)}
-  ::selection{background:rgba(79,142,247,.26);color:#fff}
+    background:radial-gradient(circle at 1px 1px,rgba(10,13,19,.03) 1px,transparent 0) 0 0/34px 34px,var(--bg)}
+  ::selection{background:rgba(11,91,255,.26);color:#fff}
   a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--ac);outline-offset:3px}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 
   .nav{height:60px;display:flex;align-items:center;justify-content:space-between;
     padding:0 40px;border-bottom:1px solid var(--bdr);position:sticky;top:0;z-index:100;
-    background:rgba(11,14,19,.86);backdrop-filter:blur(10px)}
+    background:rgba(246,247,251,.88);backdrop-filter:blur(10px)}
   .nav-brand{display:flex;align-items:center;gap:11px;text-decoration:none}
   .brand-mark{width:30px;height:30px;flex-shrink:0;display:block}
   .brand-text{display:flex;flex-direction:column;line-height:1}
@@ -74,7 +75,7 @@
     border:1px solid var(--bdr);background:var(--bg3);color:var(--tx);cursor:pointer;transition:.15s;text-decoration:none;display:inline-block}
   .btn:hover{border-color:var(--tx2)}
   .btn-p{background:var(--ac);border-color:var(--ac);color:#fff}
-  .btn-p:hover{background:#5f9bff;border-color:#5f9bff}
+  .btn-p:hover{background:#0A3CC4;border-color:#0A3CC4}
   .btn-ghost{background:transparent}
   .or{font-family:var(--mono);font-size:11px;color:var(--tx3);margin:14px 0 10px}
   .paste{width:100%;background:var(--bg);border:1px solid var(--bdr);color:var(--tx);font-family:var(--mono);
@@ -98,10 +99,10 @@
   /* ── REPORT ── */
   #report{display:none}
   .verdict{border:1px solid var(--bdr);padding:22px 26px;margin-bottom:20px;background:var(--bg2)}
-  .verdict.win{border-color:rgba(63,185,80,.45);background:rgba(63,185,80,.06)}
-  .verdict.no{border-color:rgba(210,153,34,.4);background:rgba(210,153,34,.05)}
+  .verdict.win{border-color:rgba(15,154,87,.45);background:rgba(15,154,87,.06)}
+  .verdict.no{border-color:rgba(168,118,10,.4);background:rgba(168,118,10,.05)}
   .verdict.soft{border-color:rgba(240,136,62,.45);background:rgba(240,136,62,.06)}
-  .verdict.bad{border-color:rgba(248,81,73,.5);background:rgba(248,81,73,.08)}
+  .verdict.bad{border-color:rgba(220,38,38,.5);background:rgba(220,38,38,.08)}
   .v-flag{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;display:inline-block;padding:4px 10px}
   .verdict.win .v-flag{background:var(--g);color:var(--bg)}
   .verdict.no .v-flag{background:var(--y);color:var(--bg)}
@@ -120,9 +121,9 @@
   .c-row{display:flex;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:12px;padding:3px 0;color:var(--tx2)}
   .c-row .k{color:var(--tx3)}
   .badge{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:2px 7px;margin-left:6px}
-  .badge.ok{background:rgba(63,185,80,.15);color:var(--g)}
-  .badge.warn{background:rgba(210,153,34,.15);color:var(--y)}
-  .badge.bad{background:rgba(248,81,73,.15);color:var(--r)}
+  .badge.ok{background:rgba(15,154,87,.15);color:var(--g)}
+  .badge.warn{background:rgba(168,118,10,.15);color:var(--y)}
+  .badge.bad{background:rgba(220,38,38,.15);color:var(--r)}
 
   .again{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 30px}
   .note{font-size:12px;color:var(--tx3);line-height:1.6;margin-top:4px}
@@ -138,28 +139,53 @@
   .footer-right{font-size:11px;color:var(--tx3)}
 
   @media(max-width:800px){.wrap{padding:0 22px}.nav{padding:0 22px}.cards{grid-template-columns:1fr}.footer{padding:24px 22px}}
+
+  /* ── light theme chrome, shared with the homepage ── */
+  body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+  ::selection{background:#C9D2FF;color:#0A0D13}
+  a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+    outline:2.5px solid #0B5BFF;outline-offset:3px}
+  .nav{backdrop-filter:saturate(180%) blur(14px);-webkit-backdrop-filter:saturate(180%) blur(14px)}
+  .nav-inner{gap:24px}
+  .brand-mark{width:33px;height:33px;border-radius:9px;
+    box-shadow:0 4px 12px -4px rgba(11,91,255,.55);
+    transition:transform .22s cubic-bezier(.16,1,.3,1),box-shadow .22s cubic-bezier(.16,1,.3,1)}
+  .brand:hover .brand-mark{transform:rotate(-5deg) scale(1.05);box-shadow:0 7px 16px -5px rgba(11,91,255,.6)}
+  .brand-name{letter-spacing:-.03em}
+  .nav-right{display:flex;align-items:center;gap:28px}
+  .nav-cta{font-family:'Inter',sans-serif;font-size:14.5px;font-weight:600;text-decoration:none;
+    background:#0A0D13;color:#fff;padding:10px 18px;border-radius:999px;white-space:nowrap;
+    transition:background .18s cubic-bezier(.16,1,.3,1),transform .18s cubic-bezier(.16,1,.3,1)}
+  .nav-cta:hover{background:#0B5BFF;transform:translateY(-1px)}
+  .nav-cta.active{background:#0B5BFF}
+  @media(max-width:900px){.nav-right{gap:18px}}
+  @media(max-width:660px){.nav-cta{padding:9px 15px;font-size:13.5px}}
+  @media(max-width:430px){.nav-cta{display:none}}
 </style>
 </head>
 <body>
 
 <nav class="nav">
   <a class="nav-brand" href="/" aria-label="AB Integrity — ecommerce A/B testing">
-    <svg class="brand-mark" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <rect x="1.25" y="1.25" width="29.5" height="29.5" rx="7.5" fill="var(--bg2)" stroke="var(--bdr2)" stroke-width="1.3"/>
-      <rect x="8.5" y="16" width="5.5" height="8" rx="1.2" fill="var(--tx3)"/>
-      <rect x="18" y="8.5" width="5.5" height="15.5" rx="1.2" fill="var(--ac)"/>
-    </svg>
+    <svg class="brand-mark" viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect width="34" height="34" rx="9.5" fill="#0B5BFF"/>
+        <rect x="8" y="14.6" width="6" height="9.4" rx="2" fill="#fff" opacity=".48"/>
+        <rect x="17.6" y="7.8" width="6" height="16.2" rx="2" fill="#fff"/>
+        <rect x="8" y="26.2" width="17.8" height="2.3" rx="1.15" fill="#FF4A21"/>
+      </svg>
     <span class="brand-text">
       <span class="brand-name">AB <span>Integrity</span></span>
       <span class="brand-sub">Ecommerce A/B testing</span>
     </span>
   </a>
-  <div class="nav-links">
+  <div class="nav-right">
+    <div class="nav-links">
     <a class="nav-link" href="/">Tools</a>
-    <a class="nav-link active" href="/analyze">Analyze</a>
     <a class="nav-link hide-sm" href="/learn/">Learn</a>
     <a class="nav-link" href="/blog/">Blog</a>
     <a class="nav-link" href="/about">About</a>
+  </div>
+    <a class="nav-cta" href="/analyze">Analyze a test</a>
   </div>
 </nav>
 
