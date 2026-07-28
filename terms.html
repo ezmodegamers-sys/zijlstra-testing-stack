@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="theme-color" content="#F6F7FB">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Privacy — AB Integrity</title>
-<meta name="description" content="What AB Integrity knows about you, which is almost nothing. No accounts, no cookies from us, nothing you enter ever leaves your browser. The full privacy note fits on one screen.">
-<link rel="canonical" href="https://abintegrity.com/privacy">
+<title>Terms — AB Integrity</title>
+<meta name="description" content="The terms for using AB Integrity: free tools, provided as they are, run in your browser. What you can expect from them and what stays your call.">
+<link rel="canonical" href="https://abintegrity.com/terms">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="AB Integrity">
-<meta property="og:title" content="Privacy — AB Integrity">
-<meta property="og:description" content="No accounts, no cookies from us, nothing you enter ever leaves your browser. The full privacy note fits on one screen.">
-<meta property="og:url" content="https://abintegrity.com/privacy">
+<meta property="og:title" content="Terms — AB Integrity">
+<meta property="og:description" content="Free tools, provided as they are, run in your browser. What you can expect from them and what stays your call.">
+<meta property="og:url" content="https://abintegrity.com/terms">
 <meta property="og:image" content="https://abintegrity.com/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -51,12 +51,12 @@
   .kicker::before{content:"";width:24px;height:1px;background:var(--ac);opacity:.7}
   h1{font-family:var(--display);font-weight:800;font-size:clamp(38px,5vw,56px);letter-spacing:-.035em;line-height:.98;color:var(--tx);margin-bottom:26px}
   h2{font-family:var(--display);font-weight:700;font-size:21px;letter-spacing:-.02em;color:var(--tx);margin:38px 0 14px}
-  .stamp{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--tx3);margin-bottom:30px;margin-top:-14px}
   .page p{font-size:16.5px;line-height:1.7;color:var(--tx2);margin-bottom:20px;max-width:62ch}
   .page strong{color:var(--tx);font-weight:600}
   .page a{color:var(--ac);text-decoration:none}
   .fact{border-left:2px solid var(--g);background:var(--bg2);border-top:1px solid var(--bdr);border-right:1px solid var(--bdr);border-bottom:1px solid var(--bdr);padding:14px 18px;margin:22px 0;font-size:15px;color:var(--tx2);line-height:1.7}
   .fact b{color:var(--tx)}
+  .stamp{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--tx3);margin-bottom:30px}
 
   .footer{max-width:var(--edge);margin:72px auto 0;padding:26px 48px;border-top:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
   .footer .fl{font-family:var(--sans);font-size:13px;color:var(--tx3)}
@@ -64,7 +64,6 @@
   .footer .fr{font-family:var(--mono);font-size:11px;color:var(--tx3)}
   @media(max-width:860px){.nav-inner,.page,.footer{padding-left:26px;padding-right:26px}}
 
-  /* ── light theme chrome, shared with the homepage ── */
   body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
   ::selection{background:#C9D2FF;color:#0A0D13}
   a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
@@ -81,29 +80,17 @@
     background:#0A0D13;color:#fff;padding:10px 18px;border-radius:999px;white-space:nowrap;
     transition:background .18s cubic-bezier(.16,1,.3,1),transform .18s cubic-bezier(.16,1,.3,1)}
   .nav-cta:hover{background:#0B5BFF;transform:translateY(-1px)}
-  .nav-cta.active{background:#0B5BFF}
   @media(max-width:900px){.nav-right{gap:18px}}
   @media(max-width:660px){.nav-cta{padding:9px 15px;font-size:13.5px}}
   @media(max-width:430px){.nav-cta{display:none}}
 
-  /* ── no sideways pan on a phone ──
-     The guard has to sit on html as well as body: body alone is the case iOS
-     Safari ignores. min-width:0 lets grid and flex children actually shrink,
-     so anything with its own overflow-x scrolls inside itself instead of
-     widening the page. */
   html{overflow-x:hidden}
   body{overflow-x:hidden;width:100%;max-width:100%;position:relative}
   img,svg,video,canvas,iframe{max-width:100%;height:auto}
   table{max-width:100%}
   pre{max-width:100%;overflow-x:auto}
-  /* grid and flex items default to min-width:auto, which sizes a column to its
-     widest unbreakable content and pushes the page wider than the screen.
-     Zero specificity, so any explicit rule still wins. */
   *{min-width:0}
 
-  /* ── narrow-phone nav ──
-     Below these widths the brand lockup plus the nav links no longer fit on one
-     line, so both sides step down instead of being clipped off the screen. */
   @media(max-width:430px){
     .nav-cta{display:none}
     .nav-inner{padding-left:18px;padding-right:18px}
@@ -114,8 +101,6 @@
     .nav-links a{font-size:14px}
   }
   @media(max-width:560px){
-    /* the wordmark stays: it fits once the lockup steps down, and the homepage
-       shows it at this width too */
     .brand-text{display:flex}
     .brand-sub{display:none}
   }
@@ -156,33 +141,40 @@
 </nav>
 
 <section class="page">
-  <div class="kicker">// privacy</div>
-  <h1>What we know about you</h1>
+  <div class="kicker">// terms</div>
+  <h1>Terms of use</h1>
   <div class="stamp">Last updated 28 July 2026</div>
 
-  <p><strong>Almost nothing, by design.</strong> The tools on this site run entirely in your browser. The numbers you type or the files you drop are processed on your machine and never sent to a server. There are no accounts, no signup walls, and we set no cookies.</p>
-  <div class="fact"><b>The practical consequence:</b> you can paste real client data, real revenue numbers, or an agency's raw export into any tool here without asking anyone's permission. We couldn't read it if we wanted to.</div>
+  <p>Short version: the tools are free, they run on your own machine, and what you decide to do with the numbers they give you is your call. The rest of this page just says that properly.</p>
 
-  <h2>Who is responsible</h2>
-  <p>This site is run by <strong>Sebastian Zijlstra</strong>, Sofia, Bulgaria, as a personal project rather than a company. That makes me the data controller for the little that is processed here. Reach me at <a href="mailto:sebaszijlstra@hotmail.com">sebaszijlstra@hotmail.com</a> or on <a href="https://www.linkedin.com/in/sebastianzijlstra" target="_blank" rel="me noopener">LinkedIn ↗</a>.</p>
+  <h2>Who runs this</h2>
+  <p>AB Integrity is operated by <strong>Sebastian Zijlstra</strong>, based in Sofia, Bulgaria. It is a personal project, not a registered company. You can reach me at <a href="mailto:sebaszijlstra@hotmail.com">sebaszijlstra@hotmail.com</a> or on <a href="https://www.linkedin.com/in/sebastianzijlstra" target="_blank" rel="me noopener">LinkedIn ↗</a>.</p>
 
-  <h2>What stays in your browser</h2>
-  <p>Some tools remember your work between visits. <strong>Lockbox</strong>, the <strong>Ledger</strong>, and <strong>Test Receipt</strong> save what you enter in your browser's local storage, which is a private box on your own device. It is not a cookie, it is never transmitted, and I cannot see it. Clearing your browser data erases it, and there is no backup on my side, so export anything you want to keep.</p>
+  <h2>The tools are provided as they are</h2>
+  <p>Everything here is offered free of charge and without warranty of any kind. I have tested the statistics carefully and I believe they are correct, but I cannot promise the tools are free of errors, that they suit your particular situation, or that the site will stay available. Tools may change or be removed.</p>
 
-  <h2>Traffic counts</h2>
-  <p>For traffic counts we use <strong>Cloudflare Web Analytics</strong>, which is cookieless and doesn't profile visitors. It tells us aggregate things like how many people visited a page and from which country, and nothing about who you are.</p>
+  <h2>The output is not advice</h2>
+  <p>These are calculators and checks, not a consultant. Nothing on this site is professional, statistical, financial, or legal advice, and no client relationship is created by using it. A tool telling you a result looks weak is information for your judgment, not a verdict.</p>
+  <div class="fact"><b>Where this actually matters:</b> if you are about to roll back a feature, end a supplier relationship, or tell a board that a test was inflated, treat the output here as one input among several. You are responsible for the decision.</div>
+  <p>To the fullest extent the law allows, I accept no liability for loss or damage arising from your use of the site, including decisions made on the basis of anything a tool reports. If some liability cannot be excluded under Bulgarian or EU law, it is limited to the minimum the law permits.</p>
 
-  <h2>Two standard exceptions</h2>
-  <p>In the interest of honesty: the site is hosted on <strong>Cloudflare Pages</strong>, which like every host keeps routine server logs containing IP addresses for security and reliability, and fonts load from <strong>Google Fonts</strong>, so your browser makes a request to Google's servers when a page loads and Google sees your IP address in the process. Neither involves anything you type into the tools. Both rest on a legitimate interest in keeping the site running and looking right.</p>
+  <h2>Your data and your browser</h2>
+  <p>What you type into the tools stays on your machine. It is never sent to me. The flip side is worth knowing: tools that remember your work, like <strong>Lockbox</strong>, the <strong>Ledger</strong>, and <strong>Test Receipt</strong>, keep it in your browser's own storage. Clearing your browser data, switching device, or using private browsing will lose it, and I have no copy to restore. Export anything you need to keep. The <a href="/privacy">privacy note</a> covers this in more detail.</p>
 
-  <h2>Your rights</h2>
-  <p>Under the GDPR you can ask for access to your personal data, correction, erasure, or restriction, and you can complain to a supervisory authority. In practice there is almost nothing for me to hand over, because I hold no accounts, no email list, and nothing you enter into the tools. If you write to me, I will hold that message for as long as the conversation is useful and no longer.</p>
+  <h2>Fair use</h2>
+  <p>Use the tools for whatever work you like, including commercial and client work. Please do not try to break the site, scrape it at volume, or pass the tools off as your own product. The words, code, and design here are mine; the results you produce with them are yours.</p>
 
-  <p>If any of this changes, the date at the top of this page changes with it. The <a href="/terms">terms of use</a> cover the other half of the picture.</p>
+  <h2>Links out</h2>
+  <p>Where the site links to other people's research, platforms, or documentation, that content is theirs and I do not control or endorse what it says.</p>
+
+  <h2>Changes and governing law</h2>
+  <p>If these terms change, the date at the top of this page changes with them. Bulgarian law applies, and the courts of Sofia have jurisdiction, without affecting any protection you have as a consumer in your own country of residence.</p>
+
+  <p>Questions about any of this: <a href="mailto:sebaszijlstra@hotmail.com">sebaszijlstra@hotmail.com</a>.</p>
 </section>
 
 <footer class="footer">
-  <div class="fl">AB Integrity · <a href="https://www.linkedin.com/in/sebastianzijlstra" target="_blank" rel="me noopener">LinkedIn ↗</a> · color:var(--tx3) · <a href="/terms" style="color:var(--tx3)">Terms</a></div>
+  <div class="fl">AB Integrity · <a href="https://www.linkedin.com/in/sebastianzijlstra" target="_blank" rel="me noopener">LinkedIn ↗</a> · <a href="/privacy" style="color:var(--tx3)">Privacy</a> · <a href="/terms" style="color:var(--tx3)">Terms</a></div>
   <div class="fr">runs in your browser · nothing is uploaded</div>
 </footer>
 

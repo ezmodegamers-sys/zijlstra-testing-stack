@@ -1,0 +1,17 @@
+# Cloudflare Pages reads this file and applies these headers to every response.
+# Kept deliberately small: this is a static site with no logins and no backend,
+# so the job here is to stop someone injecting a foreign script and to stop the
+# site being framed by a lookalike.
+
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()
+  Cross-Origin-Opener-Policy: same-origin
+  # 'unsafe-inline' is unavoidable while the styles and tool logic live inline in
+  # each page. It still blocks any script from a host that isn't listed here.
+  # blob: is for the Ledger's CSV export. The cloudflareinsights entries are the
+  # Web Analytics beacon; drop them if analytics is ever switched off.
+  Content-Security-Policy: default-src 'self' blob:; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://cloudflareinsights.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://buttondown.com; object-src 'none'; upgrade-insecure-requests
