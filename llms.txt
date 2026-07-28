@@ -15,9 +15,9 @@ AB Integrity exists because most ecommerce A/B testing quietly fools its own tea
 - [Subscriber Value](https://abintegrity.com/subscriber-value): Subscription LTV modelling across churn scenarios and value-per-visitor comparison when the test goal is subscriptions.
 - [Instant Analysis](https://abintegrity.com/analyze): Upload a finished test's CSV (Adobe Target, GA, Optimizely, any platform) and get the full verdict in one shot: split fairness, honest lift, what to do next.
 
-## Docket (paid, in development)
+## Portfolio (paid, in development)
 
-- [Docket](https://abintegrity.com/docket): Portfolio-level triage across every running A/B test from a single multi-activity export. Ranks activities worst-first and flags what per-test platform reporting does not: sample ratio mismatch, family-wise multiple-comparison correction (Šidák) across every variant and metric in the file, achieved power, winner's-curse-corrected lift, conversion-against-revenue conflicts, and whether a test can still reach significance before its end date. The seven tools above stay free; this is the paid tier.
+- [Portfolio](https://abintegrity.com/portfolio): Portfolio-level triage across every running A/B test from a single multi-activity export. Ranks activities worst-first and flags what per-test platform reporting does not: sample ratio mismatch, family-wise multiple-comparison correction (Šidák) across every variant and metric in the file, achieved power, winner's-curse-corrected lift, conversion-against-revenue conflicts, and whether a test can still reach significance before its end date. The seven tools above stay free; this is the paid tier.
 
 ## Learn & Blog
 

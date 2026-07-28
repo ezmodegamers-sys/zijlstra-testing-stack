@@ -4,21 +4,21 @@
 <meta charset="UTF-8">
 <meta name="theme-color" content="#F6F7FB">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Docket — Every Running A/B Test, Triaged | AB Integrity</title>
-<meta name="description" content="Upload one export covering every live A/B test and get a triaged docket: which tests are invalid, which winners do not survive multiple-comparison correction, which cannot finish before they close, and which are safe to ship. The checks your testing platform does not run.">
-<link rel="canonical" href="https://abintegrity.com/docket">
+<title>Portfolio — Every Running A/B Test, Triaged | AB Integrity</title>
+<meta name="description" content="Upload one export covering every live A/B test and get every activity triaged: which tests are invalid, which winners do not survive multiple-comparison correction, which cannot finish before they close, and which are safe to ship. The checks your testing platform does not run.">
+<link rel="canonical" href="https://abintegrity.com/portfolio">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="AB Integrity">
-<meta property="og:title" content="Docket — every running A/B test, triaged">
-<meta property="og:description" content="One export in, a ranked docket out. Invalid tests, false winners, tests that cannot finish before they close. The checks your platform does not run.">
-<meta property="og:url" content="https://abintegrity.com/docket">
+<meta property="og:title" content="Portfolio — every running A/B test, triaged">
+<meta property="og:description" content="One export in, a ranked portfolio out. Invalid tests, false winners, tests that cannot finish before they close. The checks your platform does not run.">
+<meta property="og:url" content="https://abintegrity.com/portfolio">
 <meta property="og:image" content="https://abintegrity.com/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://abintegrity.com/og-image.png">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebApplication","name":"Docket","url":"https://abintegrity.com/docket","description":"Portfolio-level review of every running A/B test from a single export. Sample ratio mismatch, multiple-comparison correction, achieved power, winner's-curse adjustment and pace-to-close, ranked by severity.","applicationCategory":"BusinessApplication","operatingSystem":"Any (runs in the browser)","browserRequirements":"Requires JavaScript","publisher":{"@type":"Organization","name":"AB Integrity","url":"https://abintegrity.com/"},"isPartOf":{"@type":"WebSite","@id":"https://abintegrity.com/#website"}}
+{"@context":"https://schema.org","@type":"WebApplication","name":"Portfolio","url":"https://abintegrity.com/portfolio","description":"Portfolio-level review of every running A/B test from a single export. Sample ratio mismatch, multiple-comparison correction, achieved power, winner's-curse adjustment and pace-to-close, ranked by severity.","applicationCategory":"BusinessApplication","operatingSystem":"Any (runs in the browser)","browserRequirements":"Requires JavaScript","publisher":{"@type":"Organization","name":"AB Integrity","url":"https://abintegrity.com/"},"isPartOf":{"@type":"WebSite","@id":"https://abintegrity.com/#website"}}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -57,9 +57,9 @@
   .nav-links{display:flex;gap:26px;align-items:center}
   .nav-link{font-size:14px;font-weight:500;color:var(--tx2);text-decoration:none;padding:4px 0}
   .nav-link:hover{color:var(--tx)}
-  .nav-cta{font-size:14.5px;font-weight:600;text-decoration:none;background:#0A0D13;color:#fff;
+  .nav-cta{font-size:14.5px;font-weight:600;text-decoration:none;background:var(--ac);color:#fff;
     padding:10px 18px;border-radius:999px;white-space:nowrap;transition:background .18s,transform .18s}
-  .nav-cta:hover{background:var(--ac);transform:translateY(-1px)}
+  .nav-cta:hover{background:#0A3CC4;transform:translateY(-1px)}
   .nav-cta.active{background:var(--ac)}
   @media(max-width:900px){.nav-right{gap:18px}}
   @media(max-width:560px){.nav{padding:0 20px}.brand-sub{display:none}.nav-link.hide-sm{display:none}}
@@ -91,7 +91,7 @@
   .st.warn .st-v{color:var(--y)}
   .st.good .st-v{color:var(--g)}
 
-  /* ── docket table ── */
+  /* ── portfolio table ── */
   .board{border:1px solid var(--bdr);background:var(--bg2)}
   .board-h{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
     padding:13px 18px;border-bottom:1px solid var(--bdr);background:var(--bg3)}
@@ -257,15 +257,15 @@
       <a class="nav-link" href="/blog/">Blog</a>
       <a class="nav-link" href="/about">About</a>
     </div>
-    <a class="nav-cta active" href="/docket">Docket</a>
+    <a class="nav-cta active" href="/portfolio">Review your portfolio</a>
   </div>
 </nav>
 
 <section class="hero">
   <div class="wrap">
-    <div class="eyebrow">// Docket</div>
+    <div class="eyebrow">// Portfolio</div>
     <h1>Forty tests running. <span class="ac">Which three are lying?</span></h1>
-    <p class="lede">Your testing platform shows you one activity at a time, and it tells you the same thing about each one: a conversion rate, a lift, a confidence number. It will not tell you that the traffic split on test 12 is broken, that the winner on test 5 stops being a winner once you count how many comparisons you ran, or that test 19 closes on Friday and was never going to reach an answer. <strong>Drop in one export covering everything you have live. Get back a docket, worst first.</strong></p>
+    <p class="lede">Your testing platform shows you one activity at a time, and it tells you the same thing about each one: a conversion rate, a lift, a confidence number. It will not tell you that the traffic split on test 12 is broken, that the winner on test 5 stops being a winner once you count how many comparisons you ran, or that test 19 closes on Friday and was never going to reach an answer. <strong>Drop in one export covering everything you have live. Get every activity back, ranked worst first.</strong></p>
   </div>
 </section>
 
@@ -274,7 +274,7 @@
 
   <div class="board">
     <div class="board-h">
-      <div class="board-t">// Docket · ranked by severity</div>
+      <div class="board-t">// Portfolio · ranked by severity</div>
       <div class="board-src" id="src">demo portfolio · 8 activities</div>
     </div>
     <div class="rowhead">
@@ -290,7 +290,7 @@
   <div class="wrap">
     <div class="kicker">// Run it on yours</div>
     <h2>One file. Every activity.</h2>
-    <p class="lede">Export your activities with a row per experience. It does not matter which platform: if the file has an activity name, an experience name, visitors and conversions, the docket will read it. Revenue and end dates unlock the revenue conflict and pace checks.</p>
+    <p class="lede">Export your activities with a row per experience. It does not matter which platform: if the file has an activity name, an experience name, visitors and conversions, it will read them. Revenue and end dates unlock the revenue conflict and pace checks.</p>
 
     <div class="drop" id="drop" style="margin-top:28px">
       <div class="drop-title">Drop a multi-activity CSV here</div>
@@ -313,7 +313,7 @@ Checkout progress bar,Control,61200,3060,367200,2026-07-28</div>
         <div style="padding:18px">
           <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:16px" id="mapFields"></div>
           <div class="drop-actions" style="justify-content:flex-start">
-            <button class="btn btn-p" id="run">Build the docket</button>
+            <button class="btn btn-p" id="run">Review the portfolio</button>
             <button class="btn btn-ghost" id="reset">Start over</button>
           </div>
         </div>
@@ -331,7 +331,7 @@ Checkout progress bar,Control,61200,3060,367200,2026-07-28</div>
     <div class="scroller">
     <table class="gap">
       <thead>
-        <tr><th>Check</th><th>Adobe Target</th><th>Optimizely</th><th>Docket</th></tr>
+        <tr><th>Check</th><th>Adobe Target</th><th>Optimizely</th><th>AB Integrity</th></tr>
       </thead>
       <tbody>
         <tr>
@@ -382,7 +382,7 @@ Checkout progress bar,Control,61200,3060,367200,2026-07-28</div>
 <section class="sect ink">
   <div class="wrap">
     <div class="kicker">// Access</div>
-    <h2>The tools stay free. The docket does not.</h2>
+    <h2>The tools stay free. This one does not.</h2>
     <p class="lede">Every calculator on this site stays exactly where it is: free, no account, nothing uploaded. What costs money is not having to run them one test at a time. Upload once a week, get the whole portfolio triaged, and know which three tests to open before your Monday meeting.</p>
 
     <div class="price">
@@ -398,7 +398,7 @@ Checkout progress bar,Control,61200,3060,367200,2026-07-28</div>
         <a class="btn btn-o" href="/">See the tools</a>
       </div>
       <div class="pc hi">
-        <div class="pc-n">Docket · in development</div>
+        <div class="pc-n">Portfolio · in development</div>
         <div class="pc-p">€49 <small>/ month</small></div>
         <div class="pc-d">Your whole portfolio, triaged from one file. Priced to go on a company card without a procurement conversation.</div>
         <ul class="pc-l">
@@ -408,7 +408,7 @@ Checkout progress bar,Control,61200,3060,367200,2026-07-28</div>
           <li>Shareable read-only verdict for the deck</li>
           <li>Direct platform connections when they land</li>
         </ul>
-        <a class="btn btn-w" href="mailto:sebaszijlstra@hotmail.com?subject=Docket%20early%20access&body=Which%20platform%20do%20you%20test%20on%2C%20and%20roughly%20how%20many%20activities%20do%20you%20run%20at%20once%3F">Ask for early access</a>
+        <a class="btn btn-w" href="mailto:sebaszijlstra@hotmail.com?subject=Portfolio%20early%20access&body=Which%20platform%20do%20you%20test%20on%2C%20and%20roughly%20how%20many%20activities%20do%20you%20run%20at%20once%3F">Ask for early access</a>
       </div>
     </div>
     <p class="note" style="color:rgba(255,255,255,.45);margin-top:20px">The demo above is the real engine on invented data. Bring your own export and it will run on that instead, in your browser, before you pay anyone anything.</p>
@@ -928,7 +928,7 @@ $('dlDemo').addEventListener('click',function(){
   var blob=new Blob([demoCSV()],{type:'text/csv'});
   var a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
-  a.download='docket-demo-portfolio.csv';
+  a.download='abintegrity-portfolio-demo.csv';
   document.body.appendChild(a);a.click();
   document.body.removeChild(a);
   setTimeout(function(){URL.revokeObjectURL(a.href);},1000);

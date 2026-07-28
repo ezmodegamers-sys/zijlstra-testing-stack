@@ -4,8 +4,8 @@
     {
       "name": "abintegrity",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "4455", "--directory", "/Users/sebas/Documents/zijlstra-testing-stack"],
-      "port": 4455
+      "runtimeArgs": ["-m", "http.server", "4399", "--directory", "/Users/sebas/Documents/zijlstra-testing-stack"],
+      "port": 4399
     }
   ]
 }
