@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="theme-color" content="#F6F7FB">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Docket — Every Running A/B Test, Triaged | AB Integrity</title>
+<meta name="description" content="Upload one export covering every live A/B test and get a triaged docket: which tests are invalid, which winners do not survive multiple-comparison correction, which cannot finish before they close, and which are safe to ship. The checks your testing platform does not run.">
+<link rel="canonical" href="https://abintegrity.com/docket">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AB Integrity">
+<meta property="og:title" content="Docket — every running A/B test, triaged">
+<meta property="og:description" content="One export in, a ranked docket out. Invalid tests, false winners, tests that cannot finish before they close. The checks your platform does not run.">
+<meta property="og:url" content="https://abintegrity.com/docket">
+<meta property="og:image" content="https://abintegrity.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://abintegrity.com/og-image.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Docket","url":"https://abintegrity.com/docket","description":"Portfolio-level review of every running A/B test from a single export. Sample ratio mismatch, multiple-comparison correction, achieved power, winner's-curse adjustment and pace-to-close, ranked by severity.","applicationCategory":"BusinessApplication","operatingSystem":"Any (runs in the browser)","browserRequirements":"Requires JavaScript","publisher":{"@type":"Organization","name":"AB Integrity","url":"https://abintegrity.com/"},"isPartOf":{"@type":"WebSite","@id":"https://abintegrity.com/#website"}}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F6F7FB;--bg2:#FFFFFF;--bg3:#EEF1F8;--bdr:#E2E7F0;--bdr2:#CFD7E4;
+    --tx:#0A0D13;--tx2:#4A5361;--tx3:#646D7B;
+    --ac:#0B5BFF;--g:#0F9A57;--r:#DC2626;--y:#A8760A;--o:#E0640B;--p:#7B3FE4;--t:#0D9488;
+    --display:'Bricolage Grotesque',sans-serif;
+    --mono:'JetBrains Mono',monospace;--sans:'Inter',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;min-width:0}
+  html{scroll-behavior:smooth;overflow-x:hidden}
+  html,body{min-height:100vh;background:var(--bg);color:var(--tx);font-family:var(--sans)}
+  body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:hidden;width:100%;max-width:100%;position:relative;
+    background:radial-gradient(circle at 1px 1px,rgba(10,13,19,.03) 1px,transparent 0) 0 0/34px 34px,var(--bg)}
+  img,svg,video,canvas,iframe{max-width:100%;height:auto}
+  ::selection{background:#C9D2FF;color:#0A0D13}
+  a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2.5px solid var(--ac);outline-offset:3px}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+  /* ── nav ── */
+  .nav{height:60px;display:flex;align-items:center;justify-content:space-between;
+    padding:0 40px;border-bottom:1px solid var(--bdr);position:sticky;top:0;z-index:100;
+    background:rgba(246,247,251,.88);backdrop-filter:saturate(180%) blur(14px);-webkit-backdrop-filter:saturate(180%) blur(14px)}
+  .nav-brand{display:flex;align-items:center;gap:11px;text-decoration:none}
+  .brand-mark{width:33px;height:33px;border-radius:9px;flex-shrink:0;display:block;
+    box-shadow:0 4px 12px -4px rgba(11,91,255,.55);transition:transform .22s cubic-bezier(.16,1,.3,1)}
+  .nav-brand:hover .brand-mark{transform:rotate(-5deg) scale(1.05)}
+  .brand-text{display:flex;flex-direction:column;line-height:1}
+  .brand-name{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:-.03em;color:var(--tx)}
+  .brand-name span{color:var(--ac)}
+  .brand-sub{font-family:var(--mono);font-size:8.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--tx3);margin-top:4px;white-space:nowrap}
+  .nav-right{display:flex;align-items:center;gap:28px}
+  .nav-links{display:flex;gap:26px;align-items:center}
+  .nav-link{font-size:14px;font-weight:500;color:var(--tx2);text-decoration:none;padding:4px 0}
+  .nav-link:hover{color:var(--tx)}
+  .nav-cta{font-size:14.5px;font-weight:600;text-decoration:none;background:#0A0D13;color:#fff;
+    padding:10px 18px;border-radius:999px;white-space:nowrap;transition:background .18s,transform .18s}
+  .nav-cta:hover{background:var(--ac);transform:translateY(-1px)}
+  .nav-cta.active{background:var(--ac)}
+  @media(max-width:900px){.nav-right{gap:18px}}
+  @media(max-width:560px){.nav{padding:0 20px}.brand-sub{display:none}.nav-link.hide-sm{display:none}}
+  @media(max-width:430px){.nav-cta{display:none}.nav{padding:0 18px}.brand-mark{width:30px;height:30px}
+    .brand-name{font-size:17px}.nav-links{gap:15px}}
+
+  /* ── layout ── */
+  .wrap{max-width:1120px;margin:0 auto;padding:0 40px}
+  .wrap-n{max-width:900px;margin:0 auto;padding:0 40px}
+  section{position:relative}
+  .hero{padding:60px 0 30px}
+  .eyebrow{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--ac);margin-bottom:16px}
+  h1{font-family:var(--display);font-size:clamp(34px,5.4vw,62px);font-weight:800;letter-spacing:-.035em;line-height:1.02;margin-bottom:18px;max-width:15ch}
+  h1 .ac{color:var(--ac)}
+  h2{font-family:var(--display);font-size:clamp(26px,3.4vw,40px);font-weight:800;letter-spacing:-.03em;line-height:1.08;margin-bottom:14px}
+  .lede{font-size:17px;color:var(--tx2);line-height:1.7;max-width:62ch}
+  .lede strong{color:var(--tx);font-weight:600}
+  .sect{padding:clamp(56px,8vw,100px) 0}
+  .kicker{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:2.4px;text-transform:uppercase;color:var(--tx3);margin-bottom:14px}
+
+  /* ── summary strip ── */
+  .strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--bdr);
+    border:1px solid var(--bdr);margin-bottom:22px}
+  .st{background:var(--bg2);padding:16px 18px}
+  .st-k{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:var(--tx3);margin-bottom:8px}
+  .st-v{font-family:var(--mono);font-size:26px;font-weight:700;line-height:1;letter-spacing:-.02em}
+  .st-s{font-size:11.5px;color:var(--tx3);margin-top:7px;line-height:1.5}
+  .st.alarm .st-v{color:var(--r)}
+  .st.warn .st-v{color:var(--y)}
+  .st.good .st-v{color:var(--g)}
+
+  /* ── docket table ── */
+  .board{border:1px solid var(--bdr);background:var(--bg2)}
+  .board-h{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+    padding:13px 18px;border-bottom:1px solid var(--bdr);background:var(--bg3)}
+  .board-t{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--tx2)}
+  .board-src{font-family:var(--mono);font-size:11px;color:var(--tx3)}
+  .rowhead,.row{display:grid;grid-template-columns:118px minmax(180px,2.1fr) .95fr .95fr .8fr .9fr 96px;
+    gap:14px;align-items:center;padding:12px 18px}
+  .rowhead{border-bottom:1px solid var(--bdr);font-family:var(--mono);font-size:9.5px;font-weight:700;
+    letter-spacing:1px;text-transform:uppercase;color:var(--tx3)}
+  .row{border-bottom:1px solid var(--bg3);cursor:pointer;transition:background .12s;text-align:left;width:100%;
+    background:none;border-left:none;border-right:none;border-top:none;font-family:inherit;font-size:inherit;color:inherit}
+  .row:last-of-type{border-bottom:none}
+  .row:hover{background:var(--bg3)}
+  .row.open{background:var(--bg3)}
+  .tag{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;
+    padding:5px 8px;display:inline-block;white-space:nowrap;color:#fff}
+  .tag.bad{background:var(--r)}
+  .tag.over{background:var(--o)}
+  .tag.warn{background:var(--y)}
+  .tag.idle{background:var(--tx3)}
+  .tag.ok{background:var(--g)}
+  .cname{font-weight:600;font-size:14.5px;letter-spacing:-.01em;line-height:1.3}
+  .cvar{font-size:11.5px;color:var(--tx3);margin-top:3px;font-family:var(--mono)}
+  .mono{font-family:var(--mono);font-size:13px;font-weight:500}
+  .mono.up{color:var(--g)}
+  .mono.down{color:var(--r)}
+  .mono.mut{color:var(--tx3);font-size:12px}
+  .colh{font-family:var(--mono);font-size:12px;color:var(--tx2)}
+  .flagcount{display:flex;align-items:center;gap:5px;justify-content:flex-end}
+  .dot{width:7px;height:7px;border-radius:50%;display:inline-block}
+  .dot.s3{background:var(--r)}.dot.s2{background:var(--y)}.dot.s1{background:var(--tx3)}
+  .chev{font-family:var(--mono);font-size:12px;color:var(--tx3);margin-left:4px}
+
+  /* ── expanded detail ── */
+  .detail{border-bottom:1px solid var(--bg3);background:#FBFCFE;padding:4px 18px 22px}
+  .dgrid{display:grid;grid-template-columns:1fr 300px;gap:26px;align-items:start}
+  @media(max-width:860px){.dgrid{grid-template-columns:1fr}}
+  .fl{border-left:2px solid var(--bdr2);padding:12px 0 12px 16px;margin-top:14px}
+  .fl.s3{border-left-color:var(--r)}
+  .fl.s2{border-left-color:var(--y)}
+  .fl.s1{border-left-color:var(--bdr2)}
+  .fl.s0{border-left-color:var(--g)}
+  .fl-t{font-size:13.5px;font-weight:700;letter-spacing:-.01em;margin-bottom:5px;display:flex;align-items:center;gap:8px}
+  .fl-b{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:2px 6px}
+  .fl.s3 .fl-b{background:rgba(220,38,38,.13);color:var(--r)}
+  .fl.s2 .fl-b{background:rgba(168,118,10,.15);color:var(--y)}
+  .fl.s1 .fl-b{background:var(--bg3);color:var(--tx3)}
+  .fl.s0 .fl-b{background:rgba(15,154,87,.15);color:var(--g)}
+  .fl-x{font-size:13.5px;color:var(--tx2);line-height:1.65;max-width:70ch}
+  .nums{border:1px solid var(--bdr);background:var(--bg2);padding:14px 16px;margin-top:14px}
+  .nums-t{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--tx3);margin-bottom:10px}
+  .nr{display:flex;justify-content:space-between;gap:12px;font-family:var(--mono);font-size:12px;padding:4px 0;color:var(--tx2);border-bottom:1px solid var(--bg3)}
+  .nr:last-child{border-bottom:none}
+  .nr .k{color:var(--tx3)}
+  .nr .v{color:var(--tx);font-weight:500;text-align:right}
+  .armtable{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin-top:10px}
+  .armtable th{text-align:right;color:var(--tx3);font-weight:700;font-size:9.5px;text-transform:uppercase;letter-spacing:.7px;padding:6px 8px;border-bottom:1px solid var(--bdr)}
+  .armtable th:first-child{text-align:left}
+  .armtable td{padding:6px 8px;border-bottom:1px solid var(--bg3);color:var(--tx2);text-align:right}
+  .armtable td:first-child{text-align:left;color:var(--tx)}
+  .armtable tr.ctrl td{color:var(--tx3)}
+  .scroller{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+  /* ── intake ── */
+  .drop{border:1.5px dashed var(--bdr2);background:var(--bg2);padding:32px 26px;text-align:center;transition:border-color .15s,background .15s}
+  .drop.over{border-color:var(--ac);background:var(--bg3)}
+  .drop-title{font-size:16.5px;font-weight:700;margin-bottom:7px;letter-spacing:-.01em}
+  .drop-sub{font-size:13px;color:var(--tx3);line-height:1.65;margin-bottom:18px;max-width:60ch;margin-left:auto;margin-right:auto}
+  .drop-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .btn{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.4px;padding:11px 18px;
+    border:1px solid var(--bdr2);background:var(--bg3);color:var(--tx);cursor:pointer;transition:.15s;text-decoration:none;display:inline-block}
+  .btn:hover{border-color:var(--tx2)}
+  .btn-p{background:var(--ac);border-color:var(--ac);color:#fff}
+  .btn-p:hover{background:#0A3CC4;border-color:#0A3CC4}
+  .btn-ghost{background:transparent}
+  .err{color:var(--r);font-size:13px;margin-top:14px;font-family:var(--mono);display:none}
+  .fmt{font-family:var(--mono);font-size:11.5px;color:var(--tx3);background:var(--bg3);border:1px solid var(--bdr);
+    padding:12px 14px;margin-top:16px;text-align:left;line-height:1.8;overflow-x:auto;white-space:pre}
+
+  /* ── gap table ── */
+  .gap{width:100%;border-collapse:collapse;margin-top:26px;font-size:14px}
+  .gap th{text-align:left;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:1px;
+    text-transform:uppercase;color:var(--tx3);padding:10px 12px;border-bottom:1px solid var(--bdr2)}
+  .gap th:not(:first-child),.gap td:not(:first-child){text-align:center;width:118px}
+  .gap td{padding:13px 12px;border-bottom:1px solid var(--bdr);color:var(--tx2);line-height:1.55;vertical-align:top}
+  .gap td:first-child{color:var(--tx);font-weight:500}
+  .gap td small{display:block;color:var(--tx3);font-weight:400;font-size:12.5px;margin-top:3px;line-height:1.5}
+  .yes{color:var(--g);font-weight:700;font-family:var(--mono);font-size:14px}
+  .no{color:var(--r);font-weight:700;font-family:var(--mono);font-size:14px}
+  .mid{color:var(--y);font-weight:700;font-family:var(--mono);font-size:13px}
+
+  /* ── drenched blocks ── */
+  .ink{background:var(--tx);color:#fff}
+  .ink h2{color:#fff}
+  .ink .lede{color:rgba(255,255,255,.72)}
+  .ink .kicker{color:rgba(255,255,255,.5)}
+  .price{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.14);margin-top:34px}
+  @media(max-width:720px){.price{grid-template-columns:1fr}}
+  .pc{background:var(--tx);padding:26px 26px 28px}
+  .pc.hi{background:#11161F}
+  .pc-n{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:14px}
+  .pc-p{font-family:var(--display);font-size:38px;font-weight:800;letter-spacing:-.035em;line-height:1;margin-bottom:6px}
+  .pc-p small{font-family:var(--sans);font-size:14px;font-weight:500;color:rgba(255,255,255,.5);letter-spacing:0}
+  .pc-d{font-size:13.5px;color:rgba(255,255,255,.66);line-height:1.65;margin-bottom:18px}
+  .pc-l{list-style:none;font-size:13.5px;color:rgba(255,255,255,.8);line-height:1.5}
+  .pc-l li{padding:7px 0 7px 20px;position:relative;border-top:1px solid rgba(255,255,255,.1)}
+  .pc-l li:before{content:"→";position:absolute;left:0;color:var(--ac);font-family:var(--mono);font-size:12px}
+  .pc .btn{margin-top:20px}
+  .pc .btn-w{background:#fff;border-color:#fff;color:var(--tx)}
+  .pc .btn-w:hover{background:var(--ac);border-color:var(--ac);color:#fff}
+  .pc .btn-o{background:transparent;border-color:rgba(255,255,255,.3);color:#fff}
+  .pc .btn-o:hover{border-color:#fff}
+
+  .method{font-size:13px;color:var(--tx3);line-height:1.75;max-width:74ch;margin-top:24px}
+  .method b{color:var(--tx2);font-weight:600}
+  .method a{color:var(--ac);text-decoration:none}
+  .note{font-size:12.5px;color:var(--tx3);line-height:1.65;margin-top:14px}
+  .note a{color:var(--ac);text-decoration:none}
+
+  .footer{border-top:1px solid var(--bdr);padding:26px 40px;margin-top:0;display:flex;align-items:center;
+    justify-content:space-between;flex-wrap:wrap;gap:12px;max-width:1120px;margin-left:auto;margin-right:auto}
+  .footer div{font-size:13px;color:var(--tx3)}
+  .footer a{color:var(--ac);text-decoration:none}
+  .footer .r{font-family:var(--mono);font-size:11px}
+
+  @media(max-width:1000px){
+    .rowhead,.row{grid-template-columns:110px minmax(150px,1.8fr) .9fr .9fr .9fr 80px}
+    .rowhead .h-p,.row .c-p{display:none}
+  }
+  @media(max-width:760px){
+    .wrap,.wrap-n{padding:0 22px}.nav{padding:0 22px}.footer{padding:26px 22px}
+    .rowhead{display:none}
+    .row{grid-template-columns:1fr auto;gap:8px 12px;padding:14px 16px;align-items:start}
+    .row .c-name{order:1}
+    .row .c-tag{order:2;justify-self:end}
+    .row .c-raw,.row .c-honest,.row .c-split{order:3;display:none}
+    .row .c-close{order:4;grid-column:1;font-size:12px}
+    .row .c-flags{order:5;grid-column:2;justify-self:end}
+    .detail{padding:4px 16px 20px}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-brand" href="/" aria-label="AB Integrity — ecommerce A/B testing">
+    <svg class="brand-mark" viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect width="34" height="34" rx="9.5" fill="#0B5BFF"/>
+      <rect x="8" y="14.6" width="6" height="9.4" rx="2" fill="#fff" opacity=".48"/>
+      <rect x="17.6" y="7.8" width="6" height="16.2" rx="2" fill="#fff"/>
+      <rect x="8" y="26.2" width="17.8" height="2.3" rx="1.15" fill="#FF4A21"/>
+    </svg>
+    <span class="brand-text">
+      <span class="brand-name">AB <span>Integrity</span></span>
+      <span class="brand-sub">Ecommerce A/B testing</span>
+    </span>
+  </a>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a class="nav-link" href="/">Tools</a>
+      <a class="nav-link hide-sm" href="/learn/">Learn</a>
+      <a class="nav-link" href="/blog/">Blog</a>
+      <a class="nav-link" href="/about">About</a>
+    </div>
+    <a class="nav-cta active" href="/docket">Docket</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">// Docket</div>
+    <h1>Forty tests running. <span class="ac">Which three are lying?</span></h1>
+    <p class="lede">Your testing platform shows you one activity at a time, and it tells you the same thing about each one: a conversion rate, a lift, a confidence number. It will not tell you that the traffic split on test 12 is broken, that the winner on test 5 stops being a winner once you count how many comparisons you ran, or that test 19 closes on Friday and was never going to reach an answer. <strong>Drop in one export covering everything you have live. Get back a docket, worst first.</strong></p>
+  </div>
+</section>
+
+<section class="wrap" style="padding-bottom:10px">
+  <div id="strip" class="strip"></div>
+
+  <div class="board">
+    <div class="board-h">
+      <div class="board-t">// Docket · ranked by severity</div>
+      <div class="board-src" id="src">demo portfolio · 8 activities</div>
+    </div>
+    <div class="rowhead">
+      <div>Status</div><div>Activity</div><div>Raw lift</div><div>Honest lift</div>
+      <div>Split</div><div class="h-p">Closes</div><div style="text-align:right">Flags</div>
+    </div>
+    <div id="rows"></div>
+  </div>
+  <p class="note">Click any row for the full working. Every number is computed in your browser. Nothing is uploaded, and nothing is stored.</p>
+</section>
+
+<section class="sect">
+  <div class="wrap">
+    <div class="kicker">// Run it on yours</div>
+    <h2>One file. Every activity.</h2>
+    <p class="lede">Export your activities with a row per experience. It does not matter which platform: if the file has an activity name, an experience name, visitors and conversions, the docket will read it. Revenue and end dates unlock the revenue conflict and pace checks.</p>
+
+    <div class="drop" id="drop" style="margin-top:28px">
+      <div class="drop-title">Drop a multi-activity CSV here</div>
+      <div class="drop-sub">Adobe Target, Adobe Analytics, Optimizely, VWO, AB Tasty, Dynamic Yield, GA4, or a spreadsheet you built by hand. Columns are detected automatically and you can correct them.</div>
+      <div class="drop-actions">
+        <label class="btn btn-p">Choose file<input type="file" id="file" accept=".csv,.tsv,.txt" style="display:none"></label>
+        <button class="btn btn-ghost" id="demoBtn">Reload the demo portfolio</button>
+        <button class="btn btn-ghost" id="dlDemo">Download the demo CSV</button>
+      </div>
+      <div class="err" id="err"></div>
+      <div class="fmt">Activity,Experience,Visitors,Orders,Revenue,End date
+PDP sticky add-to-cart,Control,48201,2410,289200,2026-08-04
+PDP sticky add-to-cart,Sticky bar,45882,2477,300500,2026-08-04
+Checkout progress bar,Control,61200,3060,367200,2026-07-28</div>
+    </div>
+
+    <div id="mapWrap" style="display:none;margin-top:18px">
+      <div class="board">
+        <div class="board-h"><div class="board-t">// we read this · fix a column if we guessed wrong</div></div>
+        <div style="padding:18px">
+          <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:16px" id="mapFields"></div>
+          <div class="drop-actions" style="justify-content:flex-start">
+            <button class="btn btn-p" id="run">Build the docket</button>
+            <button class="btn btn-ghost" id="reset">Start over</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sect" style="padding-top:0">
+  <div class="wrap">
+    <div class="kicker">// The argument</div>
+    <h2>What your platform will not tell you</h2>
+    <p class="lede">Every one of these is computable from the export you already have. None of them appear in the report your platform hands you, and none of them appear in the deck your agency builds from it.</p>
+
+    <div class="scroller">
+    <table class="gap">
+      <thead>
+        <tr><th>Check</th><th>Adobe Target</th><th>Optimizely</th><th>Docket</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Sample ratio mismatch
+            <small>Did the traffic actually split the way you configured it? If not, nothing else in the test means anything.</small></td>
+          <td class="no">no</td><td class="mid">partial</td><td class="yes">yes</td>
+        </tr>
+        <tr>
+          <td>Multiple-comparison correction
+            <small>Four experiences against five metrics is twenty chances to find a winner by luck. Both platforms report every cell as if it were the only one you looked at.</small></td>
+          <td class="no">no</td><td class="mid">partial</td><td class="yes">yes</td>
+        </tr>
+        <tr>
+          <td>Achieved power
+            <small>The smallest lift this sample could ever have detected. Without it, "no significant difference" is indistinguishable from "we did not measure".</small></td>
+          <td class="no">no</td><td class="no">no</td><td class="yes">yes</td>
+        </tr>
+        <tr>
+          <td>Winner's-curse correction
+            <small>A barely significant winner is nearly always smaller than it looks. This is why shipped tests underdeliver against the deck six months later.</small></td>
+          <td class="no">no</td><td class="no">no</td><td class="yes">yes</td>
+        </tr>
+        <tr>
+          <td>Conversion against revenue
+            <small>More orders at a smaller basket is a loss wearing a win's clothes. Reported side by side, never reconciled.</small></td>
+          <td class="no">no</td><td class="no">no</td><td class="yes">yes</td>
+        </tr>
+        <tr>
+          <td>Pace to close
+            <small>At today's traffic, will this test reach an answer before its end date? Nobody computes this, so tests close on the calendar instead of on the data.</small></td>
+          <td class="no">no</td><td class="mid">partial</td><td class="yes">yes</td>
+        </tr>
+        <tr>
+          <td>One ranked view across every activity
+            <small>Not a list of tests. A list of the tests that need you today, worst first.</small></td>
+          <td class="no">no</td><td class="no">no</td><td class="yes">yes</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p class="method"><b>On the comparison.</b> Adobe Target reports confidence from a two-tailed Welch's t-test as 1 minus the p-value, and its documented CSV download contains raw data only, without lift or confidence. Neither its reporting documentation nor Optimizely's describes a sample ratio check on the results view or a correction across experiences and metrics. Optimizely's sequential testing does control error under repeated looks and its export reports samples remaining to significance, which is why it scores partial on three rows rather than no. Marked as of July 2026 against published documentation. If a platform ships one of these, this table gets corrected.</p>
+
+    <p class="method"><b>On the method.</b> Significance is a two-proportion z-test on the pooled standard error. The multiple-comparison bar is Šidák at a family-wise 5%, counting every variant against every metric in the file, which assumes the comparisons are independent and is therefore a touch conservative when your metrics correlate. Sample ratio mismatch is a chi-square goodness-of-fit test against the configured split, flagged hard below p = 0.01. The honest lift is a posterior mean under a skeptical normal prior of 15% relative on the true effect. Power is the smallest relative effect detectable at 80% with the sample collected. Every one of these is the same math as the free tools on this site, run across your whole portfolio at once instead of one test at a time.</p>
+  </div>
+</section>
+
+<section class="sect ink">
+  <div class="wrap">
+    <div class="kicker">// Access</div>
+    <h2>The tools stay free. The docket does not.</h2>
+    <p class="lede">Every calculator on this site stays exactly where it is: free, no account, nothing uploaded. What costs money is not having to run them one test at a time. Upload once a week, get the whole portfolio triaged, and know which three tests to open before your Monday meeting.</p>
+
+    <div class="price">
+      <div class="pc">
+        <div class="pc-n">Always free</div>
+        <div class="pc-p">€0</div>
+        <div class="pc-d">The seven tools, plus Instant Analysis on a single test. Everything runs in your browser.</div>
+        <ul class="pc-l">
+          <li>One test at a time, by hand</li>
+          <li>Every calculation, in full</li>
+          <li>No account, nothing stored</li>
+        </ul>
+        <a class="btn btn-o" href="/">See the tools</a>
+      </div>
+      <div class="pc hi">
+        <div class="pc-n">Docket · in development</div>
+        <div class="pc-p">€49 <small>/ month</small></div>
+        <div class="pc-d">Your whole portfolio, triaged from one file. Priced to go on a company card without a procurement conversation.</div>
+        <ul class="pc-l">
+          <li>Unlimited activities per upload</li>
+          <li>Every check on this page, ranked worst first</li>
+          <li>Weekly change log: what moved, what broke</li>
+          <li>Shareable read-only verdict for the deck</li>
+          <li>Direct platform connections when they land</li>
+        </ul>
+        <a class="btn btn-w" href="mailto:sebaszijlstra@hotmail.com?subject=Docket%20early%20access&body=Which%20platform%20do%20you%20test%20on%2C%20and%20roughly%20how%20many%20activities%20do%20you%20run%20at%20once%3F">Ask for early access</a>
+      </div>
+    </div>
+    <p class="note" style="color:rgba(255,255,255,.45);margin-top:20px">The demo above is the real engine on invented data. Bring your own export and it will run on that instead, in your browser, before you pay anyone anything.</p>
+  </div>
+</section>
+
+<footer class="footer">
+  <div>AB Integrity · <a href="https://www.linkedin.com/in/sebastianzijlstra" target="_blank" rel="me noopener">LinkedIn ↗</a> · <a href="/privacy" style="color:var(--tx3)">Privacy</a></div>
+  <div class="r">runs in your browser · nothing is uploaded</div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+
+/* ═══════════ stats ═══════════ */
+function erf(x){var s=x<0?-1:1;x=Math.abs(x);var t=1/(1+0.3275911*x);
+  return s*(1-(((((1.061405429*t-1.453152027)*t)+1.421413741)*t-0.284496736)*t+0.254829592)*t*Math.exp(-x*x));}
+function ncdf(z){return 0.5*(1+erf(z/Math.SQRT2));}
+function gammaln(x){var c=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,0.1208650973866179e-2,-0.5395239384953e-5];
+  var y=x,t=x+5.5;t-=(x+0.5)*Math.log(t);var s=1.000000000190015;
+  for(var j=0;j<6;j++){y++;s+=c[j]/y;}return -t+Math.log(2.5066282746310005*s/x);}
+function chiSqP(x,k){if(x<=0)return 1;
+  var a=k/2,xx=x/2,sum=1/a,term=1/a,n=1;
+  while(n<1000){term*=xx/(a+n);sum+=term;if(term<sum*1e-12)break;n++;}
+  return Math.max(0,1-sum*Math.exp(-xx+a*Math.log(xx)-gammaln(a)));}
+var Z_ALPHA=1.959963985,Z_POWER=0.841621234;
+
+function twoProp(cA,nA,cB,nB){
+  var pA=cA/nA,pB=cB/nB,d=pB-pA;
+  var pPool=(cA+cB)/(nA+nB);
+  var sePool=Math.sqrt(pPool*(1-pPool)*(1/nA+1/nB));
+  var z=sePool>0?d/sePool:0;
+  var seUn=Math.sqrt(pA*(1-pA)/nA+pB*(1-pB)/nB);
+  return {pA:pA,pB:pB,d:d,z:z,p:2*(1-ncdf(Math.abs(z))),se:seUn};
+}
+function srmTest(counts,weights){
+  var total=counts.reduce(function(a,b){return a+b;},0);
+  if(!weights)weights=counts.map(function(){return 1/counts.length;});
+  var chi=0;
+  for(var i=0;i<counts.length;i++){var e=total*weights[i];if(e>0)chi+=(counts[i]-e)*(counts[i]-e)/e;}
+  var df=counts.length-1;
+  return {chi:chi,df:df,total:total,p:df===1?2*(1-ncdf(Math.sqrt(chi))):chiSqP(chi,df)};
+}
+function mdeRelative(p,nA,nB){
+  if(!(p>0)||!(nA>0)||!(nB>0))return Infinity;
+  return (Z_ALPHA+Z_POWER)*Math.sqrt(p*(1-p)*(1/nA+1/nB))/p;
+}
+function nRequired(p,r){
+  if(!(p>0)||!r)return Infinity;
+  var p2=p*(1+r),d=p2-p;
+  if(p2<=0||p2>=1||d===0)return Infinity;
+  return Math.ceil(Math.pow(Z_ALPHA+Z_POWER,2)*(p*(1-p)+p2*(1-p2))/(d*d));
+}
+function shrink(res){
+  var s0=0.15*Math.max(res.pA,1e-9),se=Math.max(res.se,1e-12);
+  var postVar=1/(1/(s0*s0)+1/(se*se));
+  var mean=postVar*(res.d/(se*se)),sd=Math.sqrt(postVar);
+  return {mean:mean,sd:sd,pBeats:ncdf(mean/sd)};
+}
+function sidak(alpha,m){return m<=1?alpha:1-Math.pow(1-alpha,1/m);}
+
+/* ═══════════ verdict ═══════════ */
+var STATUS={
+  INVALID:{rank:100,label:'Invalid',tone:'bad',blurb:'The measurement itself is broken. Nothing downstream is usable.'},
+  OVERSTATED:{rank:90,label:'Overstated',tone:'over',blurb:'A result is being claimed that the data does not support.'},
+  INCONCLUSIVE:{rank:60,label:'Inconclusive',tone:'warn',blurb:'This test cannot answer its own question. Stop it or resize it.'},
+  RUNNING:{rank:30,label:'Running',tone:'idle',blurb:'No call yet, and on pace to get one.'},
+  CALLED:{rank:10,label:'Called',tone:'ok',blurb:'A real result that survives every check.'}
+};
+
+function analyzeCampaign(camp,ctx){
+  var arms=camp.arms.filter(function(a){return a.visitors>0;});
+  if(arms.length<2)return null;
+  var ci=0;
+  for(var i=0;i<arms.length;i++){if(/control|original|baseline|^a$|\(a\)/i.test(arms[i].name)){ci=i;break;}}
+  var control=arms[ci],variants=arms.filter(function(_,i){return i!==ci;});
+  var srm=srmTest(arms.map(function(a){return a.visitors;}),camp.weights);
+  var best=variants.slice().sort(function(a,b){return b.rate-a.rate;})[0];
+  var tp=twoProp(control.conv,control.visitors,best.conv,best.visitors);
+  var sh=shrink(tp);
+  var relRaw=(best.rate-control.rate)/control.rate;
+  var relHonest=sh.mean/control.rate;
+  var mde=mdeRelative(control.rate,control.visitors,best.visitors);
+  var alphaAdj=sidak(0.05,ctx.totalComparisons);
+  var sigRaw=tp.p<0.05,sigAdj=tp.p<alphaAdj;
+
+  /* pace targets the observed effect, floored at 5% so a noise-level reading
+     does not demand an impossible sample and mark every quiet test doomed */
+  var pace=null;
+  if(camp.daysElapsed>0){
+    var perDay=(control.visitors+best.visitors)/2/camp.daysElapsed;
+    var target=Math.max(Math.abs(relRaw),0.05);
+    var need=nRequired(control.rate,target);
+    var have=Math.min(control.visitors,best.visitors);
+    pace={need:need,have:have,target:target,perDay:Math.round(perDay),
+      daysMore:perDay>0?Math.ceil(Math.max(0,need-have)/perDay):Infinity};
+  }
+  var rpv=null;
+  if(control.rev!=null&&best.rev!=null&&control.rev>0){
+    var ra=control.rev/control.visitors,rb=best.rev/best.visitors;
+    rpv={a:ra,b:rb,rel:(rb-ra)/ra};
+  }
+
+  /* every check files independently; status is derived from the flags after,
+     so a genuine winner can still carry a warning */
+  var flags=[];
+  function flag(id,sev,title,text){flags.push({id:id,sev:sev,title:title,text:text});}
+
+  if(srm.p<0.01){
+    flag('srm',3,'Sample ratio mismatch',
+      'Traffic did not split the way it was configured (chi-square p = '+fmtP(srm.p)+'). Something upstream is misassigning or mis-tracking visitors, so every number in this test is biased in an unknown direction. Your platform does not run this check.');
+  } else if(srm.p<0.05){
+    flag('srm_mild',2,'Split is skewed',
+      'The split is off by more than chance comfortably explains (p = '+fmtP(srm.p)+'). Not fatal on its own, but confirm assignment before acting on this.');
+  }
+  if(sigRaw&&!sigAdj){
+    flag('multiplicity',3,'Does not survive correction',
+      'Significant read on its own (p = '+fmtP(tp.p)+'), but this file contains '+ctx.totalComparisons+' variant-by-metric comparisons. At that many looks the bar moves to p < '+alphaAdj.toFixed(4)+', and this does not clear it. Your platform reports each cell as if it were the only one you looked at.');
+  }
+  if(rpv&&relRaw>0&&rpv.rel<-0.005&&sigRaw){
+    flag('rpv',3,'Conversion up, revenue down',
+      'Conversion rate is up '+pct(relRaw)+' but revenue per visitor is down '+pct(rpv.rel)+'. The variant is converting more people at a lower basket value. Shipping it trades margin for a nicer-looking chart.');
+  }
+  if(sigAdj&&relRaw>0&&relHonest<relRaw*0.85){
+    flag('curse',2,'Lift is overstated',
+      'The raw '+pct(relRaw)+' is inflated by the winner’s curse. Correct for the fact that this sample could only just detect an effect of '+pct(mde)+' and the honest estimate is about '+pct(relHonest)+'. Announce that number, not the raw one.');
+  }
+  if(!sigRaw&&mde>0.10){
+    flag('power',2,'Underpowered',
+      'This sample can only detect a lift of '+pct(mde)+' or larger. A real 3% improvement would be invisible to it, so "no difference" here means "no measurement", not "no effect".');
+  }
+  if(!sigRaw&&pace&&camp.daysLeft!=null&&camp.daysLeft>0&&pace.daysMore>camp.daysLeft&&mde<=0.10){
+    flag('pace',2,'Will not finish in time',
+      'At '+num(pace.perDay)+' visitors per arm per day it needs roughly '+pace.daysMore+' more days to call an effect of '+pct(pace.target)+', and it closes in '+camp.daysLeft+'. It will end without an answer unless you extend it.');
+  }
+  if(camp.daysLeft!=null&&camp.daysLeft>=0&&camp.daysLeft<=5){
+    flag('closing',1,camp.daysLeft===0?'Closes today':'Closes in '+camp.daysLeft+' day'+(camp.daysLeft===1?'':'s'),
+      'Decision due. '+(sigAdj?'The result is ready to act on.':'There is no clean result to act on yet.'));
+  }
+  var anyCrit=flags.some(function(f){return f.sev===3;});
+  if(sigAdj&&relRaw>0&&!anyCrit){
+    flag('win',0,'Genuine winner',
+      'Clears the corrected significance bar and holds up after the winner’s-curse adjustment. Honest lift about '+pct(relHonest)+'.');
+  }
+  if(sigAdj&&relRaw<0){
+    flag('loss',0,'Genuine loser',
+      'The variant is worse by '+pct(relRaw)+' and that is not noise (p = '+fmtP(tp.p)+'). Kill it and bank the finding.');
+  }
+
+  var has=function(id){return flags.some(function(f){return f.id===id;});};
+  var status = has('srm') ? 'INVALID'
+    : (has('multiplicity')||has('rpv')) ? 'OVERSTATED'
+    : sigAdj ? 'CALLED'
+    : (has('power')||has('pace')) ? 'INCONCLUSIVE'
+    : 'RUNNING';
+
+  flags.sort(function(a,b){return b.sev-a.sev;});
+  return {name:camp.name,status:status,meta:STATUS[status],control:control,best:best,arms:arms,
+    srm:srm,tp:tp,relRaw:relRaw,relHonest:relHonest,mde:mde,sigRaw:sigRaw,sigAdj:sigAdj,
+    alphaAdj:alphaAdj,pBeats:sh.pBeats,rpv:rpv,pace:pace,flags:flags,metrics:camp.metrics||1,
+    daysLeft:camp.daysLeft,daysElapsed:camp.daysElapsed,
+    split:arms.map(function(a){return a.visitors/srm.total;})};
+}
+
+function analyzePortfolio(campaigns){
+  var totalComparisons=campaigns.reduce(function(s,c){
+    return s+Math.max(1,c.arms.length-1)*(c.metrics||1);},0);
+  var ctx={totalComparisons:totalComparisons};
+  var results=campaigns.map(function(c){return analyzeCampaign(c,ctx);}).filter(Boolean);
+  results.sort(function(a,b){
+    if(b.meta.rank!==a.meta.rank)return b.meta.rank-a.meta.rank;
+    return (a.daysLeft==null?999:a.daysLeft)-(b.daysLeft==null?999:b.daysLeft);});
+  return {results:results,totalComparisons:totalComparisons,
+    anyFalseWinner:1-Math.pow(0.95,totalComparisons),
+    counts:results.reduce(function(m,r){m[r.status]=(m[r.status]||0)+1;return m;},{})};
+}
+
+/* ═══════════ format ═══════════ */
+function fmtP(p){return p<0.0001?'<0.0001':p<0.001?p.toExponential(1):p.toFixed(4);}
+function pct(x){return (x>=0?'+':'')+(x*100).toFixed(1)+'%';}
+function num(n){return Math.round(n).toLocaleString('en-US');}
+function money(n){return Math.round(n).toLocaleString('en-US');}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+var $=function(id){return document.getElementById(id);};
+
+/* ═══════════ demo portfolio ═══════════ */
+function demoCampaigns(){
+  return [
+    {name:'PDP sticky add-to-cart',daysElapsed:21,daysLeft:7,metrics:3,arms:[
+      {name:'Control',visitors:48201,conv:2410,rev:289200},
+      {name:'Sticky bar',visitors:45882,conv:2477,rev:300500}]},
+    {name:'Checkout progress bar',daysElapsed:28,daysLeft:0,metrics:2,arms:[
+      {name:'Control',visitors:61200,conv:3060,rev:367200},
+      {name:'Progress bar',visitors:61050,conv:3355,rev:409310}]},
+    {name:'Homepage hero rotator',daysElapsed:18,daysLeft:10,metrics:4,arms:[
+      {name:'Control',visitors:30100,conv:1204,rev:144480},
+      {name:'Static hero',visitors:30050,conv:1250,rev:150000},
+      {name:'Video hero',visitors:29980,conv:1324,rev:158880},
+      {name:'Split hero',visitors:30110,conv:1198,rev:143760}]},
+    {name:'Free shipping threshold banner',daysElapsed:20,daysLeft:4,metrics:2,arms:[
+      {name:'Control',visitors:40000,conv:2000,rev:240000},
+      {name:'Banner',visitors:39900,conv:2055,rev:246600}]},
+    {name:'Mobile filter redesign',daysElapsed:35,daysLeft:2,metrics:1,arms:[
+      {name:'Control',visitors:5200,conv:156,rev:18720},
+      {name:'New filters',visitors:5180,conv:163,rev:19560}]},
+    {name:'Search autocomplete v2',daysElapsed:20,daysLeft:14,metrics:3,arms:[
+      {name:'Control',visitors:44000,conv:2200,rev:286000},
+      {name:'Autocomplete',visitors:43900,conv:2480,rev:272800}]},
+    {name:'Guest checkout toggle',daysElapsed:6,daysLeft:22,metrics:2,arms:[
+      {name:'Control',visitors:12400,conv:620,rev:74400},
+      {name:'Guest first',visitors:12380,conv:634,rev:76080}]},
+    {name:'Loyalty upsell modal',daysElapsed:30,daysLeft:1,metrics:2,arms:[
+      {name:'Control',visitors:52000,conv:2600,rev:312000},
+      {name:'Upsell modal',visitors:51900,conv:2340,rev:280800}]}
+  ].map(function(c){
+    c.arms.forEach(function(a){a.rate=a.conv/a.visitors;});
+    return c;
+  });
+}
+function demoCSV(){
+  var out=['Activity,Experience,Visitors,Orders,Revenue,Start date,End date'];
+  var today=new Date();
+  demoCampaigns().forEach(function(c){
+    var start=new Date(today.getTime()-c.daysElapsed*864e5);
+    var end=new Date(today.getTime()+c.daysLeft*864e5);
+    c.arms.forEach(function(a){
+      out.push([c.name,a.name,a.visitors,a.conv,a.rev,iso(start),iso(end)].join(','));
+    });
+  });
+  return out.join('\n');
+}
+function iso(d){return d.toISOString().slice(0,10);}
+
+/* ═══════════ CSV ═══════════ */
+function splitLine(line,delim){
+  var out=[],cur='',q=false;
+  for(var i=0;i<line.length;i++){
+    var ch=line[i];
+    if(q){
+      if(ch==='"'&&line[i+1]==='"'){cur+='"';i++;}
+      else if(ch==='"'){q=false;}
+      else cur+=ch;
+    } else if(ch==='"'){q=true;}
+    else if(ch===delim){out.push(cur);cur='';}
+    else cur+=ch;
+  }
+  out.push(cur);
+  return out.map(function(c){return c.trim();});
+}
+function parseCSV(text){
+  text=text.replace(/\r/g,'').trim();
+  if(!text)return null;
+  var lines=text.split('\n').filter(function(l){return l.trim().length;});
+  if(!lines.length)return null;
+  var head=lines[0];
+  var counts={',':(head.match(/,/g)||[]).length,'\t':(head.match(/\t/g)||[]).length,';':(head.match(/;/g)||[]).length};
+  var delim=Object.keys(counts).reduce(function(a,b){return counts[b]>counts[a]?b:a;},',');
+  var rows=lines.map(function(l){return splitLine(l,delim);});
+  var allNum=rows[0].every(function(c){return c===''||!isNaN(toNum(c));});
+  if(allNum)return {header:rows[0].map(function(_,i){return 'Column '+(i+1);}),rows:rows};
+  return {header:rows[0],rows:rows.slice(1)};
+}
+function toNum(s){
+  if(s==null)return NaN;
+  var t=String(s).replace(/[\s,$€£%]/g,'');
+  // 1.234,56 european style
+  if(/^-?\d+\.\d{3}(,\d+)?$/.test(t))t=t.replace(/\./g,'').replace(',','.');
+  else t=t.replace(/,/g,'');
+  return parseFloat(t);
+}
+function guess(header,re){
+  for(var i=0;i<header.length;i++)if(re.test(header[i]))return i;
+  return -1;
+}
+function parseDate(s){
+  if(!s)return null;
+  var d=new Date(s);
+  return isNaN(d.getTime())?null:d;
+}
+
+var parsed=null,mapSel=null;
+var FIELDS=[
+  {key:'activity',label:'Activity',re:/^(activity|campaign|experiment|test)\b|activity ?name|campaign ?name|experiment ?name|test ?name/i,required:true},
+  {key:'variant',label:'Experience',re:/experience|variation|variant|recipe|version|arm|offer|combination/i,required:true},
+  {key:'visitors',label:'Visitors',re:/visitor|impression|entrant|traffic|user|session|participant|denominator|sample|reach/i,required:true},
+  {key:'conv',label:'Conversions',re:/conversion|order|success|goal|purchase|transaction|buyer|checkout|numerator/i,required:true},
+  {key:'rev',label:'Revenue (optional)',re:/revenue|sales|amount|value|gmv/i,required:false},
+  {key:'metric',label:'Metric (optional)',re:/metric|goal ?name|kpi/i,required:false},
+  {key:'end',label:'End date (optional)',re:/end ?date|end ?time|finish|closes?$|stop/i,required:false},
+  {key:'start',label:'Start date (optional)',re:/start ?date|start ?time|launch|begin/i,required:false}
+];
+
+function ingest(text){
+  hideErr();
+  parsed=parseCSV(text);
+  if(!parsed||parsed.rows.length<2){showErr('Could not read a table with at least two rows.');return;}
+  var h=parsed.header;
+  mapSel={};
+  FIELDS.forEach(function(f){mapSel[f.key]=guess(h,f.re);});
+  // conversions must not collide with a rate column or with visitors
+  if(mapSel.conv===mapSel.visitors)mapSel.conv=-1;
+  if(mapSel.conv<0)mapSel.conv=firstNumeric(h,parsed.rows,[mapSel.activity,mapSel.variant,mapSel.visitors]);
+  if(mapSel.visitors<0)mapSel.visitors=firstNumeric(h,parsed.rows,[mapSel.activity,mapSel.variant,mapSel.conv]);
+  if(mapSel.activity<0)mapSel.activity=0;
+  if(mapSel.variant<0)mapSel.variant=mapSel.activity===0?1:0;
+  buildMap(h);
+  $('mapWrap').style.display='block';
+  $('mapWrap').scrollIntoView({block:'center',behavior:'smooth'});
+}
+function firstNumeric(h,rows,exclude){
+  for(var i=0;i<h.length;i++){
+    if(exclude.indexOf(i)>-1)continue;
+    if(!isNaN(toNum(rows[0][i])))return i;
+  }
+  return -1;
+}
+function buildMap(header){
+  var html='';
+  FIELDS.forEach(function(f){
+    var opts=f.required?'':'<option value="-1"'+(mapSel[f.key]<0?' selected':'')+'>(none)</option>';
+    header.forEach(function(name,i){
+      opts+='<option value="'+i+'"'+(i===mapSel[f.key]?' selected':'')+'>'+esc(name)+'</option>';
+    });
+    html+='<div style="flex:1;min-width:150px"><label style="display:block;font-size:10px;font-weight:700;'+
+      'text-transform:uppercase;letter-spacing:.6px;color:var(--tx3);margin-bottom:5px">'+f.label+'</label>'+
+      '<select data-k="'+f.key+'" style="width:100%;background:var(--bg);border:1px solid var(--bdr);color:var(--tx);'+
+      'padding:8px 10px;font-family:var(--mono);font-size:12px;outline:none">'+opts+'</select></div>';
+  });
+  $('mapFields').innerHTML=html;
+  Array.prototype.forEach.call($('mapFields').querySelectorAll('select'),function(s){
+    s.onchange=function(){mapSel[s.getAttribute('data-k')]=+s.value;};
+  });
+}
+
+function buildCampaigns(){
+  var m=mapSel,groups={},order=[],metricsByCamp={};
+  var today=new Date();today.setHours(0,0,0,0);
+  parsed.rows.forEach(function(r){
+    var vis=toNum(r[m.visitors]),cv=toNum(r[m.conv]);
+    if(isNaN(vis)||isNaN(cv)||vis<=0)return;
+    var cname=(r[m.activity]||'Unnamed activity').toString();
+    var metric=m.metric>=0?(r[m.metric]||'').toString():'';
+    if(!metricsByCamp[cname])metricsByCamp[cname]={};
+    if(metric)metricsByCamp[cname][metric]=1;
+    // when the file is long-format across metrics, only the first metric seen
+    // per activity feeds the verdict; the rest still count toward multiplicity
+    if(m.metric>=0){
+      if(!groups[cname])groups[cname]={primary:metric};
+      if(metric!==groups[cname].primary)return;
+    }
+    if(!groups[cname]){groups[cname]={};}
+    if(!groups[cname].arms){
+      groups[cname].arms=[];groups[cname].name=cname;order.push(cname);
+      var ed=m.end>=0?parseDate(r[m.end]):null;
+      var sd=m.start>=0?parseDate(r[m.start]):null;
+      groups[cname].daysLeft=ed?Math.round((ed-today)/864e5):null;
+      groups[cname].daysElapsed=sd?Math.max(1,Math.round((today-sd)/864e5)):null;
+    }
+    var rev=m.rev>=0?toNum(r[m.rev]):NaN;
+    groups[cname].arms.push({
+      name:(r[m.variant]||'?').toString(),visitors:vis,conv:cv,rate:cv/vis,
+      rev:isNaN(rev)?null:rev});
+  });
+  return order.map(function(k){
+    var g=groups[k];
+    g.metrics=Math.max(1,Object.keys(metricsByCamp[k]||{}).length);
+    return g;
+  }).filter(function(g){return g.arms&&g.arms.length>=2;});
+}
+
+/* ═══════════ render ═══════════ */
+var current=null;
+function renderPortfolio(campaigns,label){
+  var out=analyzePortfolio(campaigns);
+  current=out;
+  if(!out.results.length){showErr('Read the file, but could not find any activity with two or more experiences.');return;}
+  $('src').textContent=label;
+
+  var c=out.counts;
+  var needAttention=(c.INVALID||0)+(c.OVERSTATED||0);
+  var strip=[
+    {k:'Activities',v:out.results.length,s:'in this file',cls:''},
+    {k:'Need attention',v:needAttention,s:'invalid or overstated',cls:needAttention?'alarm':'good'},
+    {k:'Inconclusive',v:c.INCONCLUSIVE||0,s:'cannot answer as sized',cls:(c.INCONCLUSIVE||0)?'warn':''},
+    {k:'Safe to act on',v:c.CALLED||0,s:'survive every check',cls:(c.CALLED||0)?'good':''},
+    {k:'Comparisons',v:out.totalComparisons,s:'variant × metric in this file',cls:''},
+    {k:'False-winner risk',v:Math.round(out.anyFalseWinner*100)+'%',
+     s:'chance at least one 95% "winner" here is luck',cls:out.anyFalseWinner>0.5?'alarm':'warn'}
+  ];
+  $('strip').innerHTML=strip.map(function(s){
+    return '<div class="st '+s.cls+'"><div class="st-k">'+s.k+'</div><div class="st-v">'+s.v+'</div><div class="st-s">'+s.s+'</div></div>';
+  }).join('');
+
+  $('rows').innerHTML=out.results.map(function(r,i){return rowHTML(r,i);}).join('');
+  Array.prototype.forEach.call($('rows').querySelectorAll('.row'),function(btn){
+    btn.addEventListener('click',function(){toggle(+btn.getAttribute('data-i'));});
+  });
+}
+
+function rowHTML(r,i){
+  var crit=r.flags.filter(function(f){return f.sev===3;}).length;
+  var warn=r.flags.filter(function(f){return f.sev===2;}).length;
+  var notes=r.flags.filter(function(f){return f.sev===1;}).length;
+  var dots='';
+  for(var a=0;a<crit;a++)dots+='<span class="dot s3"></span>';
+  for(var b=0;b<warn;b++)dots+='<span class="dot s2"></span>';
+  for(var d=0;d<notes;d++)dots+='<span class="dot s1"></span>';
+  if(!dots)dots='<span class="mono mut">clean</span>';
+  var closes=r.daysLeft==null?'<span class="mono mut">—</span>'
+    :r.daysLeft<0?'<span class="mono mut">closed</span>'
+    :r.daysLeft===0?'<span class="mono" style="color:var(--o)">today</span>'
+    :'<span class="mono'+(r.daysLeft<=5?'" style="color:var(--o)':' mut"')+'">'+r.daysLeft+'d</span>';
+  return '<button class="row" data-i="'+i+'" aria-expanded="false">'+
+    '<div class="c-tag"><span class="tag '+r.meta.tone+'">'+r.meta.label+'</span></div>'+
+    '<div class="c-name"><div class="cname">'+esc(r.name)+'</div>'+
+      '<div class="cvar">'+esc(r.best.name)+' vs '+esc(r.control.name)+
+      (r.arms.length>2?' · '+r.arms.length+' experiences':'')+'</div></div>'+
+    '<div class="c-raw"><span class="mono '+(r.relRaw>=0?'up':'down')+'">'+pct(r.relRaw)+'</span></div>'+
+    '<div class="c-honest"><span class="mono mut">'+pct(r.relHonest)+'</span></div>'+
+    '<div class="c-split"><span class="mono'+(r.srm.p<0.01?'" style="color:var(--r)':' mut"')+'">'+
+      r.split.map(function(s){return (s*100).toFixed(1);}).join(' / ')+'</span></div>'+
+    '<div class="c-close c-p">'+closes+'</div>'+
+    '<div class="c-flags flagcount">'+dots+'<span class="chev">+</span></div>'+
+    '</button>';
+}
+
+function toggle(i){
+  var rows=$('rows');
+  var btn=rows.querySelector('.row[data-i="'+i+'"]');
+  var existing=rows.querySelector('.detail[data-i="'+i+'"]');
+  if(existing){
+    existing.parentNode.removeChild(existing);
+    btn.classList.remove('open');
+    btn.setAttribute('aria-expanded','false');
+    btn.querySelector('.chev').textContent='+';
+    return;
+  }
+  var d=document.createElement('div');
+  d.className='detail';d.setAttribute('data-i',i);
+  d.innerHTML=detailHTML(current.results[i],current);
+  btn.parentNode.insertBefore(d,btn.nextSibling);
+  btn.classList.add('open');
+  btn.setAttribute('aria-expanded','true');
+  btn.querySelector('.chev').textContent='−';
+}
+
+function detailHTML(r,out){
+  var sevName={3:'critical',2:'warning',1:'note',0:'clear'};
+  var flags=r.flags.map(function(f){
+    return '<div class="fl s'+f.sev+'"><div class="fl-t">'+esc(f.title)+
+      '<span class="fl-b">'+sevName[f.sev]+'</span></div><div class="fl-x">'+f.text+'</div></div>';
+  }).join('');
+
+  var arms='<div class="scroller"><table class="armtable"><tr><th>Experience</th><th>Visitors</th><th>Conv.</th><th>Rate</th>'+
+    (r.rpv?'<th>RPV</th>':'')+'</tr>'+
+    r.arms.map(function(a){
+      var isC=a===r.control;
+      return '<tr'+(isC?' class="ctrl"':'')+'><td>'+esc(a.name)+(isC?' (control)':'')+'</td>'+
+        '<td>'+num(a.visitors)+'</td><td>'+num(a.conv)+'</td><td>'+(a.rate*100).toFixed(2)+'%</td>'+
+        (r.rpv?'<td>'+(a.rev!=null?(a.rev/a.visitors).toFixed(2):'—')+'</td>':'')+'</tr>';
+    }).join('')+'</table></div>';
+
+  var rows=[
+    ['Raw lift',pct(r.relRaw)],
+    ['Honest lift',pct(r.relHonest)],
+    ['Smallest detectable',pct(r.mde)],
+    ['p-value',fmtP(r.tp.p)],
+    ['Corrected bar','p < '+r.alphaAdj.toFixed(4)],
+    // never print a bare 100%: the posterior is never that certain, and on a
+    // broken test it reads as an endorsement
+    ['P(variant better)',r.pBeats>=0.995?'>99%':r.pBeats<=0.005?'<1%':Math.round(r.pBeats*100)+'%'],
+    ['Split test','chi-square p = '+fmtP(r.srm.p)],
+    ['Metrics in file',r.metrics]
+  ];
+  if(r.rpv)rows.push(['Revenue per visitor',pct(r.rpv.rel)]);
+  if(r.pace&&isFinite(r.pace.need))rows.push(['Sample per arm',num(r.pace.have)+' of '+num(r.pace.need)]);
+  if(r.daysLeft!=null)rows.push(['Days left',r.daysLeft<0?'closed':r.daysLeft]);
+
+  return '<div class="dgrid"><div>'+
+      '<div class="fl-x" style="margin-top:16px;font-weight:500;color:var(--tx)">'+r.meta.blurb+'</div>'+
+      flags+
+    '</div><div>'+
+      '<div class="nums"><div class="nums-t">// the numbers</div>'+
+        rows.map(function(x){return '<div class="nr"><span class="k">'+x[0]+'</span><span class="v">'+x[1]+'</span></div>';}).join('')+
+      '</div>'+
+      '<div class="nums"><div class="nums-t">// experiences</div>'+arms+'</div>'+
+    '</div></div>';
+}
+
+/* ═══════════ wiring ═══════════ */
+function showErr(m){var e=$('err');e.textContent=m;e.style.display='block';}
+function hideErr(){$('err').style.display='none';}
+
+$('file').addEventListener('change',function(e){
+  var f=e.target.files[0];if(!f)return;
+  var rd=new FileReader();
+  rd.onload=function(){ingest(rd.result);};
+  rd.readAsText(f);
+});
+$('run').addEventListener('click',function(){
+  var camps=buildCampaigns();
+  if(!camps.length){showErr('Could not group the rows into activities with two or more experiences. Check the Activity and Experience columns.');return;}
+  hideErr();
+  renderPortfolio(camps,'your file · '+camps.length+' activit'+(camps.length===1?'y':'ies'));
+  $('mapWrap').style.display='none';
+  document.querySelector('.board').scrollIntoView({block:'start',behavior:'smooth'});
+});
+$('reset').addEventListener('click',function(){
+  parsed=null;$('mapWrap').style.display='none';$('file').value='';hideErr();
+});
+$('demoBtn').addEventListener('click',function(){
+  renderPortfolio(demoCampaigns(),'demo portfolio · 8 activities');
+  document.querySelector('.board').scrollIntoView({block:'start',behavior:'smooth'});
+});
+$('dlDemo').addEventListener('click',function(){
+  var blob=new Blob([demoCSV()],{type:'text/csv'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='docket-demo-portfolio.csv';
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(a.href);},1000);
+});
+
+var drop=$('drop');
+['dragenter','dragover'].forEach(function(ev){
+  drop.addEventListener(ev,function(e){e.preventDefault();drop.classList.add('over');});});
+['dragleave','drop'].forEach(function(ev){
+  drop.addEventListener(ev,function(e){e.preventDefault();drop.classList.remove('over');});});
+drop.addEventListener('drop',function(e){
+  var f=e.dataTransfer.files[0];if(!f)return;
+  var rd=new FileReader();
+  rd.onload=function(){ingest(rd.result);};
+  rd.readAsText(f);
+});
+
+renderPortfolio(demoCampaigns(),'demo portfolio · 8 activities');
+})();
+</script>
+</body>
+</html>
