@@ -83,6 +83,46 @@
   @media(max-width:900px){.nav-right{gap:18px}}
   @media(max-width:660px){.nav-cta{padding:9px 15px;font-size:13.5px}}
   @media(max-width:430px){.nav-cta{display:none}}
+
+  /* ── no sideways pan on a phone ──
+     The guard has to sit on html as well as body: body alone is the case iOS
+     Safari ignores. min-width:0 lets grid and flex children actually shrink,
+     so anything with its own overflow-x scrolls inside itself instead of
+     widening the page. */
+  html{overflow-x:hidden}
+  body{overflow-x:hidden;width:100%;max-width:100%;position:relative}
+  img,svg,video,canvas,iframe{max-width:100%;height:auto}
+  table{max-width:100%}
+  pre{max-width:100%;overflow-x:auto}
+  /* grid and flex items default to min-width:auto, which sizes a column to its
+     widest unbreakable content and pushes the page wider than the screen.
+     Zero specificity, so any explicit rule still wins. */
+  *{min-width:0}
+
+  /* ── narrow-phone nav ──
+     Below these widths the brand lockup plus the nav links no longer fit on one
+     line, so both sides step down instead of being clipped off the screen. */
+  @media(max-width:430px){
+    .nav-cta{display:none}
+    .nav-inner{padding-left:18px;padding-right:18px}
+    .brand{gap:9px}
+    .brand-mark{width:30px;height:30px}
+    .brand-name{font-size:17px}
+    .nav-links{gap:15px}
+    .nav-links a{font-size:14px}
+  }
+  @media(max-width:560px){
+    /* the wordmark stays: it fits once the lockup steps down, and the homepage
+       shows it at this width too */
+    .brand-text{display:flex}
+    .brand-sub{display:none}
+  }
+  @media(max-width:360px){
+    .nav-inner{padding-left:14px;padding-right:14px}
+    .brand-name{font-size:16px}
+    .nav-links{gap:12px}
+    .nav-links a{font-size:13px}
+  }
 </style>
 </head>
 <body>

@@ -51,11 +51,16 @@
     /* z scale */
     --z-field:0; --z-base:1; --z-float:5; --z-sticky:50;
   }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  /* min-width:0 because grid and flex items otherwise default to min-width:auto,
+     which sizes a track to its widest unbreakable content and pushes the page
+     wider than the screen. Zero specificity, so any explicit rule still wins. */
+  *{box-sizing:border-box;margin:0;padding:0;min-width:0}
+  /* the guard has to sit on html as well as body: body alone is the case iOS
+     Safari ignores, which is what lets a phone pan the page sideways */
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
   body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.55;
     -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;
-    overflow-x:hidden}
+    overflow-x:hidden;width:100%;max-width:100%;position:relative}
   a{color:inherit}
   img,svg{max-width:100%}
   ::selection{background:#C9D2FF;color:var(--ink)}
@@ -87,27 +92,31 @@
     padding:10px 18px;border-radius:999px;white-space:nowrap;transition:background .18s var(--ease),transform .18s var(--ease)}
   .nav-cta:hover{background:var(--blue);transform:translateY(-1px)}
 
-  /* ══ HERO ══ */
-  .hero{position:relative;max-width:var(--edge);margin:0 auto;
-    padding:clamp(60px,7.5vw,104px) var(--gut) clamp(36px,4.5vw,56px);text-align:center;isolation:isolate}
-  /* colour wash: bleeds past the hero box on all four sides and is masked to
-     nothing at its own edges, so it dissolves into the page instead of ending
-     on a straight line. Low opacity keeps text contrast intact. */
-  .hero::before{content:"";position:absolute;z-index:var(--z-field);pointer-events:none;
-    top:-80px;bottom:-150px;left:calc(50% - 51vw);right:calc(50% - 51vw);
+  /* ══ HERO ══
+     The band is a plain block element, so it is exactly as wide as the page and
+     the background layers can be full-bleed with left:0/right:0. No vw units:
+     those are measured against the viewport including the scrollbar, which is
+     what makes a page pannable sideways on a phone. */
+  .hero-band{position:relative;isolation:isolate}
+  /* colour wash: bleeds above and below the hero and is masked to nothing at its
+     own edges, so it dissolves into the page instead of ending on a straight
+     line. Low opacity keeps text contrast intact. */
+  .hero-band::before{content:"";position:absolute;z-index:var(--z-field);pointer-events:none;
+    top:-80px;bottom:-150px;left:0;right:0;
     background:
       radial-gradient(34% 40% at 16% 26%,rgba(11,91,255,.13),transparent 74%),
       radial-gradient(40% 40% at 62% 88%,rgba(196,245,54,.22),transparent 74%);
-    -webkit-mask-image:radial-gradient(74% 66% at 50% 46%,#000 34%,rgba(0,0,0,.45) 68%,transparent 92%);
-            mask-image:radial-gradient(74% 66% at 50% 46%,#000 34%,rgba(0,0,0,.45) 68%,transparent 92%)}
-  /* dot field sits above the wash so the grid stays readable; also full-bleed
-     and masked, for the same reason */
-  .hero::after{content:"";position:absolute;z-index:var(--z-field);pointer-events:none;
-    top:0;bottom:-60px;left:calc(50% - 51vw);right:calc(50% - 51vw);
+    -webkit-mask-image:radial-gradient(78% 66% at 50% 46%,#000 34%,rgba(0,0,0,.45) 68%,transparent 94%);
+            mask-image:radial-gradient(78% 66% at 50% 46%,#000 34%,rgba(0,0,0,.45) 68%,transparent 94%)}
+  /* dot field sits above the wash so the grid stays readable */
+  .hero-band::after{content:"";position:absolute;z-index:var(--z-field);pointer-events:none;
+    top:0;bottom:-60px;left:0;right:0;
     background-image:radial-gradient(#C2CCDC 1.2px,transparent 1.2px);
     background-size:24px 24px;
-    -webkit-mask-image:radial-gradient(56% 68% at 50% 44%,#000 0%,rgba(0,0,0,.38) 48%,transparent 82%);
-            mask-image:radial-gradient(56% 68% at 50% 44%,#000 0%,rgba(0,0,0,.38) 48%,transparent 82%)}
+    -webkit-mask-image:radial-gradient(60% 68% at 50% 44%,#000 0%,rgba(0,0,0,.38) 48%,transparent 84%);
+            mask-image:radial-gradient(60% 68% at 50% 44%,#000 0%,rgba(0,0,0,.38) 48%,transparent 84%)}
+  .hero{position:relative;z-index:var(--z-base);max-width:var(--edge);margin:0 auto;
+    padding:clamp(60px,7.5vw,104px) var(--gut) clamp(36px,4.5vw,56px);text-align:center}
   .hero-inner{position:relative;z-index:var(--z-base);max-width:900px;margin:0 auto}
 
   /* a count, not a badge: seven rising bars that spell the number, then plain words */
@@ -356,8 +365,22 @@
     .sec-head{align-items:flex-start;flex-direction:column;gap:8px}
     .footer{flex-direction:column;align-items:flex-start;gap:10px}
   }
-  @media(max-width:400px){
+  /* below this the brand lockup plus four nav links no longer fit on one line,
+     so both sides step down rather than getting clipped */
+  @media(max-width:430px){
     .nav-cta{display:none}
+    .nav-inner{padding-left:18px;padding-right:18px}
+    .brand{gap:9px}
+    .brand-mark{width:30px;height:30px}
+    .brand-name{font-size:17px}
+    .nav-links{gap:15px}
+    .nav-links a{font-size:14px}
+  }
+  @media(max-width:360px){
+    .nav-inner{padding-left:14px;padding-right:14px}
+    .brand-name{font-size:16px}
+    .nav-links{gap:12px}
+    .nav-links a{font-size:13px}
     .chip{width:100%}
   }
 </style>
@@ -390,6 +413,7 @@
   </div>
 </nav>
 
+<div class="hero-band">
 <section class="hero">
   <div class="hero-inner">
     <p class="kicker an" style="--ad:.02s">
@@ -441,6 +465,7 @@
     </div></figure>
   </div>
 </section>
+</div>
 
 <section class="strip">
   <div class="strip-inner">

@@ -46,6 +46,21 @@
   @media(max-width:900px){.nav-right{gap:18px}}
   @media(max-width:660px){.nav-cta{padding:9px 15px;font-size:13.5px}}
   @media(max-width:430px){.nav-cta{display:none}}
+
+  /* ── no sideways pan on a phone ──
+     The guard has to sit on html as well as body: body alone is the case iOS
+     Safari ignores. min-width:0 lets grid and flex children actually shrink,
+     so anything with its own overflow-x scrolls inside itself instead of
+     widening the page. */
+  html{overflow-x:hidden}
+  body{overflow-x:hidden;width:100%;max-width:100%;position:relative}
+  img,svg,video,canvas,iframe{max-width:100%;height:auto}
+  table{max-width:100%}
+  pre{max-width:100%;overflow-x:auto}
+  /* grid and flex items default to min-width:auto, which sizes a column to its
+     widest unbreakable content and pushes the page wider than the screen.
+     Zero specificity, so any explicit rule still wins. */
+  *{min-width:0}
 </style>
 </head>
 <body>
