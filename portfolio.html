@@ -60,11 +60,16 @@
   .nav-cta{font-size:14.5px;font-weight:600;text-decoration:none;background:var(--ac);color:#fff;
     padding:10px 18px;border-radius:999px;white-space:nowrap;transition:background .18s,transform .18s}
   .nav-cta:hover{background:#0A3CC4;transform:translateY(-1px)}
+  .nav-cta .cta-s{display:none}
   .nav-cta.active{background:var(--ac)}
   @media(max-width:900px){.nav-right{gap:18px}}
   @media(max-width:560px){.nav{padding:0 20px}.brand-sub{display:none}.nav-link.hide-sm{display:none}}
-  @media(max-width:430px){.nav-cta{display:none}.nav{padding:0 18px}.brand-mark{width:30px;height:30px}
-    .brand-name{font-size:17px}.nav-links{gap:15px}}
+  /* On a phone the CTA is the point of the page, so it keeps its slot and the
+     wordmark gives way instead. The mark alone still links home. */
+  @media(max-width:430px){.nav{padding:0 18px}.brand-mark{width:30px;height:30px}
+    .brand-text{display:none}.nav-links{gap:14px}.nav-link{font-size:13.5px}
+    .nav-cta{padding:8px 12px;font-size:12.5px}
+    .nav-cta .cta-l{display:none}.nav-cta .cta-s{display:inline}}
 
   /* ── layout ── */
   .wrap{max-width:1120px;margin:0 auto;padding:0 40px}
@@ -257,13 +262,13 @@
       <a class="nav-link" href="/blog/">Blog</a>
       <a class="nav-link" href="/about">About</a>
     </div>
-    <a class="nav-cta active" href="/portfolio">Review your portfolio</a>
+    <a class="nav-cta active" href="/portfolio"><span class="cta-l">Review your portfolio</span><span class="cta-s">Portfolio</span></a>
   </div>
 </nav>
 
 <section class="hero">
   <div class="wrap">
-    <div class="eyebrow">// Portfolio</div>
+    <div class="eyebrow">Portfolio</div>
     <h1>Forty tests running. <span class="ac">Which three are lying?</span></h1>
     <p class="lede">Your testing platform shows you one activity at a time, and it tells you the same thing about each one: a conversion rate, a lift, a confidence number. It will not tell you that the traffic split on test 12 is broken, that the winner on test 5 stops being a winner once you count how many comparisons you ran, or that test 19 closes on Friday and was never going to reach an answer. <strong>Drop in one export covering everything you have live. Get every activity back, ranked worst first.</strong></p>
   </div>
@@ -274,7 +279,7 @@
 
   <div class="board">
     <div class="board-h">
-      <div class="board-t">// Portfolio · ranked by severity</div>
+      <div class="board-t">Portfolio · ranked by severity</div>
       <div class="board-src" id="src">demo portfolio · 8 activities</div>
     </div>
     <div class="rowhead">
@@ -288,7 +293,7 @@
 
 <section class="sect">
   <div class="wrap">
-    <div class="kicker">// Run it on yours</div>
+    <div class="kicker">Run it on yours</div>
     <h2>One file. Every activity.</h2>
     <p class="lede">Export your activities with a row per experience. It does not matter which platform: if the file has an activity name, an experience name, visitors and conversions, it will read them. Revenue and end dates unlock the revenue conflict and pace checks.</p>
 
@@ -309,7 +314,7 @@ Checkout progress bar,Control,61200,3060,367200,2026-07-28</div>
 
     <div id="mapWrap" style="display:none;margin-top:18px">
       <div class="board">
-        <div class="board-h"><div class="board-t">// we read this · fix a column if we guessed wrong</div></div>
+        <div class="board-h"><div class="board-t">we read this · fix a column if we guessed wrong</div></div>
         <div style="padding:18px">
           <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:16px" id="mapFields"></div>
           <div class="drop-actions" style="justify-content:flex-start">
@@ -324,7 +329,7 @@ Checkout progress bar,Control,61200,3060,367200,2026-07-28</div>
 
 <section class="sect" style="padding-top:0">
   <div class="wrap">
-    <div class="kicker">// The argument</div>
+    <div class="kicker">The argument</div>
     <h2>What your platform will not tell you</h2>
     <p class="lede">Every one of these is computable from the export you already have. None of them appear in the report your platform hands you, and none of them appear in the deck your agency builds from it.</p>
 
@@ -381,7 +386,7 @@ Checkout progress bar,Control,61200,3060,367200,2026-07-28</div>
 
 <section class="sect ink">
   <div class="wrap">
-    <div class="kicker">// Access</div>
+    <div class="kicker">Access</div>
     <h2>The tools stay free. This one does not.</h2>
     <p class="lede">Every calculator on this site stays exactly where it is: free, no account, nothing uploaded. What costs money is not having to run them one test at a time. Upload once a week, get the whole portfolio triaged, and know which three tests to open before your Monday meeting.</p>
 
@@ -892,10 +897,10 @@ function detailHTML(r,out){
       '<div class="fl-x" style="margin-top:16px;font-weight:500;color:var(--tx)">'+r.meta.blurb+'</div>'+
       flags+
     '</div><div>'+
-      '<div class="nums"><div class="nums-t">// the numbers</div>'+
+      '<div class="nums"><div class="nums-t">the numbers</div>'+
         rows.map(function(x){return '<div class="nr"><span class="k">'+x[0]+'</span><span class="v">'+x[1]+'</span></div>';}).join('')+
       '</div>'+
-      '<div class="nums"><div class="nums-t">// experiences</div>'+arms+'</div>'+
+      '<div class="nums"><div class="nums-t">experiences</div>'+arms+'</div>'+
     '</div></div>';
 }
 

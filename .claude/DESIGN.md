@@ -76,3 +76,18 @@ No gradient text. No glassmorphism. No side-stripe borders. No nested cards. No 
 uppercase eyebrow above every section (the hero carries one, deliberately, and no other
 section does). Numbered markers appear once, on the seven tools, because that section
 genuinely is an ordered index of seven things.
+
+**No `//` prefix on labels.** Kickers, eyebrows and panel headers are the plain words:
+`Portfolio`, not `// Portfolio`. The slashes were a code-comment affectation that reads
+as machine-written, which is the exact opposite of what a trust product should sound
+like. Removed sitewide 2026-07-29. The mono font and letter-spacing already carry the
+instrument-panel register without borrowing syntax from a language nobody is writing here.
+
+## Nav CTA
+
+One pill, electric blue, white text (5.31:1, clears AA), darker blue on hover. It points
+at the paid product, currently `/portfolio`. It is never hidden: below 430px the wordmark
+gives way instead and the label shortens from "Review your portfolio" to "Portfolio" via
+`.cta-l` / `.cta-s`. On the homepage the redundant `/portfolio` nav link also drops at
+that width, because the CTA beside it already goes there. A CTA that disappears on a phone
+is the same as not having one.

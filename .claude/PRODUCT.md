@@ -35,6 +35,11 @@ Hard rules:
 
 - `/` homepage — tools index, Analyze entry point, blog feature, manifesto
 - `/analyze` — one-shot verdict on a pasted results export
+- `/portfolio` — **the paid tier.** One multi-activity export in, every test triaged
+  worst-first. Checks that per-test platform reporting does not run: SRM, Sidak
+  family-wise correction, achieved power, winner's-curse shrinkage, conversion-against-
+  revenue conflict, pace-to-close. Owns the nav CTA. No payment backend yet; the pricing
+  block is a mailto.
 - 7 tool pages: aa-validator, lockbox, survival, reality-check, receipt, ledger, subscriber-value
 - `/blog/`, `/learn/`, `/about`, `/privacy`
 

@@ -177,10 +177,11 @@
     background:#0B5BFF;color:#fff;padding:10px 18px;border-radius:999px;white-space:nowrap;
     transition:background .18s cubic-bezier(.16,1,.3,1),transform .18s cubic-bezier(.16,1,.3,1)}
   .nav-cta:hover{background:#0A3CC4;transform:translateY(-1px)}
+  .nav-cta .cta-s{display:none}
   .nav-cta.active{background:#0B5BFF}
   @media(max-width:900px){.nav-right{gap:18px}}
   @media(max-width:660px){.nav-cta{padding:9px 15px;font-size:13.5px}}
-  @media(max-width:430px){.nav-cta{display:none}}
+  @media(max-width:430px){.nav-cta{padding:8px 12px;font-size:12.5px}.nav-cta .cta-l{display:none}.nav-cta .cta-s{display:inline}}
 
   /* ── no sideways pan on a phone ──
      The guard has to sit on html as well as body: body alone is the case iOS
@@ -201,7 +202,9 @@
      Below these widths the brand lockup plus the nav links no longer fit on one
      line, so both sides step down instead of being clipped off the screen. */
   @media(max-width:430px){
-    .nav-cta{display:none}
+    .nav-cta{padding:8px 12px;font-size:12.5px}
+    .nav-cta .cta-l{display:none}
+    .nav-cta .cta-s{display:inline}
     .nav-inner{padding-left:18px;padding-right:18px}
     .brand{gap:9px}
     .brand-mark{width:30px;height:30px}
@@ -246,7 +249,7 @@
       <a class="hide-sm" href="/blog/">Blog</a>
       <a href="/about">About</a>
     </div>
-      <a class="nav-cta" href="/portfolio">Review your portfolio</a>
+      <a class="nav-cta" href="/portfolio"><span class="cta-l">Review your portfolio</span><span class="cta-s">Portfolio</span></a>
     </div>
   </div>
 </nav>
@@ -267,7 +270,7 @@
   <!-- ── SIMULATOR ── -->
   <div class="sim">
     <div class="sim-head">
-      <div class="sim-title">// A/A test simulator</div>
+      <div class="sim-title">A/A test simulator</div>
       <div class="sim-note">both arms are identical by design</div>
     </div>
     <div class="sim-body">
@@ -332,7 +335,7 @@
   <!-- ── PEEKING SIM ── -->
   <div class="sim">
     <div class="sim-head">
-      <div class="sim-title">// the peeking simulator</div>
+      <div class="sim-title">the peeking simulator</div>
       <div class="sim-note">checks daily, stops on the first "win"</div>
     </div>
     <div class="sim-body">
@@ -357,7 +360,7 @@
   </div>
 
   <div class="callout">
-    <span class="c-label">// what you just proved</span>
+    <span class="c-label">what you just proved</span>
     Look at the two rates side by side. Looking once is honest at about <b>5%</b>, one in twenty. Peeking daily and stopping on a good day pushes the false-winner rate to <b>roughly one in four</b>. You did not change the pages, the traffic, or the math. You only changed <b>when you were allowed to look</b>. That is why a real test fixes its sample size in advance and does not touch the stop button.
   </div>
 
@@ -368,7 +371,7 @@
   </div>
 
   <div class="a-cta">
-    <span class="c-label">// put it to work</span>
+    <span class="c-label">put it to work</span>
     <p>Fix your sample size before you start with <a href="/lockbox">Lockbox</a>, so there is no stop button to abuse. Already have a "winner"? <a href="/reality-check">Reality Check</a> shrinks a lucky result back to an honest one. Not sure your platform even splits traffic evenly? <a href="/aa-validator">Platform Validator</a> runs this A/A idea on your real numbers.</p>
   </div>
 

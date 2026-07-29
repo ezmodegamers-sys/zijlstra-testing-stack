@@ -157,10 +157,11 @@
     background:#0B5BFF;color:#fff;padding:10px 18px;border-radius:999px;white-space:nowrap;
     transition:background .18s cubic-bezier(.16,1,.3,1),transform .18s cubic-bezier(.16,1,.3,1)}
   .nav-cta:hover{background:#0A3CC4;transform:translateY(-1px)}
+  .nav-cta .cta-s{display:none}
   .nav-cta.active{background:#0B5BFF}
   @media(max-width:900px){.nav-right{gap:18px}}
   @media(max-width:660px){.nav-cta{padding:9px 15px;font-size:13.5px}}
-  @media(max-width:430px){.nav-cta{display:none}}
+  @media(max-width:430px){.nav-cta{padding:8px 12px;font-size:12.5px}.nav-cta .cta-l{display:none}.nav-cta .cta-s{display:inline}}
 
   /* ── no sideways pan on a phone ──
      The guard has to sit on html as well as body: body alone is the case iOS
@@ -181,7 +182,9 @@
      Below these widths the brand lockup plus the nav links no longer fit on one
      line, so both sides step down instead of being clipped off the screen. */
   @media(max-width:430px){
-    .nav-cta{display:none}
+    .nav-cta{padding:8px 12px;font-size:12.5px}
+    .nav-cta .cta-l{display:none}
+    .nav-cta .cta-s{display:inline}
     .nav-inner{padding-left:18px;padding-right:18px}
     .brand{gap:9px}
     .brand-mark{width:30px;height:30px}
@@ -225,13 +228,13 @@
     <a class="nav-link" href="/blog/">Blog</a>
     <a class="nav-link" href="/about">About</a>
   </div>
-    <a class="nav-cta" href="/portfolio">Review your portfolio</a>
+    <a class="nav-cta" href="/portfolio"><span class="cta-l">Review your portfolio</span><span class="cta-s">Portfolio</span></a>
   </div>
 </nav>
 
 <section class="hero">
   <div class="wrap">
-    <div class="eyebrow">// Instant Analysis</div>
+    <div class="eyebrow">Instant Analysis</div>
     <h1>Your test is done. <span class="ac">Drop the file.</span></h1>
     <p class="lede">Export the results of a finished A/B test from Adobe Target, GA, Optimizely, or a spreadsheet, and drop the CSV here. It doesn't have to be your test: <strong>the numbers from an agency's readout work just as well.</strong> In one shot you get the whole story: <strong>was the split honest, is the winner real, how big is it once you strip out the luck, and what to actually do.</strong> Nothing gets uploaded. It all runs in your browser.</p>
   </div>
@@ -258,7 +261,7 @@
 
 <section class="wrap" id="mapWrap" style="display:none">
   <div class="panel">
-    <div class="ph">// we read this · fix a column if we guessed wrong</div>
+    <div class="ph">we read this · fix a column if we guessed wrong</div>
     <div class="pb">
       <div class="maprow">
         <div class="mapfield"><label>Variant name</label><select id="mVariant"></select></div>

@@ -20,7 +20,7 @@ The template already carries the LinkedIn link (`https://www.linkedin.com/in/seb
 
 **Give each post an image.** Posts with a relevant image get better click-through in search and social, and the image itself can rank in Google Images. Build a 1200×630 PNG the same way the site's charts are made: write an HTML file styled with the site's CSS variables, then render it with headless Chrome (`"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --screenshot=out.png --window-size=1200,630 file://$PWD/chart.html`). Always give the `<img>` a descriptive `alt` that states what the chart shows — that alt text is itself an SEO signal.
 
-Voice notes: direct, technically precise, no hedging. Short declarative openers. Bold the one sentence per section the reader must keep. Every claim about statistics should be checkable, the same standard as the "// the math" sections in the tools.
+Voice notes: direct, technically precise, no hedging. Short declarative openers. Bold the one sentence per section the reader must keep. Every claim about statistics should be checkable, the same standard as the "the math" sections in the tools.
 
 Length & accessibility: aim for a ~4-minute read (about 900 words, 5 max). Nobody finishes a 9-minute A/B-testing essay, so cut a whole section before you let a post run long. Explain each concept the first time it appears, in plain English, for a store owner who is not a statistician: define "significance," "power," "lift," "p-value," and the like inline or in a short callout, and use a plain analogy where one helps (a low-power test is a smoke detector with a flat battery). The reader should never hit a term they were expected to already know.
 

@@ -169,10 +169,11 @@
     background:#0B5BFF;color:#fff;padding:10px 18px;border-radius:999px;white-space:nowrap;
     transition:background .18s cubic-bezier(.16,1,.3,1),transform .18s cubic-bezier(.16,1,.3,1)}
   .nav-cta:hover{background:#0A3CC4;transform:translateY(-1px)}
+  .nav-cta .cta-s{display:none}
   .nav-cta.active{background:#0B5BFF}
   @media(max-width:900px){.nav-right{gap:18px}}
   @media(max-width:660px){.nav-cta{padding:9px 15px;font-size:13.5px}}
-  @media(max-width:430px){.nav-cta{display:none}}
+  @media(max-width:430px){.nav-cta{padding:8px 12px;font-size:12.5px}.nav-cta .cta-l{display:none}.nav-cta .cta-s{display:inline}}
 
   /* ── no sideways pan on a phone ──
      The guard has to sit on html as well as body: body alone is the case iOS
@@ -193,7 +194,9 @@
      Below these widths the brand lockup plus the nav links no longer fit on one
      line, so both sides step down instead of being clipped off the screen. */
   @media(max-width:430px){
-    .nav-cta{display:none}
+    .nav-cta{padding:8px 12px;font-size:12.5px}
+    .nav-cta .cta-l{display:none}
+    .nav-cta .cta-s{display:inline}
     .nav-inner{padding-left:18px;padding-right:18px}
     .brand{gap:9px}
     .brand-mark{width:30px;height:30px}
@@ -238,7 +241,7 @@
       <a class="hide-sm" href="/blog/">Blog</a>
       <a href="/about">About</a>
     </div>
-      <a class="nav-cta" href="/portfolio">Review your portfolio</a>
+      <a class="nav-cta" href="/portfolio"><span class="cta-l">Review your portfolio</span><span class="cta-s">Portfolio</span></a>
     </div>
   </div>
 </nav>
@@ -268,7 +271,7 @@
   <!-- ── SIMULATOR ── -->
   <div class="sim">
     <div class="sim-head">
-      <div class="sim-title">// the sample size demo</div>
+      <div class="sim-title">the sample size demo</div>
       <div class="sim-note">true rate is always 2.5%</div>
     </div>
     <div class="sim-body">
@@ -328,12 +331,12 @@
   </div>
 
   <div class="callout">
-    <span class="c-label">// the one takeaway</span>
+    <span class="c-label">the one takeaway</span>
     A conversion rate is <b>the truth plus luck</b>. With few visitors it is mostly luck. With many it is mostly truth. Statistics is the toolkit for telling which one you are looking at, and the rest of these lessons are just that toolkit, one piece at a time.
   </div>
 
   <div class="a-cta">
-    <span class="c-label">// keep going</span>
+    <span class="c-label">keep going</span>
     <p>Next you will watch that luck actively fake a winner. In <a href="/learn/why-one-test-can-lie">Lesson 02</a>, two identical pages go head to head and one "wins" anyway. When you are ready to run a real one, <a href="/lockbox">Lockbox</a> works out the sample size for you.</p>
   </div>
 
