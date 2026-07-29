@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="theme-color" content="#F6F7FB">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Platform Validator — A/A Test & Sample Ratio Mismatch (SRM) Checker</title>
-<meta name="description" content="Check your A/B testing platform is telling the truth: sample ratio mismatch via chi-squared, asymmetric tracking loss, coverage gaps, and a 0–100 platform trust score.">
+<title>Sample Ratio Mismatch (SRM) & A/A Test Checker</title>
+<meta name="description" content="Check whether your A/B testing platform is telling the truth: sample ratio mismatch, asymmetric tracking loss, coverage gaps, and a 0 to 100 trust score.">
 <link rel="canonical" href="https://abintegrity.com/aa-validator">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="AB Integrity">
-<meta property="og:title" content="Platform Validator — A/A Test & Sample Ratio Mismatch (SRM) Checker">
-<meta property="og:description" content="Check your A/B testing platform is telling the truth: sample ratio mismatch via chi-squared, asymmetric tracking loss, coverage gaps, and a 0–100 platform trust score.">
+<meta property="og:title" content="Sample Ratio Mismatch (SRM) & A/A Test Checker">
+<meta property="og:description" content="Check whether your A/B testing platform is telling the truth: sample ratio mismatch, asymmetric tracking loss, coverage gaps, and a 0 to 100 trust score.">
 <meta property="og:url" content="https://abintegrity.com/aa-validator">
 <meta property="og:image" content="https://abintegrity.com/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -317,7 +317,7 @@ details.math summary:hover{color:var(--tx)}
 
       <!-- 01 PLATFORM -->
       <div class="panel">
-        <div class="ph"><div class="ph-title">01 — Platform & Configuration</div></div>
+        <div class="ph"><h2 class="ph-title">01 — Platform & Configuration</h2></div>
         <div class="ph-body">
           <div class="fg">
             <label>Testing Platform</label>
@@ -376,7 +376,7 @@ details.math summary:hover{color:var(--tx)}
 
       <!-- 02 TRAFFIC ASSIGNMENT -->
       <div class="panel">
-        <div class="ph"><div class="ph-title">02 — Traffic Assignment Check <span style="color:var(--tx3);font-size:10px;font-weight:400;margin-left:6px">/ Sample Ratio Mismatch</span></div></div>
+        <div class="ph"><h2 class="ph-title">02 — Traffic Assignment Check <span style="color:var(--tx3);font-size:10px;font-weight:400;margin-left:6px">/ Sample Ratio Mismatch</span></h2></div>
         <div class="ph-body">
           <!-- TOTAL SESSIONS SANITY CHECK -->
           <div style="background:var(--bg);border:1px solid var(--bdr);padding:14px 16px;margin-bottom:18px">
@@ -432,7 +432,7 @@ details.math summary:hover{color:var(--tx)}
       <!-- 03 METRIC BALANCE -->
       <div class="panel">
         <div class="ph">
-          <div class="ph-title">03 — Metric Balance Check</div>
+          <h2 class="ph-title">03 — Metric Balance Check</h2>
           <button class="btn btn-s btn-sm" onclick="addMetricRow()">+ Add Metric</button>
         </div>
         <div class="ph-body">
@@ -443,7 +443,7 @@ details.math summary:hover{color:var(--tx)}
 
       <!-- 04 TEMPORAL DISTRIBUTION -->
       <div class="panel">
-        <div class="ph"><div class="ph-title">04 — Temporal Distribution <span style="color:var(--tx3);font-size:10px;font-weight:400;margin-left:6px">/ optional</span></div></div>
+        <div class="ph"><h2 class="ph-title">04 — Temporal Distribution <span style="color:var(--tx3);font-size:10px;font-weight:400;margin-left:6px">/ optional</span></h2></div>
         <div class="ph-body">
           <p style="font-size:12px;color:var(--tx2);margin-bottom:14px">Paste day-by-day tracked session counts for each group, comma-separated. Checks whether assignment was stable over time — a common sign of platform issues is one group getting disproportionately more traffic on specific days.</p>
           <div class="row2">
@@ -466,7 +466,7 @@ details.math summary:hover{color:var(--tx)}
     <div style="position:sticky;top:72px">
       <!-- Trust Score -->
       <div class="panel" style="margin-bottom:18px">
-        <div class="ph"><div class="ph-title">Platform Trust Score</div></div>
+        <div class="ph"><h2 class="ph-title">Platform Trust Score</h2></div>
         <div class="ph-body" style="text-align:center;padding:20px 14px">
           <div class="trust-score-ring">
             <svg width="100" height="100" viewBox="0 0 100 100">
@@ -486,7 +486,7 @@ details.math summary:hover{color:var(--tx)}
 
       <!-- Quick checks -->
       <div class="panel" style="margin-bottom:18px">
-        <div class="ph"><div class="ph-title">Diagnostic Checklist</div></div>
+        <div class="ph"><h2 class="ph-title">Diagnostic Checklist</h2></div>
         <div class="ph-body" style="padding:14px">
           <div id="checkList">
             <div class="ic-row"><div class="ic-dot na2">–</div><span style="color:var(--tx3)">Assignment SRM</span></div>
@@ -500,7 +500,7 @@ details.math summary:hover{color:var(--tx)}
 
       <!-- SRM Severity Meter -->
       <div class="panel" style="margin-bottom:18px">
-        <div class="ph"><div class="ph-title">SRM Severity</div></div>
+        <div class="ph"><h2 class="ph-title">SRM Severity</h2></div>
         <div class="ph-body" style="padding:14px">
           <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--tx3);margin-bottom:6px">Assignment imbalance</div>
           <div class="srm-bar-wrap"><div class="srm-fill" id="srmBar" style="width:0%;background:var(--tx3)"></div></div>

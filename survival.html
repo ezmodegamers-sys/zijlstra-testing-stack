@@ -5,12 +5,12 @@
 <meta name="theme-color" content="#F6F7FB">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Survival Curves — Kaplan-Meier Time-to-Conversion for A/B Tests</title>
-<meta name="description" content="See how fast each variant converts, not just how many: Kaplan-Meier curves, log-rank significance test, median time-to-conversion, and hazard ratio with confidence interval.">
+<meta name="description" content="See how fast each variant converts, not just how many: Kaplan-Meier curves, log-rank test, median time-to-conversion, and hazard ratio with an interval.">
 <link rel="canonical" href="https://abintegrity.com/survival">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="AB Integrity">
 <meta property="og:title" content="Survival Curves — Kaplan-Meier Time-to-Conversion for A/B Tests">
-<meta property="og:description" content="See how fast each variant converts, not just how many: Kaplan-Meier curves, log-rank significance test, median time-to-conversion, and hazard ratio with confidence interval.">
+<meta property="og:description" content="See how fast each variant converts, not just how many: Kaplan-Meier curves, log-rank test, median time-to-conversion, and hazard ratio with an interval.">
 <meta property="og:url" content="https://abintegrity.com/survival">
 <meta property="og:image" content="https://abintegrity.com/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -301,7 +301,7 @@
 
     <!-- 01 SETUP -->
     <div class="panel">
-      <div class="ph"><div class="ph-title">01 — Experiment Setup</div></div>
+      <div class="ph"><h2 class="ph-title">01 — Experiment Setup</h2></div>
       <div class="ph-body">
         <div class="row3">
           <div class="fg" style="margin-bottom:0">
@@ -326,7 +326,7 @@
     <!-- 02 DATA ENTRY -->
     <div class="panel">
       <div class="ph">
-        <div class="ph-title">02 — Cumulative Conversions by Day</div>
+        <h2 class="ph-title">02 — Cumulative Conversions by Day</h2>
         <div style="display:flex;gap:8px">
           <button class="btn btn-sm" onclick="addRow()">+ Add day</button>
           <button class="btn btn-sm" onclick="showPaste=!showPaste;document.getElementById('pasteSection').style.display=showPaste?'block':'none'">Paste CSV</button>
@@ -360,7 +360,7 @@
 
     <!-- 03 CHART -->
     <div class="panel">
-      <div class="ph"><div class="ph-title">03 — Survival Curves (non-conversion rate over time)</div></div>
+      <div class="ph"><h2 class="ph-title">03 — Survival Curves (non-conversion rate over time)</h2></div>
       <div class="ph-body">
         <p style="font-size:11px;color:var(--tx3);margin-bottom:14px;line-height:1.5">
           Each curve shows what fraction of the original cohort has <em>not yet converted</em>. A curve that drops faster means visitors are converting sooner. Separation between curves indicates the variant is changing conversion speed — even if final rates converge.
@@ -382,7 +382,7 @@
 
     <!-- 04 RESULTS -->
     <div class="panel">
-      <div class="ph"><div class="ph-title">04 — Statistical Results</div></div>
+      <div class="ph"><h2 class="ph-title">04 — Statistical Results</h2></div>
       <div class="ph-body" id="resultsBody">
         <div style="color:var(--tx3);font-size:12px">Enter cohort sizes and at least 3 days of data to see results.</div>
       </div>
@@ -395,7 +395,7 @@
 
     <!-- Score -->
     <div class="panel">
-      <div class="ph"><div class="ph-title">Conversion Speed Score</div></div>
+      <div class="ph"><h2 class="ph-title">Conversion Speed Score</h2></div>
       <div class="score-wrap">
         <svg class="score-arc-svg" width="140" height="80" viewBox="0 0 140 80">
           <path d="M14,70 A56,56 0 0,1 126,70" fill="none" stroke="#E2E7F0" stroke-width="8" stroke-linecap="round"/>
@@ -409,7 +409,7 @@
 
     <!-- Checks -->
     <div class="panel">
-      <div class="ph"><div class="ph-title">Analysis Checklist</div></div>
+      <div class="ph"><h2 class="ph-title">Analysis Checklist</h2></div>
       <div class="check-list">
         <div class="check-item"><span class="ci ci-na" id="chk-data">○</span><span>Sufficient data</span></div>
         <div class="check-item"><span class="ci ci-na" id="chk-sig">○</span><span>Log-rank significance</span></div>
@@ -421,7 +421,7 @@
 
     <!-- Median TTC -->
     <div class="panel">
-      <div class="ph"><div class="ph-title">Median Time-to-Convert</div></div>
+      <div class="ph"><h2 class="ph-title">Median Time-to-Convert</h2></div>
       <div class="ph-body">
         <div class="stat-grid" style="margin-bottom:0">
           <div class="stat-card">
