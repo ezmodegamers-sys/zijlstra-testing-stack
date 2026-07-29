@@ -810,7 +810,7 @@ function compute() {
       interpretation = `<div class="alert err"><span class="ai">✗</span><span><strong>Control converts faster.</strong> The variant is slowing down conversion. This may not show in final conversion rates if the experiment ran long enough — but users are taking longer to commit. Investigate whether the variant is adding friction or uncertainty to the path to purchase.</span></div>`;
     }
   } else if (lr.p < 0.10) {
-    interpretation = `<div class="alert warn"><span class="ai">⚠</span><span><strong>Marginal signal.</strong> The log-rank test approaches significance (p = ${lr.p.toFixed(4)}) but doesn't cross the 0.05 threshold. The directional trend is ${lr.hr && lr.hr > 1 ? 'in favour of the variant' : 'in favour of control'} — extend the observation window before concluding.</span></div>`;
+    interpretation = `<div class="alert warn"><span class="ai">⚠</span><span><strong>Marginal signal.</strong> The log-rank test approaches significance (p = ${lr.p.toFixed(4)}) but doesn't cross the 0.05 threshold. The directional trend is ${lr.hr && lr.hr > 1 ? 'in favor of the variant' : 'in favor of control'} — extend the observation window before concluding.</span></div>`;
   } else {
     interpretation = `<div class="alert info"><span class="ai">ℹ</span><span><strong>No significant difference in conversion speed.</strong> The two variants are converting at statistically indistinguishable rates over time. If overall conversion rates also match, the test is a true null result. If conversion rates differ but speed does not, the difference is likely in who converts — not when.</span></div>`;
   }

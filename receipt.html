@@ -370,9 +370,9 @@
         <div class="fg"><label>Variant conversions</label><input type="text" inputmode="numeric" id="f_cB" placeholder="e.g. 571" oninput="this.value=this.value.replace(/[^0-9]/g,'')"></div>
       </div>
       <div class="fg" style="max-width:420px;margin-bottom:0">
-        <label>Prior scepticism <span class="hint">(for the honest estimate — same as Reality Check)</span></label>
+        <label>Prior skepticism <span class="hint">(for the honest estimate — same as Reality Check)</span></label>
         <select id="f_prior">
-          <option value="tight">Sceptical (±2.5% rel.)</option>
+          <option value="tight">Skeptical (±2.5% rel.)</option>
           <option value="medium" selected>Realistic (±5% rel.)</option>
           <option value="wide">Optimistic (±10% rel.)</option>
         </select>
@@ -393,7 +393,7 @@
       <h4>Hard caps</h4>
       <p>Two failures cap the grade regardless of everything else: not running the full pre-committed duration, and changing the primary metric. With either missing, the best achievable grade is C. These are the two sins that invalidate a test outright rather than merely weakening it — a peeked stop breaks the significance level, and a switched metric breaks the hypothesis.</p>
       <h4>Timeline cross-checks</h4>
-      <p>Computed automatically, not attested: registration date must be on or before the start date (otherwise flagged "registered after start"), and the analysis date must be on or after the pre-committed end date (otherwise flagged "analysed before committed end").</p>
+      <p>Computed automatically, not attested: registration date must be on or before the start date (otherwise flagged "registered after start"), and the analysis date must be on or after the pre-committed end date (otherwise flagged "analyzed before committed end").</p>
       <h4>Statistical results on the receipt</h4>
       <p>Identical engine to Reality Check: two-proportion z-test for the p-value, and a normal-normal Bayesian posterior for the honest (shrunk) estimate, P(B beats A), and the 95% credible interval. See the math section on the Reality Check page for the full derivation.</p>
       <h4>The tamper-evident stamp</h4>
@@ -515,7 +515,7 @@ function computeGrade(validated){
   // hard fails: duration or metric unchecked caps the grade
   const hardFail=!attestState['duration']||!attestState['metric'];
   if(hardFail)return pct>=0.5?{letter:'C',desc:'Core integrity conditions not met — the full-duration and fixed-metric attestations are missing. Treat the result as exploratory, not confirmatory.'}:{letter:'F',desc:'This test does not meet the minimum conditions for a trustworthy readout. The result may be interesting, but it is not evidence.'};
-  if(pct>=0.9)return{letter:'A',desc:'Fully governed experiment. Pre-registered, calibrated, run to completion, honestly analysed. This readout can be defended in front of anyone.'};
+  if(pct>=0.9)return{letter:'A',desc:'Fully governed experiment. Pre-registered, calibrated, run to completion, honestly analyzed. This readout can be defended in front of anyone.'};
   if(pct>=0.72)return{letter:'B',desc:'Well-run experiment with minor gaps. The conclusion is broadly trustworthy — the unchecked attestations below are the caveats.'};
   if(pct>=0.5)return{letter:'C',desc:'Meaningful integrity gaps. Directionally informative, but do not book the projected impact from this test alone.'};
   return{letter:'F',desc:'This test does not meet the minimum conditions for a trustworthy readout. The result may be interesting, but it is not evidence.'};
@@ -574,7 +574,7 @@ async function generateReceipt(){
       <div class="r-sec-title">Timeline</div>
       <div class="r-line"><span class="k">Pre-registered</span><span class="v">${registered||'—'} ${preReg?'✓ before start':registered&&start?'⚠ after start':''}</span></div>
       <div class="r-line"><span class="k">Test window</span><span class="v">${start||'—'} → ${end||'—'}</span></div>
-      <div class="r-line"><span class="k">Analysed</span><span class="v">${analyzed||'—'} ${fullWindow?'✓ full window':end&&analyzed&&analyzed<end?'⚠ before committed end':''}</span></div>
+      <div class="r-line"><span class="k">Analyzed</span><span class="v">${analyzed||'—'} ${fullWindow?'✓ full window':end&&analyzed&&analyzed<end?'⚠ before committed end':''}</span></div>
     </div>
 
     <div class="r-sec">

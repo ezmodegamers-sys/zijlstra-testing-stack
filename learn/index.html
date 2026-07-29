@@ -84,7 +84,7 @@
     background:var(--bg2);text-decoration:none;color:inherit;margin-bottom:10px;
     transition:border-color .16s ease,background .16s ease,transform .16s ease}
   a.lesson:hover{border-color:var(--ac);background:var(--bg3);transform:translateX(3px)}
-  .lesson.soon{opacity:.5}
+  .lesson.soon{opacity:.5;border-style:dashed;background:transparent;cursor:default}
   .l-num{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--ac);flex-shrink:0;width:26px;padding-top:1px}
   .lesson.soon .l-num{color:var(--tx3)}
   .l-body{flex:1}
@@ -94,6 +94,12 @@
   .l-tag.next{color:var(--tx3);border-color:var(--bdr)}
   .l-desc{font-size:13px;color:var(--tx2);line-height:1.6}
   .l-go{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--ac);flex-shrink:0;align-self:center}
+  .l-go.wip{color:var(--tx3);font-weight:500}
+  .path-split{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;
+    color:var(--tx3);margin:30px 0 16px;display:flex;align-items:center;gap:14px}
+  .path-split::after{content:'';flex:1;height:1px;background:var(--bdr)}
+  .path-note{font-size:13px;color:var(--tx2);line-height:1.6;margin:16px 0 0}
+  .path-note a{color:var(--ac)}
 
   .footer{border-top:1px solid var(--bdr);padding:24px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
   .footer-left{font-family:var(--mono);font-size:11px;color:var(--tx3)}
@@ -247,45 +253,54 @@
       <div class="l-go">Start →</div>
     </a>
 
-    <div class="lesson soon">
+    <div class="path-split">Not written yet · four lessons live today</div>
+
+    <div class="lesson soon" aria-disabled="true">
       <div class="l-num">05</div>
       <div class="l-body">
-        <div class="l-title">Power and sample size <span class="l-tag next">Next</span></div>
+        <div class="l-title">Power and sample size <span class="l-tag next">Next up</span></div>
         <div class="l-desc">Why a weak test can miss a real winner, and how to work out how much traffic you actually need.</div>
       </div>
+      <div class="l-go wip">not yet</div>
     </div>
 
-    <div class="lesson soon">
+    <div class="lesson soon" aria-disabled="true">
       <div class="l-num">06</div>
       <div class="l-body">
         <div class="l-title">The winner's curse</div>
         <div class="l-desc">Why the wins that squeak past the bar are almost always smaller than they first look.</div>
       </div>
+      <div class="l-go wip">not yet</div>
     </div>
 
-    <div class="lesson soon">
+    <div class="lesson soon" aria-disabled="true">
       <div class="l-num">07</div>
       <div class="l-body">
         <div class="l-title">Peeking, and why it manufactures winners</div>
         <div class="l-desc">Checking daily and stopping on a good day quietly turns a 5% error rate into roughly 1 in 4. See it happen.</div>
       </div>
+      <div class="l-go wip">not yet</div>
     </div>
 
-    <div class="lesson soon">
+    <div class="lesson soon" aria-disabled="true">
       <div class="l-num">08</div>
       <div class="l-body">
         <div class="l-title">Bayesian vs frequentist</div>
         <div class="l-desc">Two languages for the same data. What each one actually tells you, and why the choice is not what saves a small store.</div>
       </div>
+      <div class="l-go wip">not yet</div>
     </div>
 
-    <div class="lesson soon">
+    <div class="lesson soon" aria-disabled="true">
       <div class="l-num">09</div>
       <div class="l-body">
         <div class="l-title">SRM: is your platform even honest?</div>
         <div class="l-desc">Sample ratio mismatch, tracking loss, and the one check that tells you whether to trust any of the above.</div>
       </div>
+      <div class="l-go wip">not yet</div>
     </div>
+
+    <p class="path-note">These five are not written yet. Until they land, the same ideas are covered in the blog and inside the tools themselves: the winner's curse in <a href="/reality-check">Reality Check</a>, peeking in <a href="/blog/does-bayesian-ab-testing-fix-peeking">this guide</a>, sample size in <a href="/blog/how-much-traffic-do-you-need-to-ab-test">this one</a>, and SRM in the <a href="/aa-validator">Platform Validator</a>.</p>
 
   </div>
 </section>

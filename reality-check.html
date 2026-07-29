@@ -18,7 +18,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://abintegrity.com/og-image.png">
 <script type="application/ld+json">
-{"@context": "https://schema.org", "@type": "WebApplication", "name": "Reality Check", "url": "https://abintegrity.com/reality-check", "description": "Your test won — but by how much, really? Shrink inflated lifts from underpowered tests, get the probability B truly beats A under a sceptical prior, and project honest revenue.", "applicationCategory": "BusinessApplication", "operatingSystem": "Any (runs in the browser)", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "publisher": {"@type": "Organization", "name": "AB Integrity", "url": "https://abintegrity.com/"}, "isPartOf": {"@type": "WebSite", "@id": "https://abintegrity.com/#website"}}
+{"@context": "https://schema.org", "@type": "WebApplication", "name": "Reality Check", "url": "https://abintegrity.com/reality-check", "description": "Your test won — but by how much, really? Shrink inflated lifts from underpowered tests, get the probability B truly beats A under a skeptical prior, and project honest revenue.", "applicationCategory": "BusinessApplication", "operatingSystem": "Any (runs in the browser)", "browserRequirements": "Requires JavaScript", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "publisher": {"@type": "Organization", "name": "AB Integrity", "url": "https://abintegrity.com/"}, "isPartOf": {"@type": "WebSite", "@id": "https://abintegrity.com/#website"}}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -312,10 +312,10 @@
           </div>
           <div class="row2">
             <div class="fg" style="margin-bottom:0">
-              <label>How sceptical should the prior be? <span class="hint">(what lift is realistic before seeing data)</span></label>
+              <label>How skeptical should the prior be? <span class="hint">(what lift is realistic before seeing data)</span></label>
               <select id="prior" onchange="compute()">
-                <option value="tight">Sceptical — most ecom tests move nothing (±2.5% rel.)</option>
-                <option value="medium" selected>Realistic — typical CRO programme (±5% rel.)</option>
+                <option value="tight">Skeptical — most ecom tests move nothing (±2.5% rel.)</option>
+                <option value="medium" selected>Realistic — typical CRO program (±5% rel.)</option>
                 <option value="wide">Optimistic — big swing / radical change (±10% rel.)</option>
               </select>
             </div>
@@ -394,9 +394,9 @@
       <div class="formula">SE = √( p_A(1−p_A)/n_A + p_B(1−p_B)/n_B )</div>
       <p>SE is the size of a typical random fluctuation in d. When SE is large relative to d, the data alone can't pin the effect down — that's where the prior starts to matter.</p>
 
-      <h4>The sceptical prior</h4>
-      <p>The prior encodes "before seeing this test, what lifts are plausible?" as a normal distribution centred on zero effect:</p>
-      <div class="formula">prior: N( 0, τ² )&nbsp;&nbsp;·&nbsp;&nbsp;τ = prior% × p_A&nbsp;&nbsp;(sceptical 2.5% · realistic 5% · optimistic 10%)</div>
+      <h4>The skeptical prior</h4>
+      <p>The prior encodes "before seeing this test, what lifts are plausible?" as a normal distribution centered on zero effect:</p>
+      <div class="formula">prior: N( 0, τ² )&nbsp;&nbsp;·&nbsp;&nbsp;τ = prior% × p_A&nbsp;&nbsp;(skeptical 2.5% · realistic 5% · optimistic 10%)</div>
       <p>Centred on zero because most ecom tests move nothing; the width says how surprised you'd be by a big true effect. This must be chosen before looking at results — choosing the prior that flatters your result is p-hacking with extra steps.</p>
 
       <h4>Bayesian shrinkage — the posterior</h4>
@@ -410,7 +410,7 @@
 
       <h4>The frequentist p-value (for comparison)</h4>
       <div class="formula">z = d / √( p̂(1−p̂)(1/n_A + 1/n_B) )&nbsp;&nbsp;·&nbsp;&nbsp;p = 2·(1 − Φ(|z|))&nbsp;&nbsp;·&nbsp;&nbsp;p̂ = pooled rate</div>
-      <p>Shown so you can watch it disagree with the Bayesian read: an underpowered test can be "significant" while P(B&gt;A) stays unconvincing under a sceptical prior. That disagreement is the winner's curse being caught in real time.</p>
+      <p>Shown so you can watch it disagree with the Bayesian read: an underpowered test can be "significant" while P(B&gt;A) stays unconvincing under a skeptical prior. That disagreement is the winner's curse being caught in real time.</p>
 
       <h4>Revenue projections</h4>
       <div class="formula">naive = 12 × monthly revenue × d/p_A&nbsp;&nbsp;·&nbsp;&nbsp;honest = … × μ_post/p_A&nbsp;&nbsp;·&nbsp;&nbsp;floor = … × max(0, CrI lower bound)</div>
@@ -502,7 +502,7 @@
     <p>
       <strong>3. Priors are honesty, not cheating.</strong> A decade of published CRO data shows most ecom tests
       move conversion by very little — big lifts of +20% are rare and usually don't replicate. Encoding this as a
-      sceptical prior automatically deflates too-good-to-be-true results. That's the winner's curse protection
+      skeptical prior automatically deflates too-good-to-be-true results. That's the winner's curse protection
       built directly into the math, which is exactly what the tool above does.
     </p>
     <p>
@@ -517,7 +517,7 @@
       interval will be wide and it will include zero. What Bayesian buys you is that the uncertainty is <em>quantified
       and usable</em> instead of hidden behind "not significant". And the prior must be chosen before you see results —
       picking the prior that makes your result look best is p-hacking with extra steps. That's why this tool makes you
-      choose the scepticism level explicitly, and why Lockbox exists.
+      choose the skepticism level explicitly, and why Lockbox exists.
     </div>
 
     <p style="margin-top:28px">
@@ -579,7 +579,7 @@ function compute(){
   const pval=2*(1-normCDF(Math.abs(z)));
 
   // ── Bayesian shrinkage on the ABSOLUTE difference ──
-  // prior: N(0, (priorSD_rel * pA)^2)   — sceptical prior centred on "no effect"
+  // prior: N(0, (priorSD_rel * pA)^2)   — skeptical prior centered on "no effect"
   const priorSD_abs=priorSD_rel*pA;
   const priorVar=priorSD_abs*priorSD_abs;
   const dataVar=se*se;
@@ -612,7 +612,7 @@ function compute(){
   } else if(shrinkFactor>0.25){
     deflAlert=`<div class="alert warn"><span class="ai">⚠</span><span><strong>Moderate inflation likely.</strong> A meaningful chunk of your observed lift is probably noise. Report the shrunk estimate of <strong>${shrunkStr}%</strong> as your central expectation — the observed ${naiveStr}% is the optimistic end, not the likely outcome.</span></div>`;
   } else {
-    deflAlert=`<div class="alert ok"><span class="ai">✓</span><span><strong>Well-supported result.</strong> Your sample is large enough that the observed effect barely deflates under a sceptical prior. ${shrunkStr}% is a defensible number to report.</span></div>`;
+    deflAlert=`<div class="alert ok"><span class="ai">✓</span><span><strong>Well-supported result.</strong> Your sample is large enough that the observed effect barely deflates under a skeptical prior. ${shrunkStr}% is a defensible number to report.</span></div>`;
   }
 
   document.getElementById('shrinkBody').innerHTML=`
@@ -670,7 +670,7 @@ function compute(){
     ${bayesAlert}
     <p style="font-size:11px;color:var(--tx3);line-height:1.6;margin-top:8px">
       The Bayesian probability answers the question your stakeholders are actually asking. Notice it can disagree with the p-value:
-      an underpowered test can be "significant" while P(B&gt;A) stays unconvincing under a sceptical prior — that's the winner's curse being caught in real time.
+      an underpowered test can be "significant" while P(B&gt;A) stays unconvincing under a skeptical prior — that's the winner's curse being caught in real time.
     </p>
   `;
 
@@ -697,7 +697,7 @@ function compute(){
           <div class="stat-sub">lower bound of credible interval</div>
         </div>
       </div>
-      <div class="alert info"><span class="ai">ℹ</span><span>Put the <strong>honest projection</strong> in the deck and the range in the footnote. If leadership hears the naive number, that becomes the anchor — and the testing programme takes the credibility hit when it doesn't materialise. Under-promise, over-deliver.</span></div>
+      <div class="alert info"><span class="ai">ℹ</span><span>Put the <strong>honest projection</strong> in the deck and the range in the footnote. If leadership hears the naive number, that becomes the anchor — and the testing program takes the credibility hit when it doesn't materialize. Under-promise, over-deliver.</span></div>
     `;
   } else {
     document.getElementById('revBody').innerHTML=`<div style="color:var(--tx3);font-size:12px">Enter monthly revenue above to see the naive vs honest projection.</div>`;

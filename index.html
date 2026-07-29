@@ -99,7 +99,7 @@
      those are measured against the viewport including the scrollbar, which is
      what makes a page pannable sideways on a phone. */
   .hero-band{position:relative;isolation:isolate}
-  /* colour wash: bleeds above and below the hero and is masked to nothing at its
+  /* color wash: bleeds above and below the hero and is masked to nothing at its
      own edges, so it dissolves into the page instead of ending on a straight
      line. Low opacity keeps text contrast intact. */
   .hero-band::before{content:"";position:absolute;z-index:var(--z-field);pointer-events:none;
@@ -332,7 +332,7 @@
 
   /* ══ RESPONSIVE ══ */
   /* below this the hero gutters are too narrow to float chips without crowding
-     the viewport edge, so they drop into a centred pair under the CTA */
+     the viewport edge, so they drop into a centered pair under the CTA */
   @media(max-width:1300px){
     .chips{position:static;display:flex;justify-content:center;flex-wrap:wrap;gap:16px;
       margin-top:42px;pointer-events:auto}
@@ -433,15 +433,15 @@
         <rect x="20.5" y="2.4" width="2.4" height="11.6" rx="1.2"/>
         <rect x="24.6" y="0" width="2.4" height="14" rx="1.2"/>
       </svg>
-      <span><b>Seven</b> free A/B testing tools</span>
+      <span><b>Seven</b> free tools · instant test analysis</span>
     </p>
     <h1 class="an" style="--ad:.1s">Ecommerce A/B testing
       <span class="mark">you can trust.<svg class="mark-line" viewBox="0 0 300 16" preserveAspectRatio="none" aria-hidden="true"><path class="fat" d="M4,11.6C58,4.8 122,3.6 176,6.2C224,8.5 264,10.2 296,5.2"/><path class="thin" d="M4,11.6C58,4.8 122,3.6 176,6.2C224,8.5 264,10.2 296,5.2"/></svg></span>
     </h1>
     <p class="hero-sub an" style="--ad:.2s"><strong>You can make almost any test look like a winner.</strong> These tools check whether a result actually holds up, so when you call something a win, <strong>you can defend it in any room.</strong></p>
     <div class="hero-cta an" style="--ad:.3s">
-      <a class="btn btn-fill" href="#tools">Explore the seven tools</a>
-      <a class="btn btn-ghost" href="/analyze">Analyze a test →</a>
+      <a class="btn btn-fill" href="/analyze">Analyze a test →</a>
+      <a class="btn btn-ghost" href="#tools">Explore the seven tools</a>
     </div>
     <p class="hero-note an" style="--ad:.38s">free · no account · runs in your browser</p>
   </div>
