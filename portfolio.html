@@ -22,409 +22,520 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#F6F7FB;--bg2:#FFFFFF;--bg3:#EEF1F8;--bdr:#E2E7F0;--bdr2:#CFD7E4;
-    --tx:#0A0D13;--tx2:#4A5361;--tx3:#646D7B;
-    --ac:#0B5BFF;--g:#0F9A57;--r:#DC2626;--y:#A8760A;--o:#E0640B;--p:#7B3FE4;--t:#0D9488;
+    --paper:#F6F7FB; --white:#fff; --field:#EEF1F8;
+    --ink:#0A0D13; --ink-2:#4A5361; --ink-3:#646D7B;
+    --line:#E2E7F0; --line-2:#CFD7E4;
+    --blue:#0B5BFF; --blue-deep:#0A3CC4; --blue-wash:#E4EBFF;
+    --red:#FF4A21; --lime:#C4F536;
     --display:'Bricolage Grotesque',sans-serif;
-    --mono:'JetBrains Mono',monospace;--sans:'Inter',sans-serif;
+    --sans:'Inter',sans-serif;
+    --mono:'JetBrains Mono',monospace;
+    --edge:1240px; --gut:48px;
+    --sec:clamp(64px,9vw,116px);
+    --ease:cubic-bezier(.16,1,.3,1);
+    --z-field:0; --z-base:1; --z-sticky:50;
   }
   *{box-sizing:border-box;margin:0;padding:0;min-width:0}
-  html{scroll-behavior:smooth;overflow-x:hidden}
-  html,body{min-height:100vh;background:var(--bg);color:var(--tx);font-family:var(--sans)}
-  body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:hidden;width:100%;max-width:100%;position:relative;
-    background:radial-gradient(circle at 1px 1px,rgba(10,13,19,.03) 1px,transparent 0) 0 0/34px 34px,var(--bg)}
-  img,svg,video,canvas,iframe{max-width:100%;height:auto}
-  ::selection{background:#C9D2FF;color:#0A0D13}
-  a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2.5px solid var(--ac);outline-offset:3px}
-  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.55;
+    -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;
+    overflow-x:hidden;width:100%;max-width:100%;position:relative}
+  a{color:inherit}
+  img,svg{max-width:100%}
+  ::selection{background:#C9D2FF;color:var(--ink)}
+  a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:2.5px solid var(--blue);outline-offset:3px;border-radius:2px}
+  .wrap{max-width:var(--edge);margin:0 auto;padding:0 var(--gut)}
 
-  /* ── nav ── */
-  .nav{height:60px;display:flex;align-items:center;justify-content:space-between;
-    padding:0 40px;border-bottom:1px solid var(--bdr);position:sticky;top:0;z-index:100;
-    background:rgba(246,247,251,.88);backdrop-filter:saturate(180%) blur(14px);-webkit-backdrop-filter:saturate(180%) blur(14px)}
-  .nav-brand{display:flex;align-items:center;gap:11px;text-decoration:none}
-  .brand-mark{width:33px;height:33px;border-radius:9px;flex-shrink:0;display:block;
-    box-shadow:0 4px 12px -4px rgba(11,91,255,.55);transition:transform .22s cubic-bezier(.16,1,.3,1)}
-  .nav-brand:hover .brand-mark{transform:rotate(-5deg) scale(1.05)}
+  /* ══ NAV ══ */
+  .nav{position:sticky;top:0;z-index:var(--z-sticky);background:rgba(246,247,251,.88);
+    backdrop-filter:saturate(180%) blur(14px);-webkit-backdrop-filter:saturate(180%) blur(14px);
+    border-bottom:1px solid var(--line)}
+  .nav-inner{max-width:var(--edge);margin:0 auto;padding:0 var(--gut);height:70px;
+    display:flex;align-items:center;justify-content:space-between;gap:24px}
+  .brand{display:flex;align-items:center;gap:11px;text-decoration:none;flex-shrink:0}
+  .brand-mark{width:33px;height:33px;flex-shrink:0;display:block;border-radius:9px;
+    box-shadow:0 4px 12px -4px rgba(11,91,255,.55);transition:transform .22s var(--ease)}
+  .brand:hover .brand-mark{transform:rotate(-5deg) scale(1.05)}
   .brand-text{display:flex;flex-direction:column;line-height:1}
-  .brand-name{font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:-.03em;color:var(--tx)}
-  .brand-name span{color:var(--ac)}
-  .brand-sub{font-family:var(--mono);font-size:8.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--tx3);margin-top:4px;white-space:nowrap}
+  .brand-name{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:-.03em;color:var(--ink)}
+  .brand-name span{color:var(--blue)}
+  .brand-sub{font-family:var(--mono);font-size:8.5px;font-weight:600;letter-spacing:.15em;
+    text-transform:uppercase;color:var(--ink-3);margin-top:4px;white-space:nowrap}
   .nav-right{display:flex;align-items:center;gap:28px}
   .nav-links{display:flex;gap:26px;align-items:center}
-  .nav-link{font-size:14px;font-weight:500;color:var(--tx2);text-decoration:none;padding:4px 0}
-  .nav-link:hover{color:var(--tx)}
-  .nav-cta{font-size:14.5px;font-weight:600;text-decoration:none;background:var(--ac);color:#fff;
-    padding:10px 18px;border-radius:999px;white-space:nowrap;transition:background .18s,transform .18s}
-  .nav-cta:hover{background:#0A3CC4;transform:translateY(-1px)}
+  .nav-links a{font-size:15.5px;font-weight:500;color:var(--ink-2);text-decoration:none;transition:color .15s}
+  .nav-links a:hover{color:var(--ink)}
+  .nav-cta{font-size:14.5px;font-weight:600;text-decoration:none;background:var(--blue);color:#fff;
+    padding:10px 18px;border-radius:999px;white-space:nowrap;
+    transition:background .18s var(--ease),transform .18s var(--ease)}
+  .nav-cta:hover{background:var(--blue-deep);transform:translateY(-1px)}
   .nav-cta .cta-s{display:none}
-  .nav-cta.active{background:var(--ac)}
-  @media(max-width:900px){.nav-right{gap:18px}}
-  @media(max-width:560px){.nav{padding:0 20px}.brand-sub{display:none}.nav-link.hide-sm{display:none}}
-  /* On a phone the CTA is the point of the page, so it keeps its slot and the
-     wordmark gives way instead. The mark alone still links home. */
-  @media(max-width:430px){.nav{padding:0 18px}.brand-mark{width:30px;height:30px}
-    .brand-text{display:none}.nav-links{gap:14px}.nav-link{font-size:13.5px}
-    .nav-cta{padding:8px 12px;font-size:12.5px}
-    .nav-cta .cta-l{display:none}.nav-cta .cta-s{display:inline}}
 
-  /* ── layout ── */
-  .wrap{max-width:1120px;margin:0 auto;padding:0 40px}
-  .wrap-n{max-width:900px;margin:0 auto;padding:0 40px}
-  section{position:relative}
-  .hero{padding:60px 0 30px}
-  .eyebrow{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--ac);margin-bottom:16px}
-  /* Each sentence gets its own block: the claim in ink, the turn in blue. Left
-     inline they wrap into each other and strand "true." alone on a fourth line. */
-  h1{font-family:var(--display);font-size:clamp(31px,4.6vw,54px);font-weight:800;letter-spacing:-.035em;line-height:1.04;margin-bottom:18px;max-width:24ch}
-  h1 .ac{color:var(--ac);display:block}
-  h2{font-family:var(--display);font-size:clamp(26px,3.4vw,40px);font-weight:800;letter-spacing:-.03em;line-height:1.08;margin-bottom:14px}
-  .lede{font-size:17px;color:var(--tx2);line-height:1.7;max-width:62ch}
-  .lede strong{color:var(--tx);font-weight:600}
-  .sect{padding:clamp(56px,8vw,100px) 0}
-  .kicker{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:2.4px;text-transform:uppercase;color:var(--tx3);margin-bottom:14px}
+  /* ══ HERO ══ */
+  .hero-band{position:relative;isolation:isolate}
+  .hero-band::before{content:"";position:absolute;z-index:var(--z-field);pointer-events:none;
+    top:-80px;bottom:-150px;left:0;right:0;
+    background:
+      radial-gradient(34% 40% at 16% 26%,rgba(11,91,255,.13),transparent 74%),
+      radial-gradient(40% 40% at 62% 88%,rgba(196,245,54,.22),transparent 74%);
+    -webkit-mask-image:radial-gradient(78% 66% at 50% 46%,#000 34%,rgba(0,0,0,.45) 68%,transparent 94%);
+            mask-image:radial-gradient(78% 66% at 50% 46%,#000 34%,rgba(0,0,0,.45) 68%,transparent 94%)}
+  .hero-band::after{content:"";position:absolute;z-index:var(--z-field);pointer-events:none;
+    top:0;bottom:-60px;left:0;right:0;
+    background-image:radial-gradient(#C2CCDC 1.2px,transparent 1.2px);
+    background-size:24px 24px;
+    -webkit-mask-image:radial-gradient(60% 68% at 50% 44%,#000 0%,rgba(0,0,0,.38) 48%,transparent 84%);
+            mask-image:radial-gradient(60% 68% at 50% 44%,#000 0%,rgba(0,0,0,.38) 48%,transparent 84%)}
+  .hero{position:relative;z-index:var(--z-base);max-width:var(--edge);margin:0 auto;
+    padding:clamp(56px,7vw,96px) var(--gut) clamp(34px,4.2vw,52px);text-align:center}
+  .hero-inner{position:relative;z-index:var(--z-base);max-width:940px;margin:0 auto}
+  .kicker{display:inline-flex;align-items:flex-end;gap:11px;font-size:16px;font-weight:500;
+    letter-spacing:-.005em;color:var(--ink-2);line-height:1}
+  .kicker b{color:var(--ink);font-weight:600}
+  .kicker svg{height:14px;width:auto;display:block;fill:var(--blue);flex-shrink:0}
+  .kicker svg rect{opacity:.34}
+  .kicker svg rect:last-of-type{opacity:1}
+  .hero h1{margin-top:26px;font-family:var(--display);font-weight:800;
+    font-size:clamp(38px,5.8vw,74px);line-height:.97;letter-spacing:-.035em;color:var(--ink);text-wrap:balance}
+  .mark{position:relative;display:inline-block;white-space:nowrap}
+  .mark-line{position:absolute;left:-.05em;bottom:-.10em;width:calc(100% + .1em);height:.24em;overflow:visible}
+  .mark-line path{fill:none;stroke-linecap:round;vector-effect:non-scaling-stroke}
+  .mark-line .fat{stroke:var(--red);stroke-width:9;opacity:.24}
+  .mark-line .thin{stroke:var(--red);stroke-width:4}
+  .hero-sub{margin:28px auto 0;max-width:62ch;font-size:clamp(17px,1.35vw,19.5px);line-height:1.62;
+    color:var(--ink-2);text-wrap:pretty}
+  .hero-sub strong{color:var(--ink);font-weight:600}
+  .hero-cta{margin-top:34px;display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+  .hero-note{margin-top:20px;font-family:var(--mono);font-size:12px;color:var(--ink-3)}
 
-  /* ── summary strip ── */
-  .strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--bdr);
-    border:1px solid var(--bdr);margin-bottom:22px}
-  .st{background:var(--bg2);padding:16px 18px}
-  .st-k{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:var(--tx3);margin-bottom:8px}
-  .st-v{font-family:var(--mono);font-size:26px;font-weight:700;line-height:1;letter-spacing:-.02em}
-  .st-s{font-size:11.5px;color:var(--tx3);margin-top:7px;line-height:1.5}
-  .st.alarm .st-v{color:var(--r)}
-  .st.warn .st-v{color:var(--y)}
-  .st.good .st-v{color:var(--g)}
+  /* ══ BUTTONS ══ */
+  .btn{font-family:var(--sans);font-size:16px;font-weight:600;text-decoration:none;display:inline-flex;
+    align-items:center;justify-content:center;gap:9px;padding:15px 26px;border-radius:999px;border:0;
+    cursor:pointer;transition:background .18s var(--ease),transform .18s var(--ease),box-shadow .18s var(--ease),color .18s,border-color .18s}
+  .btn-fill{background:var(--blue);color:#fff;box-shadow:0 6px 18px -6px rgba(11,91,255,.6)}
+  .btn-fill:hover{background:var(--blue-deep);transform:translateY(-2px);box-shadow:0 12px 26px -8px rgba(11,91,255,.62)}
+  .btn-ghost{background:var(--white);color:var(--ink);border:1px solid var(--line-2);box-shadow:0 1px 2px rgba(10,13,19,.05)}
+  .btn-ghost:hover{border-color:var(--ink);transform:translateY(-2px)}
+  .btn-lime{background:var(--lime);color:var(--ink)}
+  .btn-lime:hover{background:#D3FF4E;transform:translateY(-2px)}
+  .btn-sm{font-size:14.5px;padding:11px 20px}
 
-  /* ── portfolio table ── */
-  .board{border:1px solid var(--bdr);background:var(--bg2)}
-  .board-h{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
-    padding:13px 18px;border-bottom:1px solid var(--bdr);background:var(--bg3)}
-  .board-t{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--tx2)}
-  .board-src{font-family:var(--mono);font-size:11px;color:var(--tx3)}
-  .rowhead,.row{display:grid;grid-template-columns:118px minmax(180px,2.1fr) .95fr .95fr .8fr .9fr 96px;
-    gap:14px;align-items:center;padding:12px 18px}
-  .rowhead{border-bottom:1px solid var(--bdr);font-family:var(--mono);font-size:9.5px;font-weight:700;
-    letter-spacing:1px;text-transform:uppercase;color:var(--tx3)}
-  .row{border-bottom:1px solid var(--bg3);cursor:pointer;transition:background .12s;text-align:left;width:100%;
-    background:none;border-left:none;border-right:none;border-top:none;font-family:inherit;font-size:inherit;color:inherit}
-  .row:last-of-type{border-bottom:none}
-  .row:hover{background:var(--bg3)}
-  .row.open{background:var(--bg3)}
-  .tag{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;
-    padding:5px 8px;display:inline-block;white-space:nowrap;color:#fff}
-  .tag.bad{background:var(--r)}
-  .tag.over{background:var(--o)}
-  .tag.warn{background:var(--y)}
-  .tag.idle{background:var(--tx3)}
-  .tag.ok{background:var(--g)}
-  .cname{font-weight:600;font-size:14.5px;letter-spacing:-.01em;line-height:1.3}
-  .cvar{font-size:11.5px;color:var(--tx3);margin-top:3px;font-family:var(--mono)}
-  .mono{font-family:var(--mono);font-size:13px;font-weight:500}
-  .mono.up{color:var(--g)}
-  .mono.down{color:var(--r)}
-  .mono.mut{color:var(--tx3);font-size:12px}
-  .colh{font-family:var(--mono);font-size:12px;color:var(--tx2)}
-  .flagcount{display:flex;align-items:center;gap:5px;justify-content:flex-end}
-  .dot{width:7px;height:7px;border-radius:50%;display:inline-block}
-  .dot.s3{background:var(--r)}.dot.s2{background:var(--y)}.dot.s1{background:var(--tx3)}
-  .chev{font-family:var(--mono);font-size:12px;color:var(--tx3);margin-left:4px}
+  /* ══ SECTION HEADS ══ */
+  .sec-head{padding:var(--sec) 0 0;display:flex;align-items:flex-end;justify-content:space-between;
+    gap:14px 28px;flex-wrap:wrap}
+  .sec-head h2{font-family:var(--display);font-weight:800;font-size:clamp(31px,4.4vw,52px);
+    letter-spacing:-.035em;color:var(--ink);line-height:1;text-wrap:balance}
+  .sec-head .cap{font-family:var(--mono);font-size:12px;color:var(--ink-3);padding-bottom:5px}
+  .sec-lead{margin-top:20px;font-size:17.5px;line-height:1.62;color:var(--ink-2);max-width:66ch;text-wrap:pretty}
+  .sec-lead strong{color:var(--ink);font-weight:600}
 
-  /* ── expanded detail ── */
-  .detail{border-bottom:1px solid var(--bg3);background:#FBFCFE;padding:4px 18px 22px}
-  .dgrid{display:grid;grid-template-columns:1fr 300px;gap:26px;align-items:start}
-  @media(max-width:860px){.dgrid{grid-template-columns:1fr}}
-  .fl{border-left:2px solid var(--bdr2);padding:12px 0 12px 16px;margin-top:14px}
-  .fl.s3{border-left-color:var(--r)}
-  .fl.s2{border-left-color:var(--y)}
-  .fl.s1{border-left-color:var(--bdr2)}
-  .fl.s0{border-left-color:var(--g)}
-  .fl-t{font-size:13.5px;font-weight:700;letter-spacing:-.01em;margin-bottom:5px;display:flex;align-items:center;gap:8px}
-  .fl-b{font-family:var(--mono);font-size:8.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:2px 6px}
-  .fl.s3 .fl-b{background:rgba(220,38,38,.13);color:var(--r)}
-  .fl.s2 .fl-b{background:rgba(168,118,10,.15);color:var(--y)}
-  .fl.s1 .fl-b{background:var(--bg3);color:var(--tx3)}
-  .fl.s0 .fl-b{background:rgba(15,154,87,.15);color:var(--g)}
-  .fl-x{font-size:13.5px;color:var(--tx2);line-height:1.65;max-width:70ch}
-  .nums{border:1px solid var(--bdr);background:var(--bg2);padding:14px 16px;margin-top:14px}
-  .nums-t{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--tx3);margin-bottom:10px}
-  .nr{display:flex;justify-content:space-between;gap:12px;font-family:var(--mono);font-size:12px;padding:4px 0;color:var(--tx2);border-bottom:1px solid var(--bg3)}
+  /* ══ STAT CARDS ══ */
+  .stats{margin-top:36px;display:grid;grid-template-columns:repeat(auto-fit,minmax(178px,1fr));gap:14px}
+  .stat{background:var(--white);border:1px solid var(--line-2);border-radius:14px;padding:20px 22px 22px;
+    box-shadow:0 1px 2px rgba(10,13,19,.05)}
+  .stat-cap{display:block;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--ink-3)}
+  .stat-big{display:block;margin-top:12px;font-family:var(--display);font-weight:800;font-size:40px;
+    letter-spacing:-.035em;line-height:.92;color:var(--ink)}
+  .stat-sub{display:block;margin-top:10px;font-size:14px;line-height:1.5;color:var(--ink-3)}
+  .stat.alarm .stat-big{color:#B42318}
+  .stat.warn .stat-big{color:#8A6100}
+  .stat.good .stat-big{color:#0B6B3E}
+
+  /* ══ THE BOARD ══ */
+  .board{margin-top:40px;border-top:1px solid var(--line)}
+  .board-note{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    padding:14px 0;font-family:var(--mono);font-size:12px;color:var(--ink-3);border-bottom:1px solid var(--line)}
+  .row{display:grid;grid-template-columns:150px 1fr 148px 106px 96px 34px;gap:22px;align-items:center;
+    width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);
+    padding:24px 18px 24px 0;position:relative;cursor:pointer;font-family:inherit;color:inherit}
+  .row::before{content:"";position:absolute;inset:0 -18px;border-radius:14px;background:var(--sw);
+    opacity:0;transition:opacity .22s var(--ease);z-index:0}
+  .row:hover::before,.row.open::before{opacity:.55}
+  .row>*{position:relative;z-index:1}
+  .r-name,.r-sub{transition:transform .22s var(--ease)}
+  .row:hover .r-name,.row:hover .r-sub{transform:translateX(8px)}
+  .r-status{display:inline-block;font-family:var(--mono);font-size:11.5px;font-weight:700;
+    letter-spacing:.08em;text-transform:uppercase;padding:8px 13px;border-radius:999px;
+    background:var(--sw);color:var(--sc);white-space:nowrap}
+  .r-name{font-family:var(--display);font-weight:700;font-size:clamp(20px,2.2vw,27px);
+    letter-spacing:-.03em;line-height:1.06;color:var(--ink)}
+  .r-sub{font-size:14.5px;line-height:1.5;color:var(--ink-2);margin-top:6px}
+  .r-lift{font-family:var(--display);font-weight:800;font-size:27px;letter-spacing:-.03em;line-height:1}
+  .r-lift.up{color:#0B6B3E}
+  .r-lift.down{color:#B42318}
+  .r-honest{display:block;margin-top:7px;font-family:var(--mono);font-size:12px;color:var(--ink-3)}
+  .r-split{font-family:var(--mono);font-size:14px;color:var(--ink-2)}
+  .r-split.bad{color:#B42318;font-weight:700}
+  .r-split small,.r-close small{display:block;margin-top:6px;font-size:11px;color:var(--ink-3);font-family:var(--mono)}
+  .r-close{font-family:var(--mono);font-size:14px;color:var(--ink-2)}
+  .r-close.soon{color:#C4320A;font-weight:700}
+  .r-arrow{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;justify-self:end;
+    background:var(--white);border:1px solid var(--line-2);color:var(--ink-3);font-size:17px;
+    transition:background .2s var(--ease),color .2s var(--ease),border-color .2s var(--ease)}
+  .row:hover .r-arrow{background:var(--sc);border-color:var(--sc);color:#fff}
+  .dots{display:flex;gap:4px;margin-top:9px}
+  .dot{width:7px;height:7px;border-radius:50%}
+  .dot.s3{background:#B42318}.dot.s2{background:#B98900}.dot.s1{background:var(--line-2)}
+
+  /* ══ DETAIL ══ */
+  .detail{border-bottom:1px solid var(--line);padding:4px 0 34px}
+  .dgrid{display:grid;grid-template-columns:1fr 340px;gap:30px;align-items:start}
+  .verdict{font-size:19px;line-height:1.5;font-weight:600;color:var(--ink);margin:20px 0 6px;max-width:56ch}
+  .fl{border-radius:14px;padding:18px 22px;margin-top:14px;background:var(--white);
+    border:1px solid var(--line-2);box-shadow:0 1px 2px rgba(10,13,19,.05)}
+  .fl.s3{background:#FFF5F4;border-color:#FBD5D0}
+  .fl.s2{background:#FFFBEF;border-color:#F3E3B5}
+  .fl-t{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;
+    font-size:19px;letter-spacing:-.02em;margin-bottom:8px;flex-wrap:wrap}
+  .fl-b{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    padding:4px 8px;border-radius:5px;background:var(--field);color:var(--ink-3)}
+  .fl.s3 .fl-b{background:#FEE4E2;color:#B42318}
+  .fl.s2 .fl-b{background:#FCF0CE;color:#8A6100}
+  .fl.s0 .fl-b{background:#DCF6E8;color:#0B6B3E}
+  .fl-x{font-size:16px;line-height:1.62;color:var(--ink-2);max-width:66ch}
+  .panel{background:var(--white);border:1px solid var(--line-2);border-radius:14px;padding:20px 22px;
+    box-shadow:12px 12px 0 var(--blue-wash),0 1px 2px rgba(10,13,19,.05);margin-top:20px}
+  .panel-t{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--ink-3);margin-bottom:14px}
+  .nr{display:flex;justify-content:space-between;gap:14px;padding:9px 0;font-size:14.5px;
+    border-bottom:1px solid var(--line)}
   .nr:last-child{border-bottom:none}
-  .nr .k{color:var(--tx3)}
-  .nr .v{color:var(--tx);font-weight:500;text-align:right}
-  .armtable{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin-top:10px}
-  .armtable th{text-align:right;color:var(--tx3);font-weight:700;font-size:9.5px;text-transform:uppercase;letter-spacing:.7px;padding:6px 8px;border-bottom:1px solid var(--bdr)}
-  .armtable th:first-child{text-align:left}
-  .armtable td{padding:6px 8px;border-bottom:1px solid var(--bg3);color:var(--tx2);text-align:right}
-  .armtable td:first-child{text-align:left;color:var(--tx)}
-  .armtable tr.ctrl td{color:var(--tx3)}
-  .scroller{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .nr .k{color:var(--ink-3)}
+  .nr .v{font-family:var(--mono);font-weight:500;color:var(--ink);text-align:right}
+  .arms{width:100%;border-collapse:collapse;font-size:14px}
+  .arms th{text-align:right;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--ink-3);padding:0 0 9px;border-bottom:1px solid var(--line)}
+  .arms th:first-child{text-align:left}
+  .arms td{padding:9px 0;text-align:right;font-family:var(--mono);color:var(--ink-2);border-bottom:1px solid var(--line)}
+  .arms td:first-child{text-align:left;font-family:var(--sans);color:var(--ink);font-weight:500}
+  .arms tr:last-child td{border-bottom:none}
 
-  /* ── intake ── */
-  .drop{border:1.5px dashed var(--bdr2);background:var(--bg2);padding:32px 26px;text-align:center;transition:border-color .15s,background .15s}
-  .drop.over{border-color:var(--ac);background:var(--bg3)}
-  .drop-title{font-size:16.5px;font-weight:700;margin-bottom:7px;letter-spacing:-.01em}
-  .drop-sub{font-size:13px;color:var(--tx3);line-height:1.65;margin-bottom:18px;max-width:60ch;margin-left:auto;margin-right:auto}
-  .drop-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-  .btn{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.4px;padding:11px 18px;
-    border:1px solid var(--bdr2);background:var(--bg3);color:var(--tx);cursor:pointer;transition:.15s;text-decoration:none;display:inline-block}
-  .btn:hover{border-color:var(--tx2)}
-  .btn-p{background:var(--ac);border-color:var(--ac);color:#fff}
-  .btn-p:hover{background:#0A3CC4;border-color:#0A3CC4}
-  .btn-ghost{background:transparent}
-  .err{color:var(--r);font-size:13px;margin-top:14px;font-family:var(--mono);display:none}
-  .fmt{font-family:var(--mono);font-size:11.5px;color:var(--tx3);background:var(--bg3);border:1px solid var(--bdr);
-    padding:12px 14px;margin-top:16px;text-align:left;line-height:1.8;overflow-x:auto;white-space:pre}
+  /* ══ INTAKE ══ */
+  .drop{margin-top:36px;background:var(--white);border:2px dashed var(--line-2);border-radius:18px;
+    padding:clamp(30px,4vw,46px) clamp(22px,3vw,38px);text-align:center;transition:border-color .18s,background .18s}
+  .drop.over{border-color:var(--blue);background:var(--blue-wash)}
+  .drop h3{font-family:var(--display);font-weight:800;font-size:clamp(22px,2.6vw,30px);
+    letter-spacing:-.03em;margin-bottom:12px}
+  .drop p{font-size:16px;line-height:1.6;color:var(--ink-2);max-width:56ch;margin:0 auto 24px}
+  .drop-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .fmt{margin-top:26px;background:var(--field);border-radius:12px;padding:16px 18px;text-align:left;
+    font-family:var(--mono);font-size:12.5px;line-height:1.9;color:var(--ink-2);overflow-x:auto;white-space:pre}
+  .err{display:none;margin-top:18px;font-size:15px;font-weight:500;color:#B42318}
+  .mapper{margin-top:22px;background:var(--white);border:1px solid var(--line-2);border-radius:18px;padding:26px 28px;
+    box-shadow:0 1px 2px rgba(10,13,19,.05)}
+  .mapper h3{font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:-.03em;margin-bottom:6px}
+  .mapper p{font-size:15px;color:var(--ink-2);margin-bottom:20px}
+  .mapfields{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+  .mapfield{flex:1;min-width:158px}
+  .mapfield label{display:block;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--ink-3);margin-bottom:7px}
+  .mapfield select{width:100%;background:var(--paper);border:1px solid var(--line-2);border-radius:9px;
+    color:var(--ink);padding:11px 12px;font-family:var(--sans);font-size:15px;outline:none}
+  .mapfield select:focus{border-color:var(--blue)}
 
-  /* ── gap table ── */
-  .gap{width:100%;border-collapse:collapse;margin-top:26px;font-size:14px}
-  .gap th{text-align:left;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:1px;
-    text-transform:uppercase;color:var(--tx3);padding:10px 12px;border-bottom:1px solid var(--bdr2)}
-  .gap th:not(:first-child),.gap td:not(:first-child){text-align:center;width:118px}
-  .gap td{padding:13px 12px;border-bottom:1px solid var(--bdr);color:var(--tx2);line-height:1.55;vertical-align:top}
-  .gap td:first-child{color:var(--tx);font-weight:500}
-  .gap td small{display:block;color:var(--tx3);font-weight:400;font-size:12.5px;margin-top:3px;line-height:1.5}
-  .yes{color:var(--g);font-weight:700;font-family:var(--mono);font-size:14px}
-  .no{color:var(--r);font-weight:700;font-family:var(--mono);font-size:14px}
-  .mid{color:var(--y);font-weight:700;font-family:var(--mono);font-size:13px}
+  /* ══ COMPARISON ══ */
+  .scroller{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:36px}
+  .gap{width:100%;border-collapse:collapse;min-width:660px}
+  .gap th{text-align:left;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--ink-3);padding:0 16px 14px 0;border-bottom:1px solid var(--line-2)}
+  .gap th:not(:first-child),.gap td:not(:first-child){text-align:center;width:132px;padding-right:0}
+  .gap td{padding:20px 16px 20px 0;border-bottom:1px solid var(--line);vertical-align:top}
+  .gap .ck{font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-.02em;color:var(--ink)}
+  .gap .cd{font-size:15px;line-height:1.55;color:var(--ink-2);margin-top:7px;max-width:56ch}
+  .vv{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;
+    text-transform:uppercase;padding:6px 11px;border-radius:999px}
+  .vv.y{background:#DCF6E8;color:#0B6B3E}
+  .vv.n{background:#FEE4E2;color:#B42318}
+  .vv.p{background:#FCF0CE;color:#8A6100}
+  .method{margin-top:30px;font-size:15px;line-height:1.7;color:var(--ink-3);max-width:74ch}
+  .method b{color:var(--ink-2);font-weight:600}
+  .method+.method{margin-top:16px}
 
-  /* ── drenched blocks ── */
-  .ink{background:var(--tx);color:#fff}
-  .ink h2{color:#fff}
-  .ink .lede{color:rgba(255,255,255,.72)}
-  .ink .kicker{color:rgba(255,255,255,.5)}
-  .price{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.14);
-    border:1px solid rgba(255,255,255,.14);margin-top:34px}
-  @media(max-width:720px){.price{grid-template-columns:1fr}}
-  .pc{background:var(--tx);padding:26px 26px 28px}
-  .pc.hi{background:#11161F}
-  .pc-n{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:14px}
-  .pc-p{font-family:var(--display);font-size:38px;font-weight:800;letter-spacing:-.035em;line-height:1;margin-bottom:6px}
-  .pc-p small{font-family:var(--sans);font-size:14px;font-weight:500;color:rgba(255,255,255,.5);letter-spacing:0}
-  .pc-d{font-size:13.5px;color:rgba(255,255,255,.66);line-height:1.65;margin-bottom:18px}
-  .pc-l{list-style:none;font-size:13.5px;color:rgba(255,255,255,.8);line-height:1.5}
-  .pc-l li{padding:7px 0 7px 20px;position:relative;border-top:1px solid rgba(255,255,255,.1)}
-  .pc-l li:before{content:"→";position:absolute;left:0;color:var(--ac);font-family:var(--mono);font-size:12px}
-  .pc .btn{margin-top:20px}
-  .pc .btn-w{background:#fff;border-color:#fff;color:var(--tx)}
-  .pc .btn-w:hover{background:var(--ac);border-color:var(--ac);color:#fff}
-  .pc .btn-o{background:transparent;border-color:rgba(255,255,255,.3);color:#fff}
-  .pc .btn-o:hover{border-color:#fff}
+  /* ══ PRICING — ink drench ══ */
+  .ink-field{background:var(--ink);color:#fff;margin-top:var(--sec);position:relative;overflow:hidden}
+  .ink-field::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(88% 86% at 2% -16%,rgba(11,91,255,.26),transparent 66%),
+               radial-gradient(64% 72% at 102% 110%,rgba(196,245,54,.10),transparent 68%)}
+  .ink-inner{position:relative;z-index:1;max-width:var(--edge);margin:0 auto;padding:clamp(58px,7.4vw,96px) var(--gut)}
+  .ink-inner h2{font-family:var(--display);font-weight:800;font-size:clamp(30px,4.2vw,48px);
+    letter-spacing:-.035em;line-height:1.02;margin-bottom:20px;text-wrap:balance}
+  .ink-inner .lead{font-size:17.5px;line-height:1.7;color:#B6BFCC;max-width:66ch;text-wrap:pretty}
+  .ink-inner .lead strong{color:#fff;font-weight:600}
+  .plans{margin-top:44px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .plan{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.14);border-radius:18px;
+    padding:30px 30px 32px}
+  .plan.hi{background:rgba(11,91,255,.14);border-color:rgba(11,91,255,.5)}
+  .plan-n{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+    color:rgba(255,255,255,.55);margin-bottom:18px}
+  .plan.hi .plan-n{color:var(--lime)}
+  .plan-p{font-family:var(--display);font-weight:800;font-size:52px;letter-spacing:-.04em;line-height:1}
+  .plan-p small{font-family:var(--sans);font-size:16px;font-weight:500;color:rgba(255,255,255,.55);letter-spacing:0}
+  .plan-d{font-size:16px;line-height:1.6;color:#B6BFCC;margin:14px 0 22px;max-width:44ch}
+  .plan ul{list-style:none;font-size:15.5px;line-height:1.5;color:rgba(255,255,255,.86)}
+  .plan li{padding:11px 0 11px 26px;position:relative;border-top:1px solid rgba(255,255,255,.1)}
+  .plan li::before{content:"→";position:absolute;left:0;color:var(--lime);font-family:var(--mono);font-size:13px}
+  .plan .btn{margin-top:26px}
+  .plan-mail{margin-top:12px;font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.45)}
+  .plan-note{margin-top:26px;font-family:var(--mono);font-size:12px;color:rgba(255,255,255,.42)}
 
-  .method{font-size:13px;color:var(--tx3);line-height:1.75;max-width:74ch;margin-top:24px}
-  .method b{color:var(--tx2);font-weight:600}
-  .method a{color:var(--ac);text-decoration:none}
-  .note{font-size:12.5px;color:var(--tx3);line-height:1.65;margin-top:14px}
-  .note a{color:var(--ac);text-decoration:none}
+  /* ══ FOOTER ══ */
+  .footer{max-width:var(--edge);margin:0 auto;padding:34px var(--gut);
+    display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .footer .fl{font-size:14.5px;color:var(--ink-3)}
+  .footer .fl a{color:var(--ink-2);text-decoration:none;font-weight:500}
+  .footer .fl a:hover{color:var(--blue)}
+  .footer .fr{font-family:var(--mono);font-size:12px;color:var(--ink-3)}
 
-  .footer{border-top:1px solid var(--bdr);padding:26px 40px;margin-top:0;display:flex;align-items:center;
-    justify-content:space-between;flex-wrap:wrap;gap:12px;max-width:1120px;margin-left:auto;margin-right:auto}
-  .footer div{font-size:13px;color:var(--tx3)}
-  .footer a{color:var(--ac);text-decoration:none}
-  .footer .r{font-family:var(--mono);font-size:11px}
+  /* ══ MOTION ══ */
+  @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  @keyframes draw{from{stroke-dashoffset:340}to{stroke-dashoffset:0}}
+  .an{animation:rise .78s var(--ease) both;animation-delay:var(--ad,0s)}
+  .mark-line path{stroke-dasharray:340;stroke-dashoffset:340;animation:draw .8s var(--ease) .62s forwards}
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+    .mark-line path{stroke-dashoffset:0}
+  }
 
-  @media(max-width:1000px){
-    .rowhead,.row{grid-template-columns:110px minmax(150px,1.8fr) .9fr .9fr .9fr 80px}
-    .rowhead .h-p,.row .c-p{display:none}
+  /* ══ RESPONSIVE ══ */
+  @media(max-width:1100px){
+    .row{grid-template-columns:150px 1fr 132px 92px 34px}
+    .r-close{display:none}
+    .dgrid{grid-template-columns:1fr}
+    .panel{box-shadow:0 1px 2px rgba(10,13,19,.05)}
+  }
+  @media(max-width:900px){
+    :root{--gut:26px}
+    .nav-links a.hide-sm{display:none}
+    .nav-right{gap:20px}
+    .plans{grid-template-columns:1fr}
   }
   @media(max-width:760px){
-    .wrap,.wrap-n{padding:0 22px}.nav{padding:0 22px}.footer{padding:26px 22px}
-    .rowhead{display:none}
-    .row{grid-template-columns:1fr auto;gap:8px 12px;padding:14px 16px;align-items:start}
-    .row .c-name{order:1}
-    .row .c-tag{order:2;justify-self:end}
-    .row .c-raw,.row .c-honest,.row .c-split{order:3;display:none}
-    .row .c-close{order:4;grid-column:1;font-size:12px}
-    .row .c-flags{order:5;grid-column:2;justify-self:end}
-    .detail{padding:4px 16px 20px}
+    /* the row becomes a stacked card: status and lift share the top line, the
+       activity name runs full width beneath. The fixed columns would otherwise
+       crush the name into a two-character gutter. */
+    .row{grid-template-columns:1fr auto;gap:12px 16px;padding:22px 0}
+    .row::before{inset:0 -14px}
+    .r-status-wrap{order:1}
+    .r-lift-wrap{order:2;justify-self:end;text-align:right}
+    .r-name-wrap{order:3;grid-column:1/-1}
+    .r-split,.r-arrow{display:none}
+    .row:hover .r-name,.row:hover .r-sub{transform:none}
+    .stats{grid-template-columns:repeat(auto-fit,minmax(146px,1fr));gap:12px}
+    .stat{padding:17px 18px 19px}
+    .stat-big{font-size:34px}
+    .r-name{font-size:21px}
+  }
+  @media(max-width:660px){
+    body{font-size:16.5px}
+    .brand-sub{display:none}
+    .hero-cta .btn,.drop-actions .btn,.drop-actions label.btn{width:100%}
+  }
+  @media(max-width:430px){
+    .nav-inner{padding-left:18px;padding-right:18px}
+    .brand-text{display:none}
+    .brand-mark{width:30px;height:30px}
+    .nav-links{gap:14px}
+    .nav-links a{font-size:13.5px}
+    .nav-cta{padding:8px 12px;font-size:12.5px}
+    .nav-cta .cta-l{display:none}
+    .nav-cta .cta-s{display:inline}
   }
 </style>
 </head>
 <body>
 
 <nav class="nav">
-  <a class="nav-brand" href="/" aria-label="AB Integrity — ecommerce A/B testing">
-    <svg class="brand-mark" viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <rect width="34" height="34" rx="9.5" fill="#0B5BFF"/>
-      <rect x="8" y="14.6" width="6" height="9.4" rx="2" fill="#fff" opacity=".48"/>
-      <rect x="17.6" y="7.8" width="6" height="16.2" rx="2" fill="#fff"/>
-      <rect x="8" y="26.2" width="17.8" height="2.3" rx="1.15" fill="#FF4A21"/>
-    </svg>
-    <span class="brand-text">
-      <span class="brand-name">AB <span>Integrity</span></span>
-      <span class="brand-sub">Ecommerce A/B testing</span>
-    </span>
-  </a>
-  <div class="nav-right">
-    <div class="nav-links">
-      <a class="nav-link" href="/">Tools</a>
-      <a class="nav-link hide-sm" href="/learn/">Learn</a>
-      <a class="nav-link" href="/blog/">Blog</a>
-      <a class="nav-link" href="/about">About</a>
+  <div class="nav-inner">
+    <a class="brand" href="/" aria-label="AB Integrity — ecommerce A/B testing">
+      <svg class="brand-mark" viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect width="34" height="34" rx="9.5" fill="#0B5BFF"/>
+        <rect x="8" y="14.6" width="6" height="9.4" rx="2" fill="#fff" opacity=".48"/>
+        <rect x="17.6" y="7.8" width="6" height="16.2" rx="2" fill="#fff"/>
+        <rect x="8" y="26.2" width="17.8" height="2.3" rx="1.15" fill="#FF4A21"/>
+      </svg>
+      <span class="brand-text">
+        <span class="brand-name">AB <span>Integrity</span></span>
+        <span class="brand-sub">Ecommerce A/B testing</span>
+      </span>
+    </a>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="/">Tools</a>
+        <a class="hide-sm" href="/learn/">Learn</a>
+        <a href="/blog/">Blog</a>
+        <a href="/about">About</a>
+      </div>
+      <a class="nav-cta" href="/portfolio"><span class="cta-l">Review your portfolio</span><span class="cta-s">Portfolio</span></a>
     </div>
-    <a class="nav-cta active" href="/portfolio"><span class="cta-l">Review your portfolio</span><span class="cta-s">Portfolio</span></a>
   </div>
 </nav>
 
+<div class="hero-band">
 <section class="hero">
-  <div class="wrap">
-    <div class="eyebrow">Portfolio</div>
-    <h1>Every platform tells you which variant won. <span class="ac">None of them check whether that is true.</span></h1>
-    <p class="lede">Adobe Target gives you a conversion rate, a lift, and a confidence number, one activity at a time. Its CSV export gives you less: Adobe documents that the download holds raw counts only, no lift and no confidence at all. Optimizely gives you more and stops in the same place. Neither checks whether your traffic split the way you configured it, whether a winner survives the other twenty comparisons you ran that week, or whether the test could ever have detected anything. <strong>Drop in one export covering everything you have live. Every activity comes back ranked worst first, with those checks already run.</strong></p>
+  <div class="hero-inner">
+    <p class="kicker an" style="--ad:.02s">
+      <svg viewBox="0 0 27 14" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="0" y="9.5" width="2.4" height="4.5" rx="1.2"/>
+        <rect x="4.1" y="8.4" width="2.4" height="5.6" rx="1.2"/>
+        <rect x="8.2" y="7" width="2.4" height="7" rx="1.2"/>
+        <rect x="12.3" y="5.9" width="2.4" height="8.1" rx="1.2"/>
+        <rect x="16.4" y="4.2" width="2.4" height="9.8" rx="1.2"/>
+        <rect x="20.5" y="2.4" width="2.4" height="11.6" rx="1.2"/>
+        <rect x="24.6" y="0" width="2.4" height="14" rx="1.2"/>
+      </svg>
+      <span><b>Six</b> checks your platform skips</span>
+    </p>
+    <!-- .mark is white-space:nowrap so the underline can span it, so only a
+         short phrase can carry it. A long one clips off a phone screen. -->
+    <h1 class="an" style="--ad:.1s">Your platform says which variant won. Not whether it is
+      <span class="mark">true.<svg class="mark-line" viewBox="0 0 300 16" preserveAspectRatio="none" aria-hidden="true"><path class="fat" d="M4,11.6C58,4.8 122,3.6 176,6.2C224,8.5 264,10.2 296,5.2"/><path class="thin" d="M4,11.6C58,4.8 122,3.6 176,6.2C224,8.5 264,10.2 296,5.2"/></svg></span>
+    </h1>
+    <p class="hero-sub an" style="--ad:.2s">Adobe Target gives you a conversion rate, a lift and a confidence number, one activity at a time. It never checks whether the traffic split was honest, whether the winner survives the other comparisons you ran that week, or whether the test could ever have detected anything. <strong>Upload one export covering everything you have live. Every activity comes back ranked worst first.</strong></p>
+    <div class="hero-cta an" style="--ad:.3s">
+      <a class="btn btn-fill" href="#board">See it on a live portfolio</a>
+      <a class="btn btn-ghost" href="#upload">Upload your export →</a>
+    </div>
+    <p class="hero-note an" style="--ad:.38s">runs in your browser · nothing is uploaded</p>
   </div>
 </section>
+</div>
 
-<section class="wrap" style="padding-bottom:10px">
-  <div id="strip" class="strip"></div>
+<section class="wrap" id="board">
+  <div class="sec-head">
+    <h2 id="boardH2">Eight activities. Three need you today.</h2>
+    <div class="cap" id="src">demo portfolio</div>
+  </div>
+  <p class="sec-lead">This is the real engine running on invented data. <strong>Click any row to see the full working.</strong> Bring your own export further down and it runs on that instead, in your browser.</p>
+
+  <div class="stats" id="stats"></div>
 
   <div class="board">
-    <div class="board-h">
-      <div class="board-t">Portfolio · ranked by severity</div>
-      <div class="board-src" id="src">demo portfolio · 8 activities</div>
-    </div>
-    <div class="rowhead">
-      <div>Status</div><div>Activity</div><div>Raw lift</div><div>Honest lift</div>
-      <div>Split</div><div class="h-p">Closes</div><div style="text-align:right">Flags</div>
+    <div class="board-note">
+      <span>Ranked worst first</span>
+      <span id="srcNote">8 activities</span>
     </div>
     <div id="rows"></div>
   </div>
-  <p class="note">Click any row for the full working. Every number is computed in your browser. Nothing is uploaded, and nothing is stored.</p>
 </section>
 
-<section class="sect">
-  <div class="wrap">
-    <div class="kicker">Run it on yours</div>
-    <h2>One file. Every activity.</h2>
-    <p class="lede">Export your activities with a row per experience. It does not matter which platform: if the file has an activity name, an experience name, visitors and conversions, it will read them. Revenue and end dates unlock the revenue conflict and pace checks.</p>
+<section class="wrap" id="upload">
+  <div class="sec-head"><h2>Run it on yours.</h2></div>
+  <p class="sec-lead">One row per experience, and it does not matter which platform made the file. If it has an activity name, an experience name, visitors and conversions, this will read it. Revenue and end dates switch on the revenue and pace checks too.</p>
 
-    <div class="drop" id="drop" style="margin-top:28px">
-      <div class="drop-title">Drop a multi-activity CSV here</div>
-      <div class="drop-sub">Adobe Target, Adobe Analytics, Optimizely, VWO, AB Tasty, Dynamic Yield, GA4, or a spreadsheet you built by hand. Columns are detected automatically and you can correct them.</div>
-      <div class="drop-actions">
-        <label class="btn btn-p">Choose file<input type="file" id="file" accept=".csv,.tsv,.txt" style="display:none"></label>
-        <button class="btn btn-ghost" id="demoBtn">Reload the demo portfolio</button>
-        <button class="btn btn-ghost" id="dlDemo">Download the demo CSV</button>
-      </div>
-      <div class="err" id="err"></div>
-      <div class="fmt">Activity,Experience,Visitors,Orders,Revenue,End date
+  <div class="drop" id="drop">
+    <h3>Drop a multi-activity CSV here</h3>
+    <p>Adobe Target, Adobe Analytics, Optimizely, VWO, AB Tasty, Dynamic Yield, GA4, or a spreadsheet you built by hand. Columns are detected for you, and you can correct any of them.</p>
+    <div class="drop-actions">
+      <label class="btn btn-fill">Choose a file<input type="file" id="file" accept=".csv,.tsv,.txt" style="display:none"></label>
+      <button class="btn btn-ghost" id="dlDemo">Download the demo CSV</button>
+      <button class="btn btn-ghost" id="demoBtn">Reload the demo</button>
+    </div>
+    <div class="err" id="err"></div>
+    <div class="fmt">Activity,Experience,Visitors,Orders,Revenue,End date
 PDP sticky add-to-cart,Control,48201,2410,289200,2026-08-04
 PDP sticky add-to-cart,Sticky bar,45882,2477,300500,2026-08-04
 Checkout progress bar,Control,61200,3060,367200,2026-07-28</div>
-    </div>
+  </div>
 
-    <div id="mapWrap" style="display:none;margin-top:18px">
-      <div class="board">
-        <div class="board-h"><div class="board-t">we read this · fix a column if we guessed wrong</div></div>
-        <div style="padding:18px">
-          <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:16px" id="mapFields"></div>
-          <div class="drop-actions" style="justify-content:flex-start">
-            <button class="btn btn-p" id="run">Review the portfolio</button>
-            <button class="btn btn-ghost" id="reset">Start over</button>
-          </div>
-        </div>
-      </div>
+  <div class="mapper" id="mapWrap" style="display:none">
+    <h3>We read this</h3>
+    <p>Change any column we guessed wrong, then build the portfolio.</p>
+    <div class="mapfields" id="mapFields"></div>
+    <div class="drop-actions" style="justify-content:flex-start">
+      <button class="btn btn-fill btn-sm" id="run">Review the portfolio</button>
+      <button class="btn btn-ghost btn-sm" id="reset">Start over</button>
     </div>
   </div>
 </section>
 
-<section class="sect" style="padding-top:0">
-  <div class="wrap">
-    <div class="kicker">The argument</div>
-    <h2>What your platform will not tell you</h2>
-    <p class="lede">Every one of these is computable from the export you already have. None of them appear in the report your platform hands you, and none of them appear in the deck your agency builds from it.</p>
+<section class="wrap">
+  <div class="sec-head"><h2>What your platform will not tell you.</h2></div>
+  <p class="sec-lead">Every one of these is computable from the export you already have. None of them appear in the report your platform hands you, and none of them appear in the deck your agency builds from it.</p>
 
-    <div class="scroller">
-    <table class="gap">
-      <thead>
-        <tr><th>Check</th><th>Adobe Target</th><th>Optimizely</th><th>AB Integrity</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Sample ratio mismatch
-            <small>Did the traffic actually split the way you configured it? If not, nothing else in the test means anything.</small></td>
-          <td class="no">no</td><td class="mid">partial</td><td class="yes">yes</td>
-        </tr>
-        <tr>
-          <td>Multiple-comparison correction
-            <small>Four experiences against five metrics is twenty chances to find a winner by luck. Both platforms report every cell as if it were the only one you looked at.</small></td>
-          <td class="no">no</td><td class="mid">partial</td><td class="yes">yes</td>
-        </tr>
-        <tr>
-          <td>Achieved power
-            <small>The smallest lift this sample could ever have detected. Without it, "no significant difference" is indistinguishable from "we did not measure".</small></td>
-          <td class="no">no</td><td class="no">no</td><td class="yes">yes</td>
-        </tr>
-        <tr>
-          <td>Winner's-curse correction
-            <small>A barely significant winner is nearly always smaller than it looks. This is why shipped tests underdeliver against the deck six months later.</small></td>
-          <td class="no">no</td><td class="no">no</td><td class="yes">yes</td>
-        </tr>
-        <tr>
-          <td>Conversion against revenue
-            <small>More orders at a smaller basket is a loss wearing a win's clothes. Reported side by side, never reconciled.</small></td>
-          <td class="no">no</td><td class="no">no</td><td class="yes">yes</td>
-        </tr>
-        <tr>
-          <td>Pace to close
-            <small>At today's traffic, will this test reach an answer before its end date? Nobody computes this, so tests close on the calendar instead of on the data.</small></td>
-          <td class="no">no</td><td class="mid">partial</td><td class="yes">yes</td>
-        </tr>
-        <tr>
-          <td>One ranked view across every activity
-            <small>Not a list of tests. A list of the tests that need you today, worst first.</small></td>
-          <td class="no">no</td><td class="no">no</td><td class="yes">yes</td>
-        </tr>
-      </tbody>
-    </table>
-    </div>
-
-    <p class="method"><b>On the comparison.</b> Adobe Target reports confidence from a two-tailed Welch's t-test as 1 minus the p-value, and its documented CSV download contains raw data only, without lift or confidence. Neither its reporting documentation nor Optimizely's describes a sample ratio check on the results view or a correction across experiences and metrics. Optimizely's sequential testing does control error under repeated looks and its export reports samples remaining to significance, which is why it scores partial on three rows rather than no. Marked as of July 2026 against published documentation. If a platform ships one of these, this table gets corrected.</p>
-
-    <p class="method"><b>On the method.</b> Significance is a two-proportion z-test on the pooled standard error. The multiple-comparison bar is Šidák at a family-wise 5%, counting every variant against every metric in the file, which assumes the comparisons are independent and is therefore a touch conservative when your metrics correlate. Sample ratio mismatch is a chi-square goodness-of-fit test against the configured split, flagged hard below p = 0.01. The honest lift is a posterior mean under a skeptical normal prior of 15% relative on the true effect. Power is the smallest relative effect detectable at 80% with the sample collected. Every one of these is the same math as the free tools on this site, run across your whole portfolio at once instead of one test at a time.</p>
+  <div class="scroller">
+  <table class="gap">
+    <thead><tr><th>Check</th><th>Adobe Target</th><th>Optimizely</th><th>AB Integrity</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><div class="ck">Sample ratio mismatch</div><div class="cd">Did the traffic actually split the way you configured it? If not, nothing else in the test means anything.</div></td>
+        <td><span class="vv n">no</span></td><td><span class="vv p">partial</span></td><td><span class="vv y">yes</span></td>
+      </tr>
+      <tr>
+        <td><div class="ck">Multiple-comparison correction</div><div class="cd">Four experiences against five metrics is twenty chances to find a winner by luck. Both platforms report every cell as if it were the only one you looked at.</div></td>
+        <td><span class="vv n">no</span></td><td><span class="vv p">partial</span></td><td><span class="vv y">yes</span></td>
+      </tr>
+      <tr>
+        <td><div class="ck">Achieved power</div><div class="cd">The smallest lift this sample could ever have detected. Without it, "no significant difference" is indistinguishable from "we did not measure".</div></td>
+        <td><span class="vv n">no</span></td><td><span class="vv n">no</span></td><td><span class="vv y">yes</span></td>
+      </tr>
+      <tr>
+        <td><div class="ck">Winner's-curse correction</div><div class="cd">A barely significant winner is nearly always smaller than it looks. This is why shipped tests underdeliver against the deck six months later.</div></td>
+        <td><span class="vv n">no</span></td><td><span class="vv n">no</span></td><td><span class="vv y">yes</span></td>
+      </tr>
+      <tr>
+        <td><div class="ck">Conversion against revenue</div><div class="cd">More orders at a smaller basket is a loss wearing a win's clothes. Reported side by side, never reconciled.</div></td>
+        <td><span class="vv n">no</span></td><td><span class="vv n">no</span></td><td><span class="vv y">yes</span></td>
+      </tr>
+      <tr>
+        <td><div class="ck">Pace to close</div><div class="cd">At today's traffic, will this test reach an answer before its end date? Nobody computes this, so tests close on the calendar instead of on the data.</div></td>
+        <td><span class="vv n">no</span></td><td><span class="vv p">partial</span></td><td><span class="vv y">yes</span></td>
+      </tr>
+      <tr>
+        <td><div class="ck">One ranked view across everything</div><div class="cd">Not a list of tests. A list of the tests that need you today, worst first.</div></td>
+        <td><span class="vv n">no</span></td><td><span class="vv n">no</span></td><td><span class="vv y">yes</span></td>
+      </tr>
+    </tbody>
+  </table>
   </div>
+
+  <p class="method"><b>On the comparison.</b> Adobe Target reports confidence from a two-tailed Welch's t-test as 1 minus the p-value, and its documented CSV download contains raw data only, without lift or confidence. Neither its reporting documentation nor Optimizely's describes a sample ratio check on the results view or a correction across experiences and metrics. Optimizely's sequential testing does control error under repeated looks and its export reports samples remaining to significance, which is why it scores partial on three rows rather than no. Marked as of July 2026 against published documentation. If a platform ships one of these, this table gets corrected.</p>
+
+  <p class="method"><b>On the method.</b> Significance is a two-proportion z-test on the pooled standard error. The multiple-comparison bar is Šidák at a family-wise 5%, counting every variant against every metric in the file, which assumes the comparisons are independent and is therefore a touch conservative when your metrics correlate. Sample ratio mismatch is a chi-square goodness-of-fit test against the configured split, flagged hard below p = 0.01. The honest lift is a posterior mean under a skeptical normal prior of 15% relative on the true effect. Power is the smallest relative effect detectable at 80% with the sample collected. Every one of these is the same math as the free tools on this site, run across your whole portfolio at once instead of one test at a time.</p>
 </section>
 
-<section class="sect ink">
-  <div class="wrap">
-    <div class="kicker">Access</div>
+<section class="ink-field">
+  <div class="ink-inner">
     <h2>The tools stay free. This one does not.</h2>
-    <p class="lede">Every calculator on this site stays exactly where it is: free, no account, nothing uploaded. What costs money is not having to run them one test at a time. Upload once a week, get the whole portfolio triaged, and know which three tests to open before your Monday meeting.</p>
+    <p class="lead">Every calculator on this site stays exactly where it is: free, no account, nothing uploaded. What costs money is not having to run them one test at a time. <strong>Upload once a week, get the whole portfolio triaged, and know which three tests to open before your Monday meeting.</strong></p>
 
-    <div class="price">
-      <div class="pc">
-        <div class="pc-n">Always free</div>
-        <div class="pc-p">€0</div>
-        <div class="pc-d">The seven tools, plus Instant Analysis on a single test. Everything runs in your browser.</div>
-        <ul class="pc-l">
+    <div class="plans">
+      <div class="plan">
+        <div class="plan-n">Always free</div>
+        <div class="plan-p">€0</div>
+        <p class="plan-d">The seven tools, plus Instant Analysis on a single test. Everything runs in your browser.</p>
+        <ul>
           <li>One test at a time, by hand</li>
           <li>Every calculation, in full</li>
           <li>No account, nothing stored</li>
         </ul>
-        <a class="btn btn-o" href="/">See the tools</a>
+        <a class="btn btn-ghost btn-sm" href="/">See the tools</a>
       </div>
-      <div class="pc hi">
-        <div class="pc-n">Portfolio · in development</div>
-        <div class="pc-p">€49 <small>/ month</small></div>
-        <div class="pc-d">Your whole portfolio, triaged from one file. Priced to go on a company card without a procurement conversation.</div>
-        <ul class="pc-l">
+      <div class="plan hi">
+        <div class="plan-n">Portfolio · early access</div>
+        <div class="plan-p">€49 <small>/ month</small></div>
+        <p class="plan-d">Your whole portfolio, triaged from one file. Priced to go on a company card without a procurement conversation.</p>
+        <ul>
           <li>Unlimited activities per upload</li>
           <li>Every check on this page, ranked worst first</li>
           <li>Weekly change log: what moved, what broke</li>
           <li>Shareable read-only verdict for the deck</li>
           <li>Direct platform connections when they land</li>
         </ul>
-        <a class="btn btn-w" href="mailto:sebaszijlstra@hotmail.com?subject=Portfolio%20early%20access&body=Which%20platform%20do%20you%20test%20on%2C%20and%20roughly%20how%20many%20activities%20do%20you%20run%20at%20once%3F">Ask for early access</a>
+        <a class="btn btn-lime btn-sm" href="mailto:hello@abintegrity.com?subject=Portfolio%20early%20access&body=Which%20platform%20do%20you%20test%20on%2C%20and%20roughly%20how%20many%20activities%20do%20you%20run%20at%20once%3F">Ask for early access</a>
+        <p class="plan-mail">hello@abintegrity.com</p>
       </div>
     </div>
-    <p class="note" style="color:rgba(255,255,255,.45);margin-top:20px">The demo above is the real engine on invented data. Bring your own export and it will run on that instead, in your browser, before you pay anyone anything.</p>
+    <p class="plan-note">The demo above is the real engine on invented data. Bring your own export and it runs on that instead, in your browser, before you pay anyone anything.</p>
   </div>
 </section>
 
 <footer class="footer">
-  <div>AB Integrity · <a href="https://www.linkedin.com/in/sebastianzijlstra" target="_blank" rel="me noopener">LinkedIn ↗</a> · <a href="/privacy" style="color:var(--tx3)">Privacy</a></div>
-  <div class="r">runs in your browser · nothing is uploaded</div>
+  <div class="fl">AB Integrity · <a href="https://www.linkedin.com/in/sebastianzijlstra" target="_blank" rel="me noopener">LinkedIn ↗</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a></div>
+  <div class="fr">runs in your browser · nothing is uploaded</div>
 </footer>
 
 <script>
@@ -478,13 +589,20 @@ function shrink(res){
 }
 function sidak(alpha,m){return m<=1?alpha:1-Math.pow(1-alpha,1/m);}
 
-/* ═══════════ verdict ═══════════ */
+/* ═══════════ verdict ═══════════
+   Five triage states. Nuance lives in the flags, not in more buckets, so a
+   genuine winner can still carry a warning. */
 var STATUS={
-  INVALID:{rank:100,label:'Invalid',tone:'bad',blurb:'The measurement itself is broken. Nothing downstream is usable.'},
-  OVERSTATED:{rank:90,label:'Overstated',tone:'over',blurb:'A result is being claimed that the data does not support.'},
-  INCONCLUSIVE:{rank:60,label:'Inconclusive',tone:'warn',blurb:'This test cannot answer its own question. Stop it or resize it.'},
-  RUNNING:{rank:30,label:'Running',tone:'idle',blurb:'No call yet, and on pace to get one.'},
-  CALLED:{rank:10,label:'Called',tone:'ok',blurb:'A real result that survives every check.'}
+  INVALID:{rank:100,label:'Invalid',sc:'#B42318',sw:'#FEE4E2',
+    blurb:'The measurement itself is broken, so nothing downstream is usable.'},
+  OVERSTATED:{rank:90,label:'Overstated',sc:'#C4320A',sw:'#FFE7D6',
+    blurb:'A result is being claimed here that the data does not support.'},
+  INCONCLUSIVE:{rank:60,label:'Inconclusive',sc:'#8A6100',sw:'#FCF0CE',
+    blurb:'This test cannot answer its own question. Stop it or resize it.'},
+  RUNNING:{rank:30,label:'Running',sc:'#475467',sw:'#EEF1F8',
+    blurb:'No call yet, and on pace to get one.'},
+  CALLED:{rank:10,label:'Called',sc:'#0B6B3E',sw:'#DCF6E8',
+    blurb:'A real result that survives every check.'}
 };
 
 function analyzeCampaign(camp,ctx){
@@ -520,8 +638,6 @@ function analyzeCampaign(camp,ctx){
     rpv={a:ra,b:rb,rel:(rb-ra)/ra};
   }
 
-  /* every check files independently; status is derived from the flags after,
-     so a genuine winner can still carry a warning */
   var flags=[];
   function flag(id,sev,title,text){flags.push({id:id,sev:sev,title:title,text:text});}
 
@@ -598,7 +714,6 @@ function analyzePortfolio(campaigns){
 function fmtP(p){return p<0.0001?'<0.0001':p<0.001?p.toExponential(1):p.toFixed(4);}
 function pct(x){return (x>=0?'+':'')+(x*100).toFixed(1)+'%';}
 function num(n){return Math.round(n).toLocaleString('en-US');}
-function money(n){return Math.round(n).toLocaleString('en-US');}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 var $=function(id){return document.getElementById(id);};
 
@@ -682,7 +797,6 @@ function parseCSV(text){
 function toNum(s){
   if(s==null)return NaN;
   var t=String(s).replace(/[\s,$€£%]/g,'');
-  // 1.234,56 european style
   if(/^-?\d+\.\d{3}(,\d+)?$/.test(t))t=t.replace(/\./g,'').replace(',','.');
   else t=t.replace(/,/g,'');
   return parseFloat(t);
@@ -716,7 +830,6 @@ function ingest(text){
   var h=parsed.header;
   mapSel={};
   FIELDS.forEach(function(f){mapSel[f.key]=guess(h,f.re);});
-  // conversions must not collide with a rate column or with visitors
   if(mapSel.conv===mapSel.visitors)mapSel.conv=-1;
   if(mapSel.conv<0)mapSel.conv=firstNumeric(h,parsed.rows,[mapSel.activity,mapSel.variant,mapSel.visitors]);
   if(mapSel.visitors<0)mapSel.visitors=firstNumeric(h,parsed.rows,[mapSel.activity,mapSel.variant,mapSel.conv]);
@@ -740,10 +853,7 @@ function buildMap(header){
     header.forEach(function(name,i){
       opts+='<option value="'+i+'"'+(i===mapSel[f.key]?' selected':'')+'>'+esc(name)+'</option>';
     });
-    html+='<div style="flex:1;min-width:150px"><label style="display:block;font-size:10px;font-weight:700;'+
-      'text-transform:uppercase;letter-spacing:.6px;color:var(--tx3);margin-bottom:5px">'+f.label+'</label>'+
-      '<select data-k="'+f.key+'" style="width:100%;background:var(--bg);border:1px solid var(--bdr);color:var(--tx);'+
-      'padding:8px 10px;font-family:var(--mono);font-size:12px;outline:none">'+opts+'</select></div>';
+    html+='<div class="mapfield"><label>'+f.label+'</label><select data-k="'+f.key+'">'+opts+'</select></div>';
   });
   $('mapFields').innerHTML=html;
   Array.prototype.forEach.call($('mapFields').querySelectorAll('select'),function(s){
@@ -761,8 +871,8 @@ function buildCampaigns(){
     var metric=m.metric>=0?(r[m.metric]||'').toString():'';
     if(!metricsByCamp[cname])metricsByCamp[cname]={};
     if(metric)metricsByCamp[cname][metric]=1;
-    // when the file is long-format across metrics, only the first metric seen
-    // per activity feeds the verdict; the rest still count toward multiplicity
+    /* when the file is long-format across metrics, only the first metric seen
+       per activity feeds the verdict; the rest still count toward multiplicity */
     if(m.metric>=0){
       if(!groups[cname])groups[cname]={primary:metric};
       if(metric!==groups[cname].primary)return;
@@ -789,25 +899,31 @@ function buildCampaigns(){
 
 /* ═══════════ render ═══════════ */
 var current=null;
-function renderPortfolio(campaigns,label){
+function renderPortfolio(campaigns,label,note){
   var out=analyzePortfolio(campaigns);
-  current=out;
   if(!out.results.length){showErr('Read the file, but could not find any activity with two or more experiences.');return;}
+  current=out;
   $('src').textContent=label;
+  $('srcNote').textContent=note;
 
   var c=out.counts;
-  var needAttention=(c.INVALID||0)+(c.OVERSTATED||0);
-  var strip=[
-    {k:'Activities',v:out.results.length,s:'in this file',cls:''},
-    {k:'Need attention',v:needAttention,s:'invalid or overstated',cls:needAttention?'alarm':'good'},
+  var need=(c.INVALID||0)+(c.OVERSTATED||0);
+  var n=out.results.length;
+  $('boardH2').textContent=n+' activit'+(n===1?'y':'ies')+'. '+
+    (need? need+' need'+(need===1?'s':'')+' you today.' : 'None need you today.');
+
+  var cards=[
+    {k:'Activities',v:n,s:'in this file',cls:''},
+    {k:'Need attention',v:need,s:'invalid or overstated',cls:need?'alarm':'good'},
     {k:'Inconclusive',v:c.INCONCLUSIVE||0,s:'cannot answer as sized',cls:(c.INCONCLUSIVE||0)?'warn':''},
     {k:'Safe to act on',v:c.CALLED||0,s:'survive every check',cls:(c.CALLED||0)?'good':''},
     {k:'Comparisons',v:out.totalComparisons,s:'variant × metric in this file',cls:''},
     {k:'False-winner risk',v:Math.round(out.anyFalseWinner*100)+'%',
      s:'chance at least one 95% "winner" here is luck',cls:out.anyFalseWinner>0.5?'alarm':'warn'}
   ];
-  $('strip').innerHTML=strip.map(function(s){
-    return '<div class="st '+s.cls+'"><div class="st-k">'+s.k+'</div><div class="st-v">'+s.v+'</div><div class="st-s">'+s.s+'</div></div>';
+  $('stats').innerHTML=cards.map(function(s){
+    return '<div class="stat '+s.cls+'"><span class="stat-cap">'+s.k+'</span>'+
+      '<span class="stat-big">'+s.v+'</span><span class="stat-sub">'+s.s+'</span></div>';
   }).join('');
 
   $('rows').innerHTML=out.results.map(function(r,i){return rowHTML(r,i);}).join('');
@@ -817,29 +933,27 @@ function renderPortfolio(campaigns,label){
 }
 
 function rowHTML(r,i){
-  var crit=r.flags.filter(function(f){return f.sev===3;}).length;
-  var warn=r.flags.filter(function(f){return f.sev===2;}).length;
-  var notes=r.flags.filter(function(f){return f.sev===1;}).length;
   var dots='';
-  for(var a=0;a<crit;a++)dots+='<span class="dot s3"></span>';
-  for(var b=0;b<warn;b++)dots+='<span class="dot s2"></span>';
-  for(var d=0;d<notes;d++)dots+='<span class="dot s1"></span>';
-  if(!dots)dots='<span class="mono mut">clean</span>';
-  var closes=r.daysLeft==null?'<span class="mono mut">—</span>'
-    :r.daysLeft<0?'<span class="mono mut">closed</span>'
-    :r.daysLeft===0?'<span class="mono" style="color:var(--o)">today</span>'
-    :'<span class="mono'+(r.daysLeft<=5?'" style="color:var(--o)':' mut"')+'">'+r.daysLeft+'d</span>';
-  return '<button class="row" data-i="'+i+'" aria-expanded="false">'+
-    '<div class="c-tag"><span class="tag '+r.meta.tone+'">'+r.meta.label+'</span></div>'+
-    '<div class="c-name"><div class="cname">'+esc(r.name)+'</div>'+
-      '<div class="cvar">'+esc(r.best.name)+' vs '+esc(r.control.name)+
+  [3,2,1].forEach(function(sev){
+    r.flags.filter(function(f){return f.sev===sev;}).forEach(function(){dots+='<span class="dot s'+sev+'"></span>';});
+  });
+  var closes = r.daysLeft==null ? '—'
+    : r.daysLeft<0 ? 'closed'
+    : r.daysLeft===0 ? 'today'
+    : r.daysLeft+' days';
+  var soon = r.daysLeft!=null&&r.daysLeft>=0&&r.daysLeft<=5;
+  return '<button class="row" data-i="'+i+'" aria-expanded="false" style="--sc:'+r.meta.sc+';--sw:'+r.meta.sw+'">'+
+    '<div class="r-status-wrap"><span class="r-status">'+r.meta.label+'</span>'+
+      (dots?'<span class="dots">'+dots+'</span>':'')+'</div>'+
+    '<div class="r-name-wrap"><div class="r-name">'+esc(r.name)+'</div>'+
+      '<div class="r-sub">'+esc(r.best.name)+' vs '+esc(r.control.name)+
       (r.arms.length>2?' · '+r.arms.length+' experiences':'')+'</div></div>'+
-    '<div class="c-raw"><span class="mono '+(r.relRaw>=0?'up':'down')+'">'+pct(r.relRaw)+'</span></div>'+
-    '<div class="c-honest"><span class="mono mut">'+pct(r.relHonest)+'</span></div>'+
-    '<div class="c-split"><span class="mono'+(r.srm.p<0.01?'" style="color:var(--r)':' mut"')+'">'+
-      r.split.map(function(s){return (s*100).toFixed(1);}).join(' / ')+'</span></div>'+
-    '<div class="c-close c-p">'+closes+'</div>'+
-    '<div class="c-flags flagcount">'+dots+'<span class="chev">+</span></div>'+
+    '<div class="r-lift-wrap"><span class="r-lift '+(r.relRaw>=0?'up':'down')+'">'+pct(r.relRaw)+'</span>'+
+      '<span class="r-honest">'+pct(r.relHonest)+' honest</span></div>'+
+    '<div class="r-split'+(r.srm.p<0.01?' bad':'')+'">'+
+      r.split.map(function(s){return (s*100).toFixed(1);}).join(' / ')+'<small>traffic split</small></div>'+
+    '<div class="r-close'+(soon?' soon':'')+'">'+closes+'<small>to close</small></div>'+
+    '<span class="r-arrow" aria-hidden="true">+</span>'+
     '</button>';
 }
 
@@ -851,33 +965,33 @@ function toggle(i){
     existing.parentNode.removeChild(existing);
     btn.classList.remove('open');
     btn.setAttribute('aria-expanded','false');
-    btn.querySelector('.chev').textContent='+';
+    btn.querySelector('.r-arrow').textContent='+';
     return;
   }
   var d=document.createElement('div');
   d.className='detail';d.setAttribute('data-i',i);
-  d.innerHTML=detailHTML(current.results[i],current);
+  d.innerHTML=detailHTML(current.results[i]);
   btn.parentNode.insertBefore(d,btn.nextSibling);
   btn.classList.add('open');
   btn.setAttribute('aria-expanded','true');
-  btn.querySelector('.chev').textContent='−';
+  btn.querySelector('.r-arrow').textContent='−';
 }
 
-function detailHTML(r,out){
+function detailHTML(r){
   var sevName={3:'critical',2:'warning',1:'note',0:'clear'};
   var flags=r.flags.map(function(f){
     return '<div class="fl s'+f.sev+'"><div class="fl-t">'+esc(f.title)+
       '<span class="fl-b">'+sevName[f.sev]+'</span></div><div class="fl-x">'+f.text+'</div></div>';
   }).join('');
 
-  var arms='<div class="scroller"><table class="armtable"><tr><th>Experience</th><th>Visitors</th><th>Conv.</th><th>Rate</th>'+
+  var arms='<table class="arms"><tr><th>Experience</th><th>Visitors</th><th>Conv.</th><th>Rate</th>'+
     (r.rpv?'<th>RPV</th>':'')+'</tr>'+
     r.arms.map(function(a){
       var isC=a===r.control;
-      return '<tr'+(isC?' class="ctrl"':'')+'><td>'+esc(a.name)+(isC?' (control)':'')+'</td>'+
+      return '<tr><td>'+esc(a.name)+(isC?' (control)':'')+'</td>'+
         '<td>'+num(a.visitors)+'</td><td>'+num(a.conv)+'</td><td>'+(a.rate*100).toFixed(2)+'%</td>'+
         (r.rpv?'<td>'+(a.rev!=null?(a.rev/a.visitors).toFixed(2):'—')+'</td>':'')+'</tr>';
-    }).join('')+'</table></div>';
+    }).join('')+'</table>';
 
   var rows=[
     ['Raw lift',pct(r.relRaw)],
@@ -885,8 +999,8 @@ function detailHTML(r,out){
     ['Smallest detectable',pct(r.mde)],
     ['p-value',fmtP(r.tp.p)],
     ['Corrected bar','p < '+r.alphaAdj.toFixed(4)],
-    // never print a bare 100%: the posterior is never that certain, and on a
-    // broken test it reads as an endorsement
+    /* never a bare 100%: the posterior is never that certain, and on a broken
+       test it reads as an endorsement */
     ['P(variant better)',r.pBeats>=0.995?'>99%':r.pBeats<=0.005?'<1%':Math.round(r.pBeats*100)+'%'],
     ['Split test','chi-square p = '+fmtP(r.srm.p)],
     ['Metrics in file',r.metrics]
@@ -896,13 +1010,12 @@ function detailHTML(r,out){
   if(r.daysLeft!=null)rows.push(['Days left',r.daysLeft<0?'closed':r.daysLeft]);
 
   return '<div class="dgrid"><div>'+
-      '<div class="fl-x" style="margin-top:16px;font-weight:500;color:var(--tx)">'+r.meta.blurb+'</div>'+
-      flags+
+      '<p class="verdict">'+r.meta.blurb+'</p>'+flags+
     '</div><div>'+
-      '<div class="nums"><div class="nums-t">the numbers</div>'+
+      '<div class="panel"><div class="panel-t">The numbers</div>'+
         rows.map(function(x){return '<div class="nr"><span class="k">'+x[0]+'</span><span class="v">'+x[1]+'</span></div>';}).join('')+
       '</div>'+
-      '<div class="nums"><div class="nums-t">experiences</div>'+arms+'</div>'+
+      '<div class="panel"><div class="panel-t">Experiences</div>'+arms+'</div>'+
     '</div></div>';
 }
 
@@ -920,16 +1033,16 @@ $('run').addEventListener('click',function(){
   var camps=buildCampaigns();
   if(!camps.length){showErr('Could not group the rows into activities with two or more experiences. Check the Activity and Experience columns.');return;}
   hideErr();
-  renderPortfolio(camps,'your file · '+camps.length+' activit'+(camps.length===1?'y':'ies'));
+  renderPortfolio(camps,'your file','your file · '+camps.length+' activit'+(camps.length===1?'y':'ies'));
   $('mapWrap').style.display='none';
-  document.querySelector('.board').scrollIntoView({block:'start',behavior:'smooth'});
+  $('board').scrollIntoView({block:'start',behavior:'smooth'});
 });
 $('reset').addEventListener('click',function(){
   parsed=null;$('mapWrap').style.display='none';$('file').value='';hideErr();
 });
 $('demoBtn').addEventListener('click',function(){
-  renderPortfolio(demoCampaigns(),'demo portfolio · 8 activities');
-  document.querySelector('.board').scrollIntoView({block:'start',behavior:'smooth'});
+  renderPortfolio(demoCampaigns(),'demo portfolio','8 activities');
+  $('board').scrollIntoView({block:'start',behavior:'smooth'});
 });
 $('dlDemo').addEventListener('click',function(){
   var blob=new Blob([demoCSV()],{type:'text/csv'});
@@ -953,7 +1066,7 @@ drop.addEventListener('drop',function(e){
   rd.readAsText(f);
 });
 
-renderPortfolio(demoCampaigns(),'demo portfolio · 8 activities');
+renderPortfolio(demoCampaigns(),'demo portfolio','8 activities');
 })();
 </script>
 </body>
